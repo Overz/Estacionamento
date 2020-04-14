@@ -32,3 +32,9 @@ lib/
 /.idea/
 /Projeto/Projeto.iml
 /Projeto/target/
+/.project
+/.classpath
+/.settings/
+/bin/
+/projeto.iml/
+/Projeto.iml
