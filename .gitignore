@@ -22,19 +22,15 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Configurations files and others
-
+# Eclipse Configurations
 /.project
 /.classpath
 /bin/
-/settings/
-lib/
-/.idea/
-/Projeto/Projeto.iml
-/Projeto/target/
-/.project
-/.classpath
 /.settings/
-/bin/
-/projeto.iml/
+
+# Intellij Configurations
+/.idea/
 /Projeto.iml
+
+# Multiple configurations
+/target/

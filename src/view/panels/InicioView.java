@@ -42,11 +42,6 @@ public class InicioView extends JPanel {
     private JLabel lblTotalDeVeiculos, lblValorPgto, lblCancelaEntrada, lblCancelaSaída;
     private JLabel lblMetodo;
 
-
-
-    /**
-     * Inicia a Tela
-     */
     public InicioView() {
 
         this.setBounds(100, 100, 1122, 789);
@@ -384,7 +379,6 @@ public class InicioView extends JPanel {
         }
         dao.excluir(rows);
     }
-    /* ITEMS RELACIONADOS A TABELA */
 
     /**
      * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
