@@ -11,7 +11,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.text.ParseException;
@@ -141,7 +140,7 @@ public class InicioView extends JPanel {
      * Adiciona os campos de validação na tela;
      */
     private void setInputFields() {
-        formaPgto = new ArrayList<String>();
+        formaPgto = new ArrayList<>();
         formaPgto.add(DINHEIRO);
         formaPgto.add(CARTAO);
 
@@ -180,11 +179,7 @@ public class InicioView extends JPanel {
         btnCancelar.setBackground(Color.decode("#F85C50"));
         btnCancelar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnCancelar, "cell 1 6,grow");
-        btnCancelar.addActionListener(e -> {
-
-            txtTicket.setText("Digite o Número do Ticket");
-
-        });
+        btnCancelar.addActionListener(e -> txtTicket.setText("Digite o Número do Ticket"));
 
         btnValidar = new JButton("Validar");
         btnValidar.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-selecionado-50.png")));
@@ -334,7 +329,7 @@ public class InicioView extends JPanel {
     /**
      * Atualiza a JTable com Todos os Valores
      *
-     * @param MovimentoVO object
+     * @param vo MovimentoVO
      */
     private void atualizarTabela(ArrayList<MovimentoVO> vo) {
 
@@ -368,7 +363,7 @@ public class InicioView extends JPanel {
     /**
      * Remover as linhas selecionadas da tablea;
      *
-     * @param table
+     * @param table JTable
      */
     public void removeSelectedRows(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
@@ -403,12 +398,7 @@ public class InicioView extends JPanel {
      * Adiciona um Timer em Alguns Campos
      */
     private void timerDoClick() {
-
-        ActionListener timerProcurar = new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-                btnProcurar.doClick();
-            }
-        };
+        ActionListener timerProcurar = actionEvent -> btnProcurar.doClick();
         Timer timer1 = new Timer(1000, timerProcurar);
         timer1.start();
     }

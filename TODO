@@ -1,0 +1,108 @@
+--------------------------------------------------------------------------------------------------------------------
+$$ TO-DO:
+    # View Inicio:
+        ~ Validações:
+            - Numero do Ticket/Cartão digitado:
+            - Dinheiro ou Cartão:
+            - Meio de Pesquisa dos dados, com seletor:
+
+        ~ Botões:
+            - Gerar um ticket aleatório:
+            - Imprimir esse ticket:
+            - Imprimir ultimo recebido:
+
+        ~ Tabela:
+            - Imprimir linha selecionada:
+            - remover linha selecionada:
+            - Mostrar total de Veículos na Label acima:
+
+        ~ Implementar OCR:
+            - Add Leitura de imagem, arquivo .img, .jpg, e etc:
+            - Verificar o tempo para mais adições futuras ou modificações:
+
+    # View Caixa:
+        ~ Botões:
+            - Add ações aos botões:
+                - Imprimir relatório do dia:
+                - Add valor ao caixa(Criar nova tela pop-up com campos):
+                - Retirar valor do caixa(Valor simples? ou Algo específico?):
+            - Fechar o caixa do dia(Zerar os campos das telas: Inicio e Caixa):
+            - Imprimir Comprovante na Linha selecionada:
+
+        ~ Tabela:
+            - Preencher a Tabela ao abrir a tela:
+            - Mostrar os dados nas Labels explicitas na tela:
+
+    # View Cliente:
+        ~ Validações:
+            - Validar o campo de Pesquisa que interfere diretamente a tabela:
+            - Validar os campos do Botão Cadastrar:
+            - Validar os Campos do Botão Atualizar:
+
+        ~ Botões:
+            - Add opção de Excluir o Cliente, 1:1:
+            - Add ação ao botão Atualizar (Preencher os campos com um Cliente Selecionado):
+
+        ~ Cadastrar:
+            - Preencher a Tabela com os Veículos do Cliente ou Cadastrar:
+            - Arrumar os campos da Tabela onde existem o ComboBox(Atualizar conforme selecionado):
+            - Bloquear Cliente após o vencimento da mensalidade, ou por click:
+            - Preencher os ComboBox de Plano e Forma de Pgto:
+
+        ~ Atualizar:
+            - Abrir tela após selecionar um cliente:
+            - Verificar se o Cliente está selecionado para habilitar a tela:
+            - Invalidar o botão para click:
+
+        ~ Tabela:
+            - Preencher tabela com TODOS os Clientes:
+
+    # View Movimento:
+        ~ Validações:
+            - validar a Data selecionada para Trazer os resultados:
+            - Invalidar Data se existir somente uma data selecionada:
+
+        ~ Tabela:
+            - Preencher a Tabela:
+            - Invalidar seleção de linhas:
+
+    # View Ticket Perdido:
+        ~ Validações:
+            -  Validar campos digitados:
+
+        ~ Botões:
+            - Salvar os dados digitados no DB:
+            - Preencher Label de valor(futuras alterações?):
+
+        ~ ComboBox:
+            - Preencher Cbx
+
+        ~ Main Label:
+            - Alterar para Cartão/Ticket
+
+$$ TO-DO;
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+$$ TO-FIX:
+    #
+        ~
+            -
+
+
+
+
+$$ TO-FIX;
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+$ TO-CHANGE:
+    #
+        ~
+            -
+
+
+
+
+
+
+$$ TO-CHANGE;
+--------------------------------------------------------------------------------------------------------------------
