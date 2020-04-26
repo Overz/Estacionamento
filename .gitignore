@@ -32,5 +32,5 @@ hs_err_pid*
 /.idea/
 /Projeto.iml
 
-# Multiple configurations
+# Others
 /target/

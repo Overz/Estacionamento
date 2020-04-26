@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.Seletor;
+import model.seletor.SuperSeletor;
 import model.vo.veiculo.CarroVO;
 import model.vo.veiculo.ModeloVO;
 
@@ -84,42 +84,8 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(Seletor seletor) {
-
-		String qry = " SELECT * FROM CARRO ";
-		ArrayList<CarroVO> lista = new ArrayList<CarroVO>();
-
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
-		ResultSet result = null;
-
-		if (seletor.temFiltro()) {
-			qry = seletor.criarFiltroCliente(qry);
-		}
-
-		try {
-			result = stmt.executeQuery(qry);
-			while (result.next()) {
-				CarroVO vo = criarResultSet(result);
-				lista.add(vo);
-			}
-		} catch (SQLException e) {
-			System.out.println();
-			System.out.println("/*********************************************************/");
-			System.out.println(this.getClass().getSimpleName());
-			System.out.println("Method: consultar()");
-			System.out.println(qry);
-			System.out.println("SQL Message:" + e.getMessage());
-			System.out.println("SQL Cause:" + e.getCause());
-			System.out.println("SQL State:" + e.getSQLState());
-			System.out.println("/*********************************************************/");
-			System.out.println();
-		} finally {
-			Banco.closeResultSet(result);
-			Banco.closePreparedStatement(stmt);
-			Banco.closeConnection(conn);
-		}
-		return lista;
+	public ArrayList<?> consultar(SuperSeletor<CarroVO> seletor) {
+		return null;
 	}
 
 	@Override

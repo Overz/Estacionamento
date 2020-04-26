@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.ClienteDAO;
-import model.seletor.Seletor;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
 
@@ -81,8 +81,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(Seletor seletor) {
-		// TODO Auto-generated method stub
+	public ArrayList<?> consultar(SuperSeletor<TicketVO> seletor) {
 		return null;
 	}
 

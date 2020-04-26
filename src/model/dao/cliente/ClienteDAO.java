@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.veiculos.CarroDAO;
-import model.seletor.Seletor;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.veiculo.CarroVO;
@@ -71,12 +71,13 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 		} catch (SQLException e) {
 			System.out.println();
 			System.out.println("/****************************************************************/");
-			System.out.println(this.getClass().getSimpleName());
-			System.out.println("Method: consultarTodos()");
-			System.out.println(qry);
-			System.out.println("SQL Message:" + e.getMessage());
-			System.out.println("SQL Cause:" + e.getCause());
-			System.out.println("SQL State:" + e.getSQLState());
+			System.out.println(this.getClass().getSimpleName()
+					+ "\n Method: consultarTodos()\n"
+					+ qry + "\n"
+					+ "SQL Message:" + e.getMessage() + "\n"
+					+ "SQL Cause:" + e.getCause() + "\n"
+					+ "SQL State:" + e.getSQLState() + "\n"
+			);
 			System.out.println("/****************************************************************/");
 			System.out.println();
 		} finally {
@@ -88,57 +89,22 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(Seletor seletor) {
-		String qry = " SELECT * FROM CARRO ";
-		ArrayList<ClienteVO> lista = new ArrayList<ClienteVO>();
-
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
-		ResultSet result = null;
-
-		if (seletor.temFiltro()) {
-			qry = seletor.criarFiltroCliente(qry);
-}
-
-		try {
-			result = stmt.executeQuery(qry);
-			while (result.next()) {
-				ClienteVO vo = criarResultSet(result);
-				lista.add(vo);
-			}
-		} catch (SQLException e) {
-			System.out.println();
-			System.out.println("/*********************************************************/");
-			System.out.println(this.getClass().getSimpleName());
-			System.out.println("Method: consultar()");
-			System.out.println(qry);
-			System.out.println("SQL Message:" + e.getMessage());
-			System.out.println("SQL Cause:" + e.getCause());
-			System.out.println("SQL State:" + e.getSQLState());
-			System.out.println("/*********************************************************/");
-			System.out.println();
-		} finally {
-			Banco.closeResultSet(result);
-			Banco.closePreparedStatement(stmt);
-			Banco.closeConnection(conn);
-		}
-		return lista;
+	public ArrayList<?> consultar(SuperSeletor<ClienteVO> seletor) {
+		return null;
 	}
 
 	@Override
 	public ClienteVO consultarPorId(int id) {
-//		String qry = " SELECT * FROM CLIENTE WHERE IDCLIENTE = ? ";
-		String qry = " SELECT * FROM CLIENTE WHERE IDCLIENTE = " + id;
-		ClienteVO cliente = null;
-
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
+		String qry = " SELECT * FROM CLIENTE WHERE IDCLIENTE = ? ";
 		ResultSet result = null;
+		ClienteVO cliente = null;
+		PreparedStatement myStmt = null;
+		Connection conn = Banco.getConnection();
 
 		try {
-
-//			stmt.setInt(1, id);
-			result = stmt.executeQuery(qry);
+			myStmt = conn.prepareStatement(qry);
+			myStmt.setInt(1, id);
+			result = myStmt.executeQuery();
 
 			while (result.next()) {
 				cliente = criarResultSet(result);
@@ -156,13 +122,13 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 			System.out.println();
 		} finally {
 			Banco.closeResultSet(result);
-			Banco.closePreparedStatement(stmt);
+			Banco.closePreparedStatement(myStmt);
 			Banco.closeConnection(conn);
 		}
 
 		return cliente;
 	}
-
+	
 	@Override
 	public ClienteVO cadastrar(ClienteVO ClienteVO) {
 		// TODO Auto-generated method stub

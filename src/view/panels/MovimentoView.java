@@ -2,8 +2,13 @@ package view.panels;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import model.banco.BaseDAO;
 import model.dao.movientos.FluxoDAO;
+import model.dao.movientos.MovimentoDAO;
+import model.seletor.SeletorMovimento;
+import model.seletor.SuperSeletor;
 import model.vo.movimentos.FluxoVO;
+import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.modifications.Modificacoes;
 
@@ -107,6 +112,19 @@ public class MovimentoView extends JPanel {
         btnPesquisar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnPesquisar.setFont(new Font("Arial", Font.BOLD, 16));
         this.add(btnPesquisar, "cell 12 1 2 1,grow");
+        btnPesquisar.addActionListener(e -> {
+
+            BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
+            SeletorMovimento seletorMovimento = new SeletorMovimento();
+            MovimentoVO movimentoVO = new MovimentoVO();
+            SuperSeletor<MovimentoVO> seletor = (SuperSeletor<MovimentoVO>) new MovimentoVO();
+            seletorMovimento.setDtInicio(dtInicio.getText());
+            seletorMovimento.setDtFim(dtFinal.getText());
+
+            this.lista = (ArrayList<FluxoVO>) bDAO.consultar(seletor);
+            atualizarTabela(this.lista);
+
+        });
     }
 
     /**
@@ -129,22 +147,20 @@ public class MovimentoView extends JPanel {
 
     }
 
-    private void atualizarTabela(ArrayList<FluxoVO> vo) {
+    private void atualizarTabela(ArrayList<FluxoVO> lista) {
 
 //		 Limpa a tabela
         limparTabela();
 
-        //TODO APAGAR
-        FluxoDAO dao = new FluxoDAO();
-        lista = dao.consultarTodos();
+        FluxoDAO bDAO = new FluxoDAO();
 
 //		 Obtém o model da tabela
         model = (DefaultTableModel) table.getModel();
 
 //		 Percorre os empregados para adicionar linha a linha na tabela (JTable)
-        Object[] novaLinha = new Object[5];
+        Object[] novaLinha = new Object[7];
 //		"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"
-        for (FluxoVO fluxo : vo) {
+        for (FluxoVO fluxo : lista) {
             novaLinha[0] = fluxo.getMovimento().getTicket().getNumero();
             novaLinha[1] = fluxo.getMovimento().getTicket().getCliente().getNome();
             novaLinha[2] = fluxo.getMovimento().getPlano().getDescircao();

@@ -1,6 +1,7 @@
 package view.panels;
 
 import controller.ControllerInicio;
+import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
@@ -81,7 +82,6 @@ public class InicioView extends JPanel {
 //		Timer para clicar no botão Procurar e Manter a Tabela Atualizada
 //		timerDoClick();
 
-        atualizarTabela(lista);
     }
 
     /**
@@ -208,9 +208,10 @@ public class InicioView extends JPanel {
         splitPane.setLeftComponent(btnProcurar);
         btnProcurar.addActionListener(e -> {
 
-            MovimentoDAO dao = new MovimentoDAO();
-
-            lista = dao.consultarTodos();
+            BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
+            MovimentoDAO mDAO = new MovimentoDAO();
+//            lista = (ArrayList<MovimentoVO>) bDAO.consultarTodos();
+            lista = mDAO.consultarTodos();
             atualizarTabela(lista);
 
         });
@@ -329,9 +330,9 @@ public class InicioView extends JPanel {
     /**
      * Atualiza a JTable com Todos os Valores
      *
-     * @param vo MovimentoVO
+     * @param lista MovimentoVO
      */
-    private void atualizarTabela(ArrayList<MovimentoVO> vo) {
+    private void atualizarTabela(ArrayList<MovimentoVO> lista) {
 
         // Limpa a tabela
         limparTabela();
@@ -341,7 +342,7 @@ public class InicioView extends JPanel {
 
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         Object[] novaLinha = new Object[5];
-        for (MovimentoVO movimento : vo) {
+        for (MovimentoVO movimento : lista) {
             novaLinha[0] = String.valueOf(movimento.getTicket().getNumero());
             novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
             novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();

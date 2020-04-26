@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.Seletor;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.EnderecoVO;
 
 public class EnderecoDAO implements BaseDAO<EnderecoVO> {
@@ -76,9 +76,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     }
 
     @Override
-    public ArrayList<EnderecoVO> consultar(Seletor seletor) {
-//		String qry = " SELECT * FROM ENDERECO WHERE RUA = '" + text.toUpperCase() + "' ";
-
+    public ArrayList<?> consultar(SuperSeletor<EnderecoVO> seletor) {
         return null;
     }
 

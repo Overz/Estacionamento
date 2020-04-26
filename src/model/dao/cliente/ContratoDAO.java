@@ -9,10 +9,8 @@ import java.util.ArrayList;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.Seletor;
-import model.vo.cliente.ClienteVO;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.ContratoVO;
-import model.vo.cliente.PlanoVO;
 
 public class ContratoDAO implements BaseDAO<ContratoVO> {
 
@@ -78,8 +76,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(Seletor seletor) {
-		// TODO Auto-generated method stub
+	public ArrayList<?> consultar(SuperSeletor<ContratoVO> seletor) {
 		return null;
 	}
 
