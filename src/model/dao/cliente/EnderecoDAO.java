@@ -82,17 +82,15 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public EnderecoVO consultarPorId(int id) {
-//        String qry = " SELECT * FROM ENDERECO WHERE IDENDERECO = ? ";
-        String qry = " SELECT * FROM ENDERECO WHERE IDENDERECO = " + id;
+        String qry = " SELECT * FROM ENDERECO WHERE IDENDERECO = ? ";
         EnderecoVO endereco = null;
-
-        Connection conexao = Banco.getConnection();
-        PreparedStatement stmt = Banco.getPreparedStatement(conexao, qry);
         ResultSet result = null;
+        PreparedStatement stmt = null;
+        Connection conn = Banco.getConnection();
 
         try {
-
-//            stmt.setInt(1, id);
+            stmt = conn.prepareStatement(qry);
+            stmt.setInt(1, id);
             result = stmt.executeQuery(qry);
 
             while (result.next()) {
@@ -113,7 +111,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conexao);
+            Banco.closeConnection(conn);
         }
         return endereco;
     }

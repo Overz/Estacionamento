@@ -92,18 +92,16 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
 	@Override
 	public PlanoVO consultarPorId(int id) {
-//		String qry = " SELECT * FROM PLANO WHERE IDPLANO = ? ";
-		String qry = " SELECT * FROM PLANO WHERE IDPLANO = " + id;
+		String qry = " SELECT * FROM PLANO WHERE IDPLANO = ? ";
 		PlanoVO plano = null;
-
-		Connection conexao = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conexao, qry);
 		ResultSet result = null;
+		PreparedStatement stmt = null;
+		Connection conn = Banco.getConnection();
 
 		try {
-
-//			stmt.setInt(1, id);
-			result = stmt.executeQuery(qry);
+			stmt = conn.prepareStatement(qry);
+			stmt.setInt(1, id);
+			result = stmt.executeQuery();
 
 			while (result.next()) {
 				plano = criarResultSet(result);
@@ -122,7 +120,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 		} finally {
 			Banco.closeResultSet(result);
 			Banco.closePreparedStatement(stmt);
-			Banco.closeConnection(conexao);
+			Banco.closeConnection(conn);
 		}
 
 		return plano;

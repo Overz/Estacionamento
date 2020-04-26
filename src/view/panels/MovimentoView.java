@@ -114,14 +114,27 @@ public class MovimentoView extends JPanel {
         this.add(btnPesquisar, "cell 12 1 2 1,grow");
         btnPesquisar.addActionListener(e -> {
 
+//            Instanciar as Classes usadas
             BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
             SeletorMovimento seletorMovimento = new SeletorMovimento();
             MovimentoVO movimentoVO = new MovimentoVO();
-            SuperSeletor<MovimentoVO> seletor = (SuperSeletor<MovimentoVO>) new MovimentoVO();
+
+//             Usar a classe "anonima"
+//            SuperSeletor seletor = SuperSeletor.class.cast(movimentoVO);
+//            SuperSeletor seletor2 = (SuperSeletor) new MovimentoVO();
+//            SuperSeletor seletor3 = SuperSeletor.class.cast(movimentoVO);
+//            SuperSeletor seletor4;
+//
+//            seletor4 = (SuperSeletor) new MovimentoVO();
+//            bDAO.consultar(seletor);
+
+
+//            Setar os valores da Tela no Seletor para criar Filtro
             seletorMovimento.setDtInicio(dtInicio.getText());
             seletorMovimento.setDtFim(dtFinal.getText());
 
-            this.lista = (ArrayList<FluxoVO>) bDAO.consultar(seletor);
+//            Consultar com o SuperSeletor e a BaseDao: Interfaces
+            this.lista = (ArrayList<FluxoVO>) bDAO.consultarTodos();
             atualizarTabela(this.lista);
 
         });

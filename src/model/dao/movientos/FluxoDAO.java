@@ -80,17 +80,15 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
 
     @Override
     public FluxoVO consultarPorId(int id) {
-//		String qry = " SELECT * FROM FLUXO WHERE IDFLUXO = ? ";
-        String qry = " SELECT * FROM FLUXO WHERE IDFLUXO = " + id;
+		String qry = " SELECT * FROM FLUXO WHERE IDFLUXO = ? ";
         FluxoVO fluxo = null;
-
-        Connection conexao = Banco.getConnection();
-        PreparedStatement stmt = Banco.getPreparedStatement(conexao, qry);
         ResultSet result = null;
+        PreparedStatement stmt = null;
+        Connection conn = Banco.getConnection();
 
         try {
-
-//			stmt.setInt(1, id);
+            stmt = conn.prepareStatement(qry);
+			stmt.setInt(1, id);
             result = stmt.executeQuery(qry);
 
             while (result.next()) {
@@ -110,7 +108,7 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conexao);
+            Banco.closeConnection(conn);
         }
 
         return fluxo;
@@ -118,8 +116,33 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
 
     @Override
     public FluxoVO cadastrar(FluxoVO FluxoVO) {
-        // TODO Auto-generated method stub
-        return null;
+        String qry = " INSERT INTO FLUXO (idFluxo, idMovimento) VALUES( ?, ? ) ";
+        FluxoVO fluxo = null;
+        ResultSet result = null;
+        Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+        Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            stmt.setInt(1, fluxo.getId());
+            stmt.setInt(2, fluxo.getMovimento().getId());
+
+            result = stmt.getGeneratedKeys();
+            if (result.next()){
+                int id = result.getInt(1);
+                fluxo.setId(id);
+            }
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+        return fluxo;
     }
 
     @Override

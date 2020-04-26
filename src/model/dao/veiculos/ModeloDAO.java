@@ -85,18 +85,16 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
 	@Override
 	public ModeloVO consultarPorId(int id) {
-//		String qry = " SELECT * FROM MODELO WHERE IDMODELO = ? ";
-		String qry = " SELECT * FROM MODELO WHERE IDMODELO = " + id;
+		String qry = " SELECT * FROM MODELO WHERE IDMODELO = ? ";
 		ModeloVO modelo = null;
-
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
 		ResultSet result = null;
+		PreparedStatement stmt = null;
+		Connection conn = Banco.getConnection();
 
 		try {
-
-//			stmt.setInt(1, id);
-			result = stmt.executeQuery(qry);
+			stmt = conn.prepareStatement(qry);
+			stmt.setInt(1, id);
+			result = stmt.executeQuery();
 
 			while (result.next()) {
 				modelo = criarResultSet(result);

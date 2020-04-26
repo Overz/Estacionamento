@@ -54,7 +54,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         Statement stmt = Banco.getStatement(conn);
         ResultSet result = null;
         ArrayList<MovimentoVO> lista = null;
-        String qry = "SELECT * FROM MOVIMENTO";
+        String qry = " SELECT * FROM MOVIMENTO ";
 
         try {
             lista = new ArrayList<MovimentoVO>();
@@ -88,13 +88,17 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         Connection conn = Banco.getConnection();
         PreparedStatement stmt = Banco.getPreparedStatement(conn);
         ResultSet result = null;
-
+        MovimentoVO movimento = null;
         ArrayList<MovimentoVO> lista = new ArrayList<>();
 
         String qry = " SELECT * MOVIMENTO ";
 
         try {
             result = stmt.executeQuery(qry);
+//            if (seletor.temFiltro(movimento)){
+//                qry += (seletor.criarFiltro(qry, movimento));
+//
+//            }
             while (result.next()) {
                 MovimentoVO vo = criarResultSet(result);
                 lista.add(vo);
@@ -158,13 +162,63 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public MovimentoVO cadastrar(MovimentoVO MovimentoVO) {
-        // TODO Auto-generated method stub
+        String qry = " INSERT INTO MOVIMENTO (HR_ENTRADA, HR_SAIDA) VALUES (?,?) ";
+        MovimentoVO movimento = null;
+        ResultSet result = null;
+        PreparedStatement stmt = null;
+        Connection conn = Banco.getConnection();
+
+        try {
+            stmt.setTimestamp(1, Timestamp.valueOf(movimento.getHr_entrada()));
+            stmt.setTimestamp(2, Timestamp.valueOf(movimento.getHr_saida()));
+
+            result = stmt.getGeneratedKeys();
+            if (result.next()) {
+                int id = result.getInt(1);
+                movimento.setId(id);
+            }
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+
         return null;
     }
 
     @Override
     public boolean alterar(MovimentoVO MovimentoVO) {
-        // TODO Auto-generated method stub
+        String qry = " UPDATE MOVIMENTO M SET M.HR_ENTRADA = ?, M.HR_SAIDA = ? WHERE M.ID = ? ";
+        MovimentoVO movimento = null;
+        ResultSet result = null;
+        PreparedStatement stmt = null;
+        Connection conn = Banco.getConnection();
+
+        try {
+            stmt.setTimestamp(1, Timestamp.valueOf(movimento.getHr_entrada()));
+            stmt.setTimestamp(2, Timestamp.valueOf(movimento.getHr_saida()));
+            stmt.setInt(3, movimento.getId());
+
+            result = stmt.getGeneratedKeys();
+            if (result.next()) {
+                int id = result.getInt(1);
+                movimento.setId(id);
+            }
+            stmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+
+
         return false;
     }
 

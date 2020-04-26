@@ -82,17 +82,15 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
 	@Override
 	public ContratoVO consultarPorId(int id) {
-//		String qry = " SELECT * FROM CONTRATO WHERE IDCONTRATO = ? ";
-		String qry = " SELECT * FROM CONTRATO WHERE IDCONTRATO = " + id;
+		String qry = " SELECT * FROM CONTRATO WHERE IDCONTRATO = ? ";
 		ContratoVO contrato = null;
-
-		Connection conn = Banco.getConnection();
-		PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
 		ResultSet result = null;
+		PreparedStatement stmt = null;
+		Connection conn = Banco.getConnection();
 
 		try {
-
-//			stmt.setInt(1, id);
+			stmt = conn.prepareStatement(qry);
+			stmt.setInt(1, id);
 			result = stmt.executeQuery(qry);
 
 			while (result.next()) {
