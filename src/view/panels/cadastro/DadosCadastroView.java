@@ -1,26 +1,16 @@
 package view.panels.cadastro;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.text.ParseException;
-import java.util.ArrayList;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
-
 import model.vo.veiculo.CarroVO;
 import net.miginfocom.swing.MigLayout;
 import util.modifications.Modificacoes;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
+import java.awt.*;
+import java.text.ParseException;
+import java.util.ArrayList;
 
 public class DadosCadastroView extends JPanel {
 

@@ -1,10 +1,6 @@
 package controller;
 
-import model.vo.movimentos.MovimentoVO;
 import view.panels.InicioView;
-
-import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
 
 public class ControllerInicio {
     private InicioView tela;

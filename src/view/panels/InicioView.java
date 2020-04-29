@@ -373,7 +373,11 @@ public class InicioView extends JPanel {
         for (int i = 0; i < rows.length; i++) {
             model.removeRow(rows[i] - i);
         }
-        dao.excluir(rows);
+        if (dao.excluir(rows)){
+            //TODO
+        } else {
+            //TODO
+        }
     }
 
     /**

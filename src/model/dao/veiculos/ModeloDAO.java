@@ -1,17 +1,15 @@
 package model.dao.veiculos;
 
+import model.banco.Banco;
+import model.banco.BaseDAO;
+import model.vo.veiculo.MarcaVO;
+import model.vo.veiculo.ModeloVO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-
-import model.banco.Banco;
-import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
-import model.vo.veiculo.MarcaVO;
-import model.vo.veiculo.ModeloVO;
 
 public class ModeloDAO implements BaseDAO<ModeloVO> {
 
@@ -45,12 +43,12 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
 	@Override
 	public ArrayList<ModeloVO> consultarTodos() {
-		Connection conn = Banco.getConnection();
-		Statement stmt = Banco.getStatement(conn);
-		ResultSet result = null;
-
-		ArrayList<ModeloVO> lista = new ArrayList<ModeloVO>();
 		String qry = " SELECT * FROM MODELO ";
+		ResultSet result = null;
+		Connection conn = Banco.getConnection();
+		PreparedStatement stmt =
+				Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+		ArrayList<ModeloVO> lista = new ArrayList<ModeloVO>();
 
 		try {
 			result = stmt.executeQuery(qry);
@@ -79,7 +77,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(SuperSeletor<ModeloVO> seletor) {
+	public ArrayList<?> consultar(ModeloVO seletor) {
 		return null;
 	}
 
@@ -120,7 +118,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 	}
 
 	@Override
-	public ModeloVO cadastrar(ModeloVO ModeloVO) {
+	public ModeloVO cadastrar(ModeloVO newObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}

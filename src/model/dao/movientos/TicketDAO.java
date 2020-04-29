@@ -3,7 +3,6 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.ClienteDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
 
@@ -77,7 +76,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<TicketVO> seletor) {
+    public ArrayList<?> consultar(TicketVO seletor) {
         return null;
     }
 
@@ -118,7 +117,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     }
 
     @Override
-    public TicketVO cadastrar(TicketVO TicketVO) {
+    public TicketVO cadastrar(TicketVO newObject) {
         String qry = " INSERT INTO TICKET (N_TICKET, VALOR) VALUES (?,?) ";
         TicketVO ticket = null;
         ResultSet resultSet = null;

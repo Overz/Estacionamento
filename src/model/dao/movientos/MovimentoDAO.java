@@ -3,7 +3,6 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
@@ -50,19 +49,20 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public ArrayList<MovimentoVO> consultarTodos() {
-        Connection conn = Banco.getConnection();
-        Statement stmt = Banco.getStatement(conn);
-        ResultSet result = null;
-        ArrayList<MovimentoVO> lista = null;
         String qry = " SELECT * FROM MOVIMENTO ";
+        ResultSet result = null;
+        ArrayList<MovimentoVO> lista = new ArrayList<>();
+        Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+
+        Connection conexao = Banco.getConnection();
+        String sql = " SELECT * FROM ENDERECO";
+        ResultSet resultadoDaConsulta = null;
+        PreparedStatement stmt = Banco.getPreparedStatement(conexao, sql);
 
         try {
-            lista = new ArrayList<MovimentoVO>();
-            result = stmt.executeQuery(qry);
-            while (result.next()) {
-                MovimentoVO vo = criarResultSet(result);
-                lista.add(vo);
-            }
         } catch (SQLException e) {
             System.out.println();
             System.out.println("/****************************************************************/");
@@ -83,7 +83,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<MovimentoVO> seletor) {
+    public ArrayList<?> consultar(MovimentoVO seletor) {
 
         Connection conn = Banco.getConnection();
         PreparedStatement stmt = Banco.getPreparedStatement(conn);
@@ -100,8 +100,8 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 //
 //            }
             while (result.next()) {
-                MovimentoVO vo = criarResultSet(result);
-                lista.add(vo);
+                movimento = criarResultSet(result);
+                lista.add(movimento);
             }
 
         } catch (SQLException e) {
@@ -127,8 +127,8 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public MovimentoVO consultarPorId(int id) {
         String qry = " SELECT * FROM MOVIMENTO WHERE IDMOVIMENTO = ? ";
-        MovimentoVO movimento = null;
         ResultSet result = null;
+        MovimentoVO movimento = null;
         PreparedStatement stmt = null;
         Connection conn = Banco.getConnection();
 
@@ -161,12 +161,13 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     }
 
     @Override
-    public MovimentoVO cadastrar(MovimentoVO MovimentoVO) {
+    public MovimentoVO cadastrar(MovimentoVO newObject) {
         String qry = " INSERT INTO MOVIMENTO (HR_ENTRADA, HR_SAIDA) VALUES (?,?) ";
-        MovimentoVO movimento = null;
         ResultSet result = null;
-        PreparedStatement stmt = null;
+        MovimentoVO movimento = null;
         Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setTimestamp(1, Timestamp.valueOf(movimento.getHr_entrada()));
@@ -193,10 +194,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public boolean alterar(MovimentoVO MovimentoVO) {
         String qry = " UPDATE MOVIMENTO M SET M.HR_ENTRADA = ?, M.HR_SAIDA = ? WHERE M.ID = ? ";
-        MovimentoVO movimento = null;
         ResultSet result = null;
-        PreparedStatement stmt = null;
+        MovimentoVO movimento = null;
         Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setTimestamp(1, Timestamp.valueOf(movimento.getHr_entrada()));
@@ -232,7 +234,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         try {
 
             int codigoRetorno = prepStmt.executeUpdate();
-            while (codigoRetorno == 1) {
+            while (codigoRetorno == Banco.CODIGO_RETORNO_SUCESSO_EXCLUSAO) {
                 continue;
             }
             return true;

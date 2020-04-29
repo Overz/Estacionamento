@@ -1,19 +1,14 @@
 package model.dao.cliente;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.veiculos.CarroDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.veiculo.CarroVO;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class ClienteDAO implements BaseDAO<ClienteVO> {
 
@@ -89,7 +84,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(SuperSeletor<ClienteVO> seletor) {
+	public ArrayList<?> consultar(ClienteVO seletor) {
 		return null;
 	}
 
@@ -130,7 +125,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 	}
 	
 	@Override
-	public ClienteVO cadastrar(ClienteVO ClienteVO) {
+	public ClienteVO cadastrar(ClienteVO newObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}

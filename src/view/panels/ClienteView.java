@@ -1,24 +1,13 @@
 package view.panels;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-
 import net.miginfocom.swing.MigLayout;
 import util.modifications.Modificacoes;
 import view.mainFrame.MainView;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class ClienteView extends JPanel {
 

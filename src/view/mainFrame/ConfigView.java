@@ -1,6 +1,6 @@
 package view.mainFrame;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class ConfigView extends JPanel {
 

@@ -2,7 +2,6 @@ package model.dao.veiculos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.veiculo.MarcaVO;
 
 import java.sql.*;
@@ -70,7 +69,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<MarcaVO> seletor) {
+    public ArrayList<?> consultar(MarcaVO seletor) {
         return null;
     }
 
@@ -111,7 +110,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     }
 
     @Override
-    public MarcaVO cadastrar(MarcaVO MarcaVO) {
+    public MarcaVO cadastrar(MarcaVO newObject) {
         String qry = " INSERT INTO MARCA (NOME) VALUES (?) ";
         MarcaVO marca = null;
         ResultSet result = null;

@@ -1,19 +1,13 @@
 package view.panels;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
-
 import net.miginfocom.swing.MigLayout;
 import view.panels.cadastro.DadosCadastroView;
 import view.panels.cadastro.EnderecoCadastroView;
 import view.panels.cadastro.PlanoCadastroView;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class CadastroView extends JPanel {
 

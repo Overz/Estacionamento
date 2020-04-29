@@ -1,15 +1,10 @@
 package view.panels.cadastro;
 
-import java.awt.Color;
-
-import javax.swing.JPanel;
-
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
+
+import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class EnderecoCadastroView extends JPanel {
 

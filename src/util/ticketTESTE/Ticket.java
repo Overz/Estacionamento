@@ -23,17 +23,10 @@ package util.ticketTESTE;
 * 
 */
 
-import java.awt.*;
-import java.awt.print.*;
-import javax.swing.JOptionPane;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.Doc;
-import javax.print.ServiceUI;
-import javax.print.attribute.*;
+import javax.print.*;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.swing.*;
 
 public class Ticket {
 

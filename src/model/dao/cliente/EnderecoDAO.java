@@ -1,15 +1,14 @@
 package model.dao.cliente;
 
+import model.banco.Banco;
+import model.banco.BaseDAO;
+import model.vo.cliente.EnderecoVO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import model.banco.Banco;
-import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
-import model.vo.cliente.EnderecoVO;
 
 public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
@@ -76,7 +75,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<EnderecoVO> seletor) {
+    public ArrayList<?> consultar(EnderecoVO seletor) {
         return null;
     }
 
@@ -85,19 +84,20 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         String qry = " SELECT * FROM ENDERECO WHERE IDENDERECO = ? ";
         EnderecoVO endereco = null;
         ResultSet result = null;
-        PreparedStatement stmt = null;
         Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt = conn.prepareStatement(qry);
             stmt.setInt(1, id);
-            result = stmt.executeQuery(qry);
+            result = stmt.executeQuery();
 
             while (result.next()) {
                 endereco = criarResultSet(result);
             }
-
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             System.out.println();
             System.out.println("/****************************************************************/");
             System.out.println(this.getClass());
@@ -117,14 +117,71 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     }
 
     @Override
-    public EnderecoVO cadastrar(EnderecoVO EnderecoVO) {
-        // TODO Auto-generated method stub
-        return null;
+    public EnderecoVO cadastrar(EnderecoVO newObject) {
+        String qry = " INSERT INTO ENDERECO (NUMERO, RUA, BAIRRO, CIDADE) VALUES (?,?,?,?)";
+        EnderecoVO endereco = null;
+        ResultSet result = null;
+        Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            stmt.setInt(1, endereco.getNumero());
+            stmt.setString(2, endereco.getRua());
+            stmt.setString(3, endereco.getBairro());
+            stmt.setString(4, endereco.getCidade());
+
+            result = stmt.getGeneratedKeys();
+            if (result.next()) {
+                int id = result.getInt(1);
+                endereco.setId(id);
+            }
+            stmt.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+        return endereco;
     }
 
     @Override
     public boolean alterar(EnderecoVO entidade) {
-        // TODO Auto-generated method stub
+        String qry = " UPDATE ENDERECO E SET E.NUMERO = ?, E.RUA = ?, E.BAIRRO = ?, E.CIDADE = ? WHERE E.IDENDERECO = ? ";
+        EnderecoVO endereco = null;
+        ResultSet result = null;
+        PreparedStatement stmt = null;
+        Connection conn = Banco.getConnection();
+
+        try {
+            stmt.setInt(1, endereco.getNumero());
+            stmt.setString(2, endereco.getRua());
+            stmt.setString(3, endereco.getBairro());
+            stmt.setString(4, endereco.getCidade());
+            stmt.setInt(5, endereco.getId());
+
+            result = stmt.getGeneratedKeys();
+            if (result.next()) {
+                int id = result.getInt(1);
+                endereco.setId(id);
+            }
+
+            stmt.execute(qry);
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+
         return false;
     }
 

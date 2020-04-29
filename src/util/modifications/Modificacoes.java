@@ -1,34 +1,23 @@
 package util.modifications;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Point;
+import model.dao.veiculos.MarcaDAO;
+import model.dao.veiculos.ModeloDAO;
+import model.vo.veiculo.MarcaVO;
+import model.vo.veiculo.ModeloVO;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
 import java.text.ParseException;
 import java.util.ArrayList;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.MaskFormatter;
-
-import model.dao.veiculos.MarcaDAO;
-import model.dao.veiculos.ModeloDAO;
-import model.vo.veiculo.MarcaVO;
-import model.vo.veiculo.ModeloVO;
 
 public class Modificacoes {
 

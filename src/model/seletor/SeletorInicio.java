@@ -20,7 +20,7 @@ public class SeletorInicio implements SuperSeletor<MovimentoVO> {
             primeiro = false;
         }
 
-        var teste = "select * from movimento\n" +
+        /*var teste = "select * from movimento\n" +
                 "inner join plano\n" +
                 "on movimento.idmovimento = plano.idPlano\n" +
                 "inner join cliente\n" +
@@ -28,7 +28,7 @@ public class SeletorInicio implements SuperSeletor<MovimentoVO> {
                 "inner join carro\n" +
                 "on cliente.idcliente = carro.idcarro\n" +
                 "inner join modelo \n" +
-                "on carro.idcarro = modelo.idModelo;";
+                "on carro.idcarro = modelo.idModelo;";*/
 
         return null;
     }

@@ -1,15 +1,10 @@
 package view.panels.cadastro;
 
-import java.awt.Color;
-
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import java.awt.Font;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class PlanoCadastroView extends JPanel {
 

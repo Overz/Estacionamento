@@ -2,11 +2,13 @@ package model.dao.movientos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.movimentos.FluxoVO;
 import model.vo.movimentos.MovimentoVO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FluxoDAO implements BaseDAO<FluxoVO> {
@@ -74,7 +76,7 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<FluxoVO> seletor) {
+    public ArrayList<?> consultar(FluxoVO seletor) {
         return null;
     }
 
@@ -83,8 +85,9 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
 		String qry = " SELECT * FROM FLUXO WHERE IDFLUXO = ? ";
         FluxoVO fluxo = null;
         ResultSet result = null;
-        PreparedStatement stmt = null;
         Connection conn = Banco.getConnection();
+        PreparedStatement stmt =
+                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt = conn.prepareStatement(qry);
@@ -115,7 +118,7 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
     }
 
     @Override
-    public FluxoVO cadastrar(FluxoVO FluxoVO) {
+    public FluxoVO cadastrar(FluxoVO newObject) {
         String qry = " INSERT INTO FLUXO (idFluxo, idMovimento) VALUES( ?, ? ) ";
         FluxoVO fluxo = null;
         ResultSet result = null;

@@ -1,27 +1,10 @@
 package view.mainFrame;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
-
 import net.miginfocom.swing.MigLayout;
-import view.panels.CaixaView;
-import view.panels.ClienteView;
-import view.panels.InicioView;
-import view.panels.MovimentoView;
-import view.panels.TicketPerdidoView;
+import view.panels.*;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class MainView extends JFrame {
 

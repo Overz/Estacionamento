@@ -1,19 +1,11 @@
 package view.panels;
 
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-
 import net.miginfocom.swing.MigLayout;
 
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 import java.util.ArrayList;
-
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
 
 public class TicketPerdidoView extends JPanel {
 

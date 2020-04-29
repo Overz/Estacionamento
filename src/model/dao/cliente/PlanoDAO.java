@@ -1,18 +1,13 @@
 package model.dao.cliente;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class PlanoDAO implements BaseDAO<PlanoVO> {
 
@@ -53,12 +48,11 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
 	@Override
 	public ArrayList<PlanoVO> consultarTodos() {
+		String qry = " SELECT * FROM PLANO ";
+		ResultSet result = null;
+		ArrayList<PlanoVO> lista = new ArrayList<PlanoVO>();
 		Connection conn = Banco.getConnection();
 		Statement stmt = Banco.getStatement(conn);
-		ResultSet result = null;
-
-		ArrayList<PlanoVO> lista = new ArrayList<PlanoVO>();
-		String qry = " SELECT * FROM PLANO ";
 
 		try {
 			result = stmt.executeQuery(qry);
@@ -86,7 +80,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 	}
 
 	@Override
-	public ArrayList<?> consultar(SuperSeletor<PlanoVO> seletor) {
+	public ArrayList<?> consultar(PlanoVO seletor) {
 		return null;
 	}
 
@@ -95,8 +89,9 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 		String qry = " SELECT * FROM PLANO WHERE IDPLANO = ? ";
 		PlanoVO plano = null;
 		ResultSet result = null;
-		PreparedStatement stmt = null;
 		Connection conn = Banco.getConnection();
+		PreparedStatement stmt =
+				Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
 		try {
 			stmt = conn.prepareStatement(qry);
@@ -127,7 +122,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 	}
 
 	@Override
-	public PlanoVO cadastrar(PlanoVO PlanoVO) {
+	public PlanoVO cadastrar(PlanoVO newObject) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,7 +3,6 @@ package view.panels;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import model.banco.BaseDAO;
-import model.dao.movientos.FluxoDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.seletor.SeletorMovimento;
 import model.seletor.SuperSeletor;
@@ -27,7 +26,7 @@ public class MovimentoView extends JPanel {
     private JScrollPane scrollPane;
     private JTable table;
 
-    private ArrayList<FluxoVO> lista;
+    private ArrayList<MovimentoVO> lista;
     private String[] colunas = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     private DefaultTableModel model;
 
@@ -116,25 +115,15 @@ public class MovimentoView extends JPanel {
 
 //            Instanciar as Classes usadas
             BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
-            SeletorMovimento seletorMovimento = new SeletorMovimento();
-            MovimentoVO movimentoVO = new MovimentoVO();
-
-//             Usar a classe "anonima"
-//            SuperSeletor seletor = SuperSeletor.class.cast(movimentoVO);
-//            SuperSeletor seletor2 = (SuperSeletor) new MovimentoVO();
-//            SuperSeletor seletor3 = SuperSeletor.class.cast(movimentoVO);
-//            SuperSeletor seletor4;
-//
-//            seletor4 = (SuperSeletor) new MovimentoVO();
-//            bDAO.consultar(seletor);
-
+            SeletorMovimento<MovimentoVO> seletorMovimento = new SeletorMovimento<MovimentoVO>();
 
 //            Setar os valores da Tela no Seletor para criar Filtro
             seletorMovimento.setDtInicio(dtInicio.getText());
             seletorMovimento.setDtFim(dtFinal.getText());
 
-//            Consultar com o SuperSeletor e a BaseDao: Interfaces
-            this.lista = (ArrayList<FluxoVO>) bDAO.consultarTodos();
+            SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
+
+            this.lista = (ArrayList<MovimentoVO>) bDAO.consultar((MovimentoVO) seletor);
             atualizarTabela(this.lista);
 
         });
@@ -160,12 +149,10 @@ public class MovimentoView extends JPanel {
 
     }
 
-    private void atualizarTabela(ArrayList<FluxoVO> lista) {
+    private void atualizarTabela(ArrayList<MovimentoVO> lista) {
 
 //		 Limpa a tabela
         limparTabela();
-
-        FluxoDAO bDAO = new FluxoDAO();
 
 //		 Obtém o model da tabela
         model = (DefaultTableModel) table.getModel();
@@ -173,14 +160,14 @@ public class MovimentoView extends JPanel {
 //		 Percorre os empregados para adicionar linha a linha na tabela (JTable)
         Object[] novaLinha = new Object[7];
 //		"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"
-        for (FluxoVO fluxo : lista) {
-            novaLinha[0] = fluxo.getMovimento().getTicket().getNumero();
-            novaLinha[1] = fluxo.getMovimento().getTicket().getCliente().getNome();
-            novaLinha[2] = fluxo.getMovimento().getPlano().getDescircao();
-            novaLinha[3] = fluxo.getMovimento().getTicket().getCliente().getCarro().getPlaca();
-            novaLinha[4] = fluxo.getMovimento().getTicket().getValor();
-            novaLinha[5] = fluxo.getMovimento().getHr_entrada();
-            novaLinha[6] = fluxo.getMovimento().getHr_saida();
+        for (MovimentoVO movimento : lista) {
+            novaLinha[0] = movimento.getTicket().getNumero();
+            novaLinha[1] = movimento.getTicket().getCliente().getNome();
+            novaLinha[2] = movimento.getPlano().getDescircao();
+            novaLinha[3] = movimento.getTicket().getCliente().getCarro().getPlaca();
+            novaLinha[4] = movimento.getTicket().getValor();
+            novaLinha[5] = movimento.getHr_entrada();
+            novaLinha[6] = movimento.getHr_saida();
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);

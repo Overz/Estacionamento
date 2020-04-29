@@ -1,16 +1,15 @@
 package model.seletor;
 
-import model.vo.movimentos.FluxoVO;
-
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
-public class SeletorMovimento implements SuperSeletor<FluxoVO>{
+public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO>{
 
     private LocalDateTime dtInicio, dtFim;
-    private FluxoVO fluxoVO;
+    private MovimentoVO movimentoVO;
 
     @Override
-    public String criarFiltro(String qry, FluxoVO object) {
+    public String criarFiltro(String qry, MovimentoVO object) {
         qry += " WHERE ";
         boolean primeiro = true;
 
@@ -32,7 +31,7 @@ public class SeletorMovimento implements SuperSeletor<FluxoVO>{
     }
 
     @Override
-    public boolean temFiltro(FluxoVO object) {
+    public boolean temFiltro(MovimentoVO object) {
         return false;
     }
 
@@ -45,7 +44,13 @@ public class SeletorMovimento implements SuperSeletor<FluxoVO>{
     }
 
     public void setDtInicio(String dtInicio) {
-        this.dtInicio = LocalDateTime.parse(dtInicio);
+        try {
+            this.dtInicio = LocalDateTime.parse(dtInicio);
+        } catch (DateTimeException e){
+            System.out.println(e.getCause() +"\n"+
+                    e.getMessage() +"\n"+
+                    e.getLocalizedMessage());
+        }
     }
 
     public LocalDateTime getDtFim() {
@@ -60,11 +65,11 @@ public class SeletorMovimento implements SuperSeletor<FluxoVO>{
         this.dtFim = LocalDateTime.parse(dtFim);
     }
 
-    public FluxoVO getFluxoVO() {
-        return fluxoVO;
+    public MovimentoVO getMovimentoVO() {
+        return movimentoVO;
     }
 
-    public void setFluxoVO(FluxoVO fluxoVO) {
-        this.fluxoVO = fluxoVO;
+    public void setMovimentoVO(MovimentoVO movimentoVO) {
+        this.movimentoVO = movimentoVO;
     }
 }

@@ -1,20 +1,12 @@
 package view.panels;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-
 import net.miginfocom.swing.MigLayout;
 import util.modifications.Modificacoes;
 
-import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class CaixaView extends JPanel {
 

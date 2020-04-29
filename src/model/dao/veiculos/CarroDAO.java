@@ -2,7 +2,6 @@ package model.dao.veiculos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.veiculo.CarroVO;
 import model.vo.veiculo.ModeloVO;
 
@@ -80,7 +79,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     }
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<CarroVO> seletor) {
+    public ArrayList<?> consultar(CarroVO seletor) {
         return null;
     }
 
@@ -121,7 +120,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     }
 
     @Override
-    public CarroVO cadastrar(CarroVO CarroVO) {
+    public CarroVO cadastrar(CarroVO newObject) {
         String qry = " INSERT INTO CARRO (PLACA, COR) VALUES (?,?) ";
         CarroVO carro = null;
         ResultSet resultSet = null;

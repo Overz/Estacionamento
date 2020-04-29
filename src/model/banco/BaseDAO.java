@@ -1,7 +1,5 @@
 package model.banco;
 
-import model.seletor.SuperSeletor;
-
 import java.util.ArrayList;
 
 public interface BaseDAO<T> {
@@ -17,7 +15,7 @@ public interface BaseDAO<T> {
 	 * @param seletor: Seletor
 	 * @return ArrayList<?>
 	 */
-    ArrayList<?> consultar(SuperSeletor<T> seletor);
+    ArrayList<?> consultar(T seletor);
 
 	/**
 	 * Consulta algo especifico através de um id;
@@ -28,10 +26,10 @@ public interface BaseDAO<T> {
 
 	/**
 	 * Método para cadastrar;
-	 * @param object: Object
-	 * @return object
+	 * @param newObject: Object
+	 * @return newObject
 	 */
-    T cadastrar(T object);
+    T cadastrar(T newObject);
 	
 	/**
 	 * Método para altera/atualizar;
