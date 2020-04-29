@@ -1,9 +1,11 @@
 package model.banco;
 
+import model.seletor.SuperSeletor;
+
 import java.util.ArrayList;
 
 public interface BaseDAO<T> {
-	
+
 	/**
 	 * Método para consultar tudo o que há no db;
 	 * @return ArrayList<?>
@@ -15,7 +17,7 @@ public interface BaseDAO<T> {
 	 * @param seletor: Seletor
 	 * @return ArrayList<?>
 	 */
-    ArrayList<?> consultar(T seletor);
+    ArrayList<?> consultar(SuperSeletor<T> seletor);
 
 	/**
 	 * Consulta algo especifico através de um id;
@@ -43,6 +45,6 @@ public interface BaseDAO<T> {
 	 * @param id: Int array
 	 * @return true/false
 	 */
-    boolean excluir(int[] id);
+    boolean excluir(int id);
 
 }

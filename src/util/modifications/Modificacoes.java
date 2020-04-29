@@ -1,5 +1,6 @@
 package util.modifications;
 
+import model.banco.BaseDAO;
 import model.dao.veiculos.MarcaDAO;
 import model.dao.veiculos.ModeloDAO;
 import model.vo.veiculo.MarcaVO;
@@ -21,268 +22,266 @@ import java.util.ArrayList;
 
 public class Modificacoes {
 
-	public static final int INICIO_VIEW = 1;
-	public static final int CAIXA = 2;
-	public static final int CLIENTE = 3;
-	public static final int CADASTRO = 4;
-	public static final int ATUALIZAR = 5;
-	public static final int FLUXO = 6;
+    public static final int INICIO_VIEW = 1;
+    public static final int CAIXA = 2;
+    public static final int CLIENTE = 3;
+    public static final int CADASTRO = 4;
+    public static final int ATUALIZAR = 5;
+    public static final int FLUXO = 6;
 
-	public static final int TIPO_MENSAGEM = 1;
-	public static final int TIPO_CONFIRMACAO = 2;
-	public static final int TIPO_DIALOGO = 3;
-	public static final int TIPO_INTERNO = 4;
+    public static final int TIPO_MENSAGEM = 1;
+    public static final int TIPO_CONFIRMACAO = 2;
+    public static final int TIPO_DIALOGO = 3;
+    public static final int TIPO_INTERNO = 4;
 
-	/**
-	 * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
-	 * padronizados.
-	 * 
-	 * @param label
-	 * @param text
-	 * @return label+text
-	 */
-	public JLabel labelConfig(JLabel label, String text) {
+    /**
+     * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
+     * padronizados.
+     *
+     * @param label
+     * @param text
+     * @return label+text
+     */
+    public JLabel labelConfig(JLabel label, String text) {
 
-		label = new JLabel();
-		label.setText(text);
-		label.setFont(new Font("Arial", Font.BOLD, 20));
-		label.setBackground(Color.WHITE);
-		label.setForeground(Color.BLACK);
+        label = new JLabel();
+        label.setText(text);
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setBackground(Color.WHITE);
+        label.setForeground(Color.BLACK);
 
-		if (text.trim().isEmpty() || text.trim().equals("")) {
-			label.setText(
-					"<html><body>Erro: Line 76 >> Modificacoes.class<br>Method: labelConfig.<br>Motivo: Campo Vazio</body></html>");
-			return label;
-		}
+        if (text.trim().isEmpty() || text.trim().equals("")) {
+            label.setText(
+                    "<html><body>Erro: Line 76 >> Modificacoes.class<br>Method: labelConfig.<br>Motivo: Campo Vazio</body></html>");
+            return label;
+        }
 
-		return label;
-	}
+        return label;
+    }
 
-	/**
-	 * Modifica e retorna fonte, cor, e tamanho, padronizados.
-	 * 
-	 * @param table
-	 * @return table(Style da Table)
-	 */
-	public JTable tableLookAndFiel(JTable table) {
-		table.setBackground(Color.WHITE);
-		table.setForeground(Color.BLACK);
-		table.setFont(new Font("Arial", Font.BOLD, 16));
-		table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
-		table.getTableHeader().setBackground(Color.WHITE);
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(false);
-		table.setRowSelectionAllowed(true);
-		table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+    /**
+     * Modifica e retorna fonte, cor, e tamanho, padronizados.
+     *
+     * @param table
+     * @return table(Style da Table)
+     */
+    public JTable tableLookAndFiel(JTable table) {
+        table.setBackground(Color.WHITE);
+        table.setForeground(Color.BLACK);
+        table.setFont(new Font("Arial", Font.BOLD, 16));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+        table.getTableHeader().setBackground(Color.WHITE);
+        table.setColumnSelectionAllowed(true);
+        table.setCellSelectionEnabled(false);
+        table.setRowSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 
-		table.setRowHeight(35);
-		table.setShowGrid(true);
-		table.setGridColor(Color.BLACK);
-		table.setShowHorizontalLines(true);
-		table.setShowVerticalLines(false);
+        table.setRowHeight(35);
+        table.setShowGrid(true);
+        table.setGridColor(Color.BLACK);
+        table.setShowHorizontalLines(true);
+        table.setShowVerticalLines(false);
 
-		return table;
-	}
+        return table;
+    }
 
-	/**
-	 * Configura a Tabela para editar os campos de acordo com sua instancia
-	 * 
-	 * @param table
-	 * @return table
-	 */
-	public JTable tableConfigurations_(JTable table, int hashCode) {
-		DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
-		DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
-		@SuppressWarnings("unused")
-		DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
-		
-		DefaultTableModel model = new DefaultTableModel() {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				boolean a = false;
-				if (hashCode == INICIO_VIEW) {
-					a = false;
-				}
-				if (hashCode == CAIXA) {
-					a = false;
-				}
-				if (hashCode == CLIENTE) {
-					a = false;
-				}
-				if (hashCode == CADASTRO) {
-					a = true;
-				}
-				if (hashCode == ATUALIZAR) {
-					a = true;
-				}
-				if (hashCode == FLUXO) {
-					a = false;
-				}
-				return a;
-			}
-		};
-		table.setModel(model);
-		table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
-		
+    /**
+     * Configura a Tabela para editar os campos de acordo com sua instancia
+     *
+     * @param table
+     * @return table
+     */
+    public JTable tableConfigurations_(JTable table, int hashCode) {
+        DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
+        DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
+        @SuppressWarnings("unused")
+        DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
+
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                boolean a = false;
+                if (hashCode == INICIO_VIEW) {
+                    a = false;
+                }
+                if (hashCode == CAIXA) {
+                    a = false;
+                }
+                if (hashCode == CLIENTE) {
+                    a = false;
+                }
+                if (hashCode == CADASTRO) {
+                    a = true;
+                }
+                if (hashCode == ATUALIZAR) {
+                    a = true;
+                }
+                if (hashCode == FLUXO) {
+                    a = false;
+                }
+                return a;
+            }
+        };
+        table.setModel(model);
+        table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
+
 //		Renderizar os valores dentro da celular
-		for (int i = 0; i < table.getModel().getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).setCellRenderer(centerRendererCenter);
-			if (i == 3) {
-				table.getColumnModel().getColumn(1).setCellRenderer(centerRendererLeft);
-			}
-		}
-		
-		
-		return table;
-	}
+        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRendererCenter);
+            if (i == 3) {
+                table.getColumnModel().getColumn(1).setCellRenderer(centerRendererLeft);
+            }
+        }
 
-	/**
-	 * Método para criar um ComboBox dentro da JTable
-	 * 
-	 * @param table       tabela
-	 * @param sportColumn escolher a coluna
-	 */
+
+        return table;
+    }
+
+    /**
+     * Método para criar um ComboBox dentro da JTable
+     *
+     * @param table       tabela
+     * @param sportColumn escolher a coluna
+     */
 //	 Fiddle with the Sport column's cell editors/renderers.
-	public void mostrarComboBoxJTable_Modelo(JTable table, TableColumn sportColumn) {
+    public void mostrarComboBoxJTable_Modelo(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
-		ModeloDAO dao = new ModeloDAO();
-		ArrayList<ModeloVO> vo = dao.consultarTodos();
-		JComboBox<ModeloVO> cbModelo = new JComboBox<ModeloVO>();
-		cbModelo.setModel(new DefaultComboBoxModel(vo.toArray()));
+        BaseDAO<ModeloVO> bDAO = new ModeloDAO();
+        ArrayList<ModeloVO> vo = (ArrayList<ModeloVO>) bDAO.consultarTodos();
+        JComboBox<ModeloVO> cbModelo = new JComboBox<ModeloVO>();
+        cbModelo.setModel(new DefaultComboBoxModel(vo.toArray()));
 
-		sportColumn.setCellEditor(new DefaultCellEditor(cbModelo));
+        sportColumn.setCellEditor(new DefaultCellEditor(cbModelo));
 
 //		 Set up tool tips for the sport cells.
-		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-		renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
-		sportColumn.setCellRenderer(renderer);
-	}
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
+        sportColumn.setCellRenderer(renderer);
+    }
 
-	/**
-	 * Método para criar um ComboBox dentro da JTable
-	 * 
-	 * @param table       tabela
-	 * @param sportColumn escolher a coluna
-	 */
+    /**
+     * Método para criar um ComboBox dentro da JTable
+     *
+     * @param table       tabela
+     * @param sportColumn escolher a coluna
+     */
 //	 Fiddle with the Sport column's cell editors/renderers.
-	public void mostrarComboBoxJTabel_Marca(JTable table, TableColumn sportColumn) {
+    public void mostrarComboBoxJTabel_Marca(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
-		MarcaDAO dao = new MarcaDAO();
-		ArrayList<MarcaVO> vo = dao.consultarTodos();
-		JComboBox<MarcaVO> cbMarca = new JComboBox<MarcaVO>();
-		cbMarca.setModel(new DefaultComboBoxModel(vo.toArray()));
+        BaseDAO<MarcaVO> bDAO = new MarcaDAO();
+        ArrayList<MarcaVO> vo = (ArrayList<MarcaVO>) bDAO.consultarTodos();
+        JComboBox<MarcaVO> cbMarca = new JComboBox<MarcaVO>();
+        cbMarca.setModel(new DefaultComboBoxModel(vo.toArray()));
 
-		sportColumn.setCellEditor(new DefaultCellEditor(cbMarca));
+        sportColumn.setCellEditor(new DefaultCellEditor(cbMarca));
 
 //		 Set up tool tips for the sport cells.
-		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-		renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
-		sportColumn.setCellRenderer(renderer);
-	}
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
+        sportColumn.setCellRenderer(renderer);
+    }
 
-	/**
-	 * Método para reenderizar a JTable e criar uma mascara com campo formatado em
-	 * uma coluna especifica
-	 * 
-	 * @param table
-	 * @param TableColumn escolher a coluna
-	 */
-	public void maskFormJTable(JTable table, TableColumn sportColumn) {
+    /**
+     * Método para reenderizar a JTable e criar uma mascara com campo formatado em
+     * uma coluna especifica
+     *
+     * @param table
+     * @param sportColumn: TableColumn
+     */
+    public void maskFormJTable(JTable table, TableColumn sportColumn) {
 
-		JFormattedTextField placa = new JFormattedTextField();
-		MaskFormatter mascara;
-		try {
-			mascara = new MaskFormatter("HHHHHHHHHH");
-			mascara.setPlaceholderCharacter('?');
-			mascara.install(placa);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		sportColumn.setCellEditor(new DefaultCellEditor(placa));
+        JFormattedTextField placa = new JFormattedTextField();
+        MaskFormatter mascara;
+        try {
+            mascara = new MaskFormatter("HHHHHHHHHH");
+            mascara.setPlaceholderCharacter('?');
+            mascara.install(placa);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sportColumn.setCellEditor(new DefaultCellEditor(placa));
 
-	}
+    }
 
-	/**
-	 * Adicionar e Remover o PlaceHolder
-	 * 
-	 * @param JTextField field
-	 * @param Strign     mensagem
-	 */
-	public JFormattedTextField adicionarRemoverFocus(JTextField field, String mensagem) {
+    /**
+     * Adicionar e Remover o PlaceHolder
+     *
+     * @param field: JTextField
+     * @param msg:   String
+     */
+    public JFormattedTextField adicionarRemoverFocus(JTextField field, String msg) {
 
-		field.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent e) {
-				if (field.getText().trim().toLowerCase().equals(mensagem.toLowerCase())) {
-					field.setText("");
-				}
-				field.setForeground(Color.BLACK);
-			}
+        field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (field.getText().trim().toLowerCase().equals(msg.toLowerCase())) {
+                    field.setText("");
+                }
+                field.setForeground(Color.BLACK);
+            }
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (field.getText().trim().toLowerCase().equals("")) {
-					field.setText(mensagem);
-				}
-				field.setForeground(Color.BLACK);
-			}
-		});
-		return (JFormattedTextField) field;
-	}
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (field.getText().trim().toLowerCase().equals("")) {
+                    field.setText(msg);
+                }
+                field.setForeground(Color.BLACK);
+            }
+        });
+        return (JFormattedTextField) field;
+    }
 
-	/**
-	 * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
-	 * digitar)
-	 * 
-	 * @param MaskFormatter mask
-	 * @param               int tipo
-	 * @param String        text
-	 * 
-	 */
-	public MaskFormatter maskAndPlaceHolder(MaskFormatter mask, int tipo, String text) {
+    /**
+     * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
+     * digitar)
+     *
+     * @param mask: MaskFormatter
+     * @param tipo: int
+     * @param text: String
+     */
+    public MaskFormatter maskAndPlaceHolder(MaskFormatter mask, int tipo, String text) {
 
-		try {
-			if (tipo == 1) {
-				mask = new MaskFormatter("###################################");
-			}
+        try {
+            if (tipo == 1) {
+                mask = new MaskFormatter("###################################");
+            }
 
-			if (tipo == 2) {
-				mask = new MaskFormatter("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-			}
+            if (tipo == 2) {
+                mask = new MaskFormatter("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+            }
 
-			if (tipo == 3) {
-				mask = new MaskFormatter("***********************************");
-			}
-			mask.setPlaceholder(text);
-		} catch (ParseException e) {
-			e.getMessage();
-			e.printStackTrace();
-			e.getStackTrace();
-		}
-		return mask;
-	}
+            if (tipo == 3) {
+                mask = new MaskFormatter("***********************************");
+            }
+            mask.setPlaceholder(text);
+        } catch (ParseException e) {
+            e.getMessage();
+            e.printStackTrace();
+            e.getStackTrace();
+        }
+        return mask;
+    }
 
-	/**
-	 * 
-	 * Remove os espaçoes em branco do campo, iniciando a digitação no começo do
-	 * campo.
-	 * 
-	 * @param JTextField field
-	 * @return cast(JFormatedTextField)
-	 */
-	public JFormattedTextField caretPosition(JTextField txt) {
-		txt.addInputMethodListener(new InputMethodListener() {
-			public void caretPositionChanged(InputMethodEvent event) {
-				txt.viewToModel((Point) event.getText());
-				int offset = txt.viewToModel((Point) event.getText());
-				txt.setCaretPosition(offset);
-			}
+    /**
+     * Remove os espaçoes em branco do campo, iniciando a digitação no começo do
+     * campo.
+     *
+     * @param txt: JTextField
+     * @return cast(JFormatedTextField)
+     */
+    public JFormattedTextField caretPosition(JTextField txt) {
+        txt.addInputMethodListener(new InputMethodListener() {
+            public void caretPositionChanged(InputMethodEvent event) {
+                txt.viewToModel2D((Point) event.getText());
+                int offset = txt.viewToModel2D((Point) event.getText());
+                txt.setCaretPosition(offset);
+            }
 
-			public void inputMethodTextChanged(InputMethodEvent event) {
+            public void inputMethodTextChanged(InputMethodEvent event) {
 
-			}
-		});
-		return (JFormattedTextField) txt;
-	}
+            }
+        });
+        return (JFormattedTextField) txt;
+    }
 }

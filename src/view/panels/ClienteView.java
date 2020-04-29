@@ -12,7 +12,7 @@ import java.awt.*;
 public class ClienteView extends JPanel {
 
 	private static final long serialVersionUID = 3752138783055180091L;
-	private Modificacoes modificacao = new Modificacoes();
+	private final Modificacoes modificacao = new Modificacoes();
 	private JScrollPane scrollPane;
 	private JTable table;
 	private JLabel lblSelecioneUmaLinha;

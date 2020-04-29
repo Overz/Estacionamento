@@ -61,7 +61,7 @@ public class Banco {
 	private static final String SENHA = "";
 
 	public static final int CODIGO_RETORNO_ERRO_EXCLUSAO = 0;
-	public static final int CODIGO_RETORNO_SUCESSO_EXCLUSAO = 1;
+	public static final int CODIGO_RETORNO_SUCESSO = 1;
 
 	/**
 	 * Estabelece a conexão JBDC considerando as configurações da classe Banco.

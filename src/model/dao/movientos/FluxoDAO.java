@@ -2,6 +2,7 @@ package model.dao.movientos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.seletor.SuperSeletor;
 import model.vo.movimentos.FluxoVO;
 import model.vo.movimentos.MovimentoVO;
 
@@ -13,151 +14,135 @@ import java.util.ArrayList;
 
 public class FluxoDAO implements BaseDAO<FluxoVO> {
 
+    private Connection conn = null;
+    private PreparedStatement stmt = null;
+    private ResultSet result = null;
+    private ArrayList<FluxoVO> list = null;
+    private FluxoVO fluxoVO = null;
+
     public FluxoVO criarResultSet(ResultSet result) {
-        FluxoVO fluxo = new FluxoVO();
+        fluxoVO = new FluxoVO();
 
         try {
-
-            fluxo.setId(result.getInt("idfluxo"));
+            fluxoVO.setId(result.getInt("idfluxo"));
 
             int id = result.getInt("idmovimento");
             MovimentoDAO movimentoDAO = new MovimentoDAO();
             MovimentoVO movimentoVO = movimentoDAO.consultarPorId(id);
-            fluxo.setMovimento(movimentoVO);
+            fluxoVO.setMovimento(movimentoVO);
 
+            return fluxoVO;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: criarResultSet()");
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "CriarResultSet(ResultSet result)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         }
-
-        return fluxo;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<FluxoVO> consultarTodos() {
-        String qry = " SELECT * FROM FLUXO ";
-        ResultSet result = null;
-        ArrayList<FluxoVO> lista = new ArrayList<>();
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt = Banco.getPreparedStatement(conn);
+    public ArrayList<?> consultarTodos() {
+        String qry = "SELECT * FROM FLUXO";
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt = conn.prepareStatement(qry);
-            result = stmt.executeQuery(qry);
+            result = stmt.executeQuery();
             while (result.next()) {
-                FluxoVO vo = criarResultSet(result);
-                lista.add(vo);
+                fluxoVO = criarResultSet(result);
+                list.add(fluxoVO);
             }
-
+            return list;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: consultarTodos()");
-            //System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "ConsultarTodos()";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
-            Banco.closeStatement(stmt);
+            Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return lista;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<?> consultar(FluxoVO seletor) {
+    public ArrayList<?> consultar(SuperSeletor<FluxoVO> seletor) {
         return null;
-    }
+    } // NOT IMPLEMENTED
 
     @Override
     public FluxoVO consultarPorId(int id) {
-		String qry = " SELECT * FROM FLUXO WHERE IDFLUXO = ? ";
-        FluxoVO fluxo = null;
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        String qry = "SELECT * FROM FLUXO WHERE IDFLUXO = ?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt = conn.prepareStatement(qry);
-			stmt.setInt(1, id);
-            result = stmt.executeQuery(qry);
-
+            stmt.setInt(1, id);
+            result = stmt.executeQuery();
             while (result.next()) {
-                fluxo = criarResultSet(result);
+                fluxoVO = criarResultSet(result);
             }
+            return fluxoVO;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: consultarPorId");
-            System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "ConsultarPorID(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-
-        return fluxo;
-    }
+        return null;
+    } // OK
 
     @Override
     public FluxoVO cadastrar(FluxoVO newObject) {
-        String qry = " INSERT INTO FLUXO (idFluxo, idMovimento) VALUES( ?, ? ) ";
-        FluxoVO fluxo = null;
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-        Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        return null;
+    } // NOT IMPLEMENTED
+
+    @Override
+    public boolean alterar(FluxoVO object) {
+        return false;
+    } // NOT IMPLEMENTED
+
+    @Override
+    public boolean excluir(int id) {
+        String qry = "DELETE FROM FLUXO WHERE IDFLUXO = ?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setInt(1, fluxo.getId());
-            stmt.setInt(2, fluxo.getMovimento().getId());
+            stmt.setInt(1, id);
 
-            result = stmt.getGeneratedKeys();
-            if (result.next()){
-                int id = result.getInt(1);
-                fluxo.setId(id);
+            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
             }
-            stmt.execute();
-
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            String method = "excluir(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return fluxo;
-    }
-
-    @Override
-    public boolean alterar(FluxoVO FluxoVO) {
-        // TODO Auto-generated method stub
         return false;
-    }
-
-    @Override
-    public boolean excluir(int[] id) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
+    } // OK
 }

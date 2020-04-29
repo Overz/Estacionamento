@@ -2,6 +2,7 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.ContratoVO;
 
 import java.sql.*;
@@ -9,176 +10,222 @@ import java.util.ArrayList;
 
 public class ContratoDAO implements BaseDAO<ContratoVO> {
 
+    private Connection conn = null;
+    private PreparedStatement stmt = null;
+    private ResultSet result = null;
+    private ArrayList<ContratoVO> list = null;
+    private ContratoVO contratoVO = null;
+
     public ContratoVO criarResultSet(ResultSet result) {
-        ContratoVO contrato = new ContratoVO();
-
+        contratoVO = new ContratoVO();
         try {
+            contratoVO.setId(result.getInt("idcontrato"));
+            contratoVO.setNumeroCartao(result.getLong("n_cartao"));
+            contratoVO.setDtEntrada(result.getTimestamp("dt_entrada").toLocalDateTime());
+            contratoVO.setDtSaida(result.getTimestamp("dt_saida").toLocalDateTime());
+            contratoVO.setValor(result.getDouble("valor"));
+            contratoVO.setAtivo(result.getBoolean("ativo"));
 
-            contrato.setId(result.getInt("idcontrato"));
-
-            contrato.setNumeroCartao(result.getLong("n_cartao"));
-            contrato.setDtEntrada(result.getTimestamp("dt_entrada").toLocalDateTime());
-            contrato.setDtSaida(result.getTimestamp("dt_saida").toLocalDateTime());
-            contrato.setValor(result.getDouble("valor"));
-            contrato.setAtivo(result.getBoolean("ativo"));
-
+            return contratoVO;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: criarResultSet()");
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
-
+            String method = "CriarResultSet(ResultSet result)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         }
-
-        return contrato;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<ContratoVO> consultarTodos() {
-        Connection conn = Banco.getConnection();
-        Statement stmt = Banco.getStatement(conn);
-        ResultSet result = null;
-
-        ArrayList<ContratoVO> lista = new ArrayList<ContratoVO>();
-        String qry = " SELECT * FROM CONTRATO ";
+    public ArrayList<?> consultarTodos() {
+        String qry = "SELECT * FROM CONTRATO";
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            result = stmt.executeQuery(qry);
+            result = stmt.executeQuery();
             while (result.next()) {
-                ContratoVO vo = criarResultSet(result);
-                lista.add(vo);
+                contratoVO = criarResultSet(result);
+                list.add(contratoVO);
             }
+            return list;
         } catch (SQLException e) {
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: consultarTodos()");
-            System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
+            String method = "ConsultarTodos()";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+
         } finally {
             Banco.closeResultSet(result);
-            Banco.closeStatement(stmt);
+            Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return lista;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<?> consultar(ContratoVO seletor) {
+    public ArrayList<?> consultar(SuperSeletor<ContratoVO> seletor) {
+        String qry = "SELECT * FROM CONTRATO";
+        list = new ArrayList<>();
+
+        if (seletor.temFiltro(contratoVO)) {
+            qry += seletor.criarFiltro(qry, contratoVO);
+        }
+
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            result = stmt.executeQuery();
+            while (result.next()) {
+                contratoVO = criarResultSet(result);
+                list.add(contratoVO);
+            }
+            return list;
+        } catch (SQLException e) {
+            String method = "Consultar(SuperSeletor<?> seletor)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
-    }
+    } // OK
 
     @Override
     public ContratoVO consultarPorId(int id) {
-        String qry = " SELECT * FROM CONTRATO WHERE IDCONTRATO = ? ";
-        ContratoVO contrato = null;
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        String qry = "SELECT * FROM CONTRATO WHERE IDCONTRATO = ?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt = conn.prepareStatement(qry);
             stmt.setInt(1, id);
             result = stmt.executeQuery();
-
             while (result.next()) {
-                contrato = criarResultSet(result);
+                contratoVO = criarResultSet(result);
             }
+            return contratoVO;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass().getSimpleName());
-            System.out.println("Method: consultarPorID()");
-            System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "ConsultarPorID(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-
-        return contrato;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ContratoVO cadastrar(ContratoVO newContrato) {
-        String qry = " INSERT INTO CONTRATO (N_CARTAO, DT_ENTRADA, DT_SAIDA, ATIVO, VALOR) VALUES (?,?,?,?,?)";
-        ResultSet resultSet = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-
+    public ContratoVO cadastrar(ContratoVO newObject) {
+        String qry = "INSERT INTO CONTRATO (N_CARTAO, DT_ENTRADA, DT_SAIDA, ATIVO, VALOR) VALUES (?,?,?,?,?)";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
         try {
-            stmt.setLong(1, newContrato.getNumeroCartao());
-            stmt.setTimestamp(2, Timestamp.valueOf(newContrato.getDtEntrada()));
-            stmt.setTimestamp(3, Timestamp.valueOf(newContrato.getDtSaida()));
-            stmt.setBoolean(4, newContrato.isAtivo());
-            stmt.setDouble(5, newContrato.getValor());
+            stmt.setLong(1, newObject.getNumeroCartao());
+            stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDtEntrada()));
+            stmt.setTimestamp(3, Timestamp.valueOf(newObject.getDtSaida()));
+            stmt.setBoolean(4, newObject.isAtivo());
+            stmt.setDouble(5, newObject.getValor());
 
-            resultSet = stmt.getGeneratedKeys();
-            if (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                newContrato.setId(id);
+            result = stmt.getGeneratedKeys();
+            while (result.next()) {
+                int id = result.getInt(1);
+                newObject.setId(id);
             }
-            stmt.execute();
-
+            return newObject;
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            String method = "Cadastrar(T newObject)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+
         } finally {
-            Banco.closeResultSet(resultSet);
+            Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return newContrato;
-    }
+        return null;
+    } // OK
 
     @Override
-    public boolean alterar(ContratoVO contratoVO) {
-        String qry = " UPDATE CONTRATO C SET C.N_CARTAO = ?, C.DT_ENTRADA = ?, C.DT_SAIDA = ?, C.ATIVO = ?, C.VALOR = ?, WHERE C.IDCONTRATO = ? ";
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+    public boolean alterar(ContratoVO object) {
+        String qry = "UPDATE CONTRATO SET N_CARTAO=?, DT_ENTRADA=?, DT_SAIDA=?, ATIVO=?, VALOR=? WHERE IDCONTRATO =?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setLong(1, contratoVO.getNumeroCartao());
-            stmt.setTimestamp(2, Timestamp.valueOf(contratoVO.getDtEntrada()));
-            stmt.setTimestamp(3, Timestamp.valueOf(contratoVO.getDtSaida()));
-            stmt.setBoolean(4, contratoVO.isAtivo());
-            stmt.setDouble(5, contratoVO.getValor());
-            stmt.setInt(6, contratoVO.getId());
+            stmt.setLong(1, object.getNumeroCartao());
+            stmt.setTimestamp(2, Timestamp.valueOf(object.getDtEntrada()));
+            stmt.setTimestamp(3, Timestamp.valueOf(object.getDtSaida()));
+            stmt.setBoolean(4, object.isAtivo());
+            stmt.setDouble(5, object.getValor());
 
-            result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                contratoVO.setId(id);
+            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
             }
-            stmt.execute();
-            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            String method = "Alterar(T object)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
         }
         return false;
-    }
+    } // OK
 
     @Override
-    public boolean excluir(int[] id) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean excluir(int id) {
+        String qry = "DELETE FROM CONTRATO WHERE IDCONTRATO =?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
+        try {
+            stmt.setInt(1, id);
+
+            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
+            }
+        } catch (SQLException e) {
+            String method = "excluir(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+        return false;
+    } // OK
 }

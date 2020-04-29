@@ -23,10 +23,10 @@ public class InicioView extends JPanel {
     private static final String DINHEIRO = "1 - DINHEIRO";
     private static final String CARTAO = "2 - CARTÃO";
 
-    private Modificacoes modificacao = new Modificacoes();
-    private ControllerInicio control = new ControllerInicio(this);
+    private final Modificacoes modificacao = new Modificacoes();
+    private final ControllerInicio control = new ControllerInicio(this);
     private DefaultTableModel model = new DefaultTableModel();
-    private String[] colunas = new String[]{"Ticket / Cartão", "Carro", "Placa", "Cliente", "Entrada"};
+    private final String[] colunas = new String[]{"Ticket / Cartão", "Carro", "Placa", "Cliente", "Entrada"};
     private ArrayList<MovimentoVO> lista = new ArrayList<>();
     private String msg;
 
@@ -210,8 +210,7 @@ public class InicioView extends JPanel {
 
             BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
             MovimentoDAO mDAO = new MovimentoDAO();
-//            lista = (ArrayList<MovimentoVO>) bDAO.consultarTodos();
-            lista = mDAO.consultarTodos();
+            lista = (ArrayList<MovimentoVO>) mDAO.consultarTodos();
             atualizarTabela(lista);
 
         });
@@ -369,11 +368,9 @@ public class InicioView extends JPanel {
     public void removeSelectedRows(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         MovimentoDAO dao = new MovimentoDAO();
-        int[] rows = table.getSelectedRows();
-        for (int i = 0; i < rows.length; i++) {
-            model.removeRow(rows[i] - i);
-        }
-        if (dao.excluir(rows)){
+        int row = table.getSelectedRow();
+        model.removeRow(row);
+        if (dao.excluir(row)) {
             //TODO
         } else {
             //TODO

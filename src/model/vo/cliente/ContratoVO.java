@@ -1,83 +1,84 @@
 package model.vo.cliente;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class ContratoVO {
-	
-	private int id;
-	private long numeroCartao;
-	private LocalDateTime dtEntrada;
-	private LocalDateTime dtSaida;
-	private boolean ativo;
-	private double valor;
 
-	public ContratoVO(int id, long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida, boolean ativo, double valor) {
-		this.id = id;
-		this.numeroCartao = numeroCartao;
-		this.dtEntrada = dtEntrada;
-		this.dtSaida = dtSaida;
-		this.ativo = ativo;
-		this.valor = valor;
-	}
+    private int id;
+    private long numeroCartao;
+    private LocalDateTime dtEntrada;
+    private LocalDateTime dtSaida;
+    private boolean ativo;
+    private double valor;
 
-	public ContratoVO() {
-	}
+    public ContratoVO(int id, long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida, boolean ativo, double valor) {
+        this.id = id;
+        this.numeroCartao = numeroCartao;
+        this.dtEntrada = dtEntrada;
+        this.dtSaida = dtSaida;
+        this.ativo = ativo;
+        this.valor = valor;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public ContratoVO() {
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public long getNumeroCartao() {
-		return numeroCartao;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setNumeroCartao(long numeroCartao) {
-		this.numeroCartao = numeroCartao;
-	}
+    public long getNumeroCartao() {
+        return numeroCartao;
+    }
 
-	public LocalDateTime getDtEntrada() {
-		return dtEntrada;
-	}
+    public void setNumeroCartao(long numeroCartao) {
+        this.numeroCartao = numeroCartao;
+    }
 
-	public void setDtEntrada(LocalDateTime dtEntrada) {
-		this.dtEntrada = dtEntrada;
-	}
+    public LocalDateTime getDtEntrada() {
+        return dtEntrada;
+    }
 
-	public LocalDateTime getDtSaida() {
-		return dtSaida;
-	}
+    public void setDtEntrada(LocalDateTime dtEntrada) {
+        this.dtEntrada = dtEntrada;
+    }
 
-	public void setDtSaida(LocalDateTime dtSaida) {
-		this.dtSaida = dtSaida;
-	}
+    public LocalDateTime getDtSaida() {
+        return dtSaida;
+    }
 
-	public boolean isAtivo() {
-		return ativo;
-	}
+    public void setDtSaida(LocalDateTime dtSaida) {
+        this.dtSaida = dtSaida;
+    }
 
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
+    public boolean isAtivo() {
+        return ativo;
+    }
 
-	public double getValor() {
-		return valor;
-	}
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
 
-	public void setValor(double valor) {
-		this.valor = valor;
-	}
+    public double getValor() {
+        return valor;
+    }
 
-	@Override
-	public String toString() {
-		return "Nº Cartão: " + this.numeroCartao +
-				" - Hora de Entrada: " + this.dtEntrada +
-				" - Hora de Saída: " + this.dtSaida + 
-				" - Ativo?: " + this.ativo + 
-				" - R$: " + this.valor;
-	}
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    @Override
+    public String toString() {
+        return "Nº Cartão: " + this.numeroCartao +
+                " - Hora de Entrada: " + this.dtEntrada +
+                " - Hora de Saída: " + this.dtSaida +
+                " - Ativo?: " + this.ativo +
+                " - R$: " + this.valor;
+    }
 
 }

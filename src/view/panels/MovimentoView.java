@@ -20,14 +20,14 @@ import java.util.ArrayList;
 public class MovimentoView extends JPanel {
 
     private static final long serialVersionUID = -194366357031753318L;
-    private Modificacoes modificacao = new Modificacoes();
+    private final Modificacoes modificacao = new Modificacoes();
 
     private DatePicker dtInicio, dtFinal;
     private JScrollPane scrollPane;
     private JTable table;
 
     private ArrayList<MovimentoVO> lista;
-    private String[] colunas = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
+    private final String[] colunas = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     private DefaultTableModel model;
 
     public MovimentoView() {
@@ -123,7 +123,7 @@ public class MovimentoView extends JPanel {
 
             SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
 
-            this.lista = (ArrayList<MovimentoVO>) bDAO.consultar((MovimentoVO) seletor);
+            this.lista = (ArrayList<MovimentoVO>) bDAO.consultar(seletorMovimento);
             atualizarTabela(this.lista);
 
         });

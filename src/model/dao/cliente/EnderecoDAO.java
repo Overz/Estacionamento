@@ -2,6 +2,7 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.seletor.SuperSeletor;
 import model.vo.cliente.EnderecoVO;
 
 import java.sql.Connection;
@@ -12,183 +13,219 @@ import java.util.ArrayList;
 
 public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
-    public EnderecoVO criarResultSet(ResultSet result) {
+    private Connection conn = null;
+    private PreparedStatement stmt = null;
+    private ResultSet result = null;
+    private ArrayList<EnderecoVO> list = null;
+    private EnderecoVO enderecoVO = null;
 
-        EnderecoVO endereco = null;
-
+    private EnderecoVO criarResultSet(ResultSet result) {
+        enderecoVO = new EnderecoVO();
         try {
-            endereco = new EnderecoVO();
+            enderecoVO.setId(result.getInt("idendereco"));
+            enderecoVO.setNumero(result.getInt("numero"));
+            enderecoVO.setRua(result.getString("rua"));
+            enderecoVO.setBairro(result.getString("bairro"));
+            enderecoVO.setCidade(result.getString("cidade"));
 
-            endereco.setId(result.getInt("idendereco"));
-            endereco.setNumero(result.getInt("numero"));
-            endereco.setRua(result.getString("rua"));
-            endereco.setBairro(result.getString("bairro"));
-            endereco.setCidade(result.getString("cidade"));
-
+            return enderecoVO;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass());
-            System.out.println("Method: cirarResultSet()");
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "CriarResultSet(ResultSet result)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         }
-        return endereco;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<EnderecoVO> consultarTodos() {
-
-        String qry = " SELECT * FROM ENDERECO ";
-        ArrayList<EnderecoVO> lista = new ArrayList<EnderecoVO>();
-
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt = Banco.getPreparedStatement(conn, qry);
-        ResultSet result = null;
+    public ArrayList<?> consultarTodos() {
+        String qry = "SELECT * FROM ENDERECO";
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            result = stmt.executeQuery(qry);
+            result = stmt.executeQuery();
             while (result.next()) {
-                EnderecoVO e = criarResultSet(result);
-                lista.add(e);
+                enderecoVO = criarResultSet(result);
+                list.add(enderecoVO);
             }
+            return list;
         } catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass());
-            System.out.println("Method: consultarTodos()");
-            System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            String method = "ConsultarTodos()";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return lista;
-    }
+        return null;
+    } // OK
 
     @Override
-    public ArrayList<?> consultar(EnderecoVO seletor) {
+    public ArrayList<?> consultar(SuperSeletor<EnderecoVO> seletor) {
+        String qry = "SELECT * FROM ENDERECO ";
+        list = new ArrayList<>();
+
+        if (seletor.temFiltro(enderecoVO)) {
+            qry += (seletor.criarFiltro(qry, enderecoVO));
+        }
+
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            result = stmt.executeQuery();
+            while (result.next()) {
+                enderecoVO = criarResultSet(result);
+                list.add(enderecoVO);
+            }
+            return list;
+        } catch (SQLException e) {
+            String method = "Consultar(SuperSeletor<?> seletor)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
-    }
+    } // OK
 
     @Override
     public EnderecoVO consultarPorId(int id) {
-        String qry = " SELECT * FROM ENDERECO WHERE IDENDERECO = ? ";
-        EnderecoVO endereco = null;
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        String qry = "SELECT * FROM ENDERECO WHERE IDENDERECO = ?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt = conn.prepareStatement(qry);
             stmt.setInt(1, id);
             result = stmt.executeQuery();
-
             while (result.next()) {
-                endereco = criarResultSet(result);
+                enderecoVO = criarResultSet(result);
             }
-        }
-        catch (SQLException e) {
-            System.out.println();
-            System.out.println("/****************************************************************/");
-            System.out.println(this.getClass());
-            System.out.println("Method: consultarPorID()");
-            System.out.println(qry);
-            System.out.println("SQL Message:" + e.getMessage());
-            System.out.println("SQL Cause:" + e.getCause());
-            System.out.println("SQL State:" + e.getSQLState());
-            System.out.println("/****************************************************************/");
-            System.out.println();
+            return enderecoVO;
+        } catch (SQLException e) {
+            String method = "ConsultarPorID(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return endereco;
-    }
+        return null;
+    } // OK
 
     @Override
     public EnderecoVO cadastrar(EnderecoVO newObject) {
-        String qry = " INSERT INTO ENDERECO (NUMERO, RUA, BAIRRO, CIDADE) VALUES (?,?,?,?)";
-        EnderecoVO endereco = null;
-        ResultSet result = null;
-        Connection conn = Banco.getConnection();
-        PreparedStatement stmt =
-                Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        String qry = "INSERT INTO ENDERECO (numero, rua, bairro, cidade) VALUES (?,?,?,?)";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setInt(1, endereco.getNumero());
-            stmt.setString(2, endereco.getRua());
-            stmt.setString(3, endereco.getBairro());
-            stmt.setString(4, endereco.getCidade());
+            stmt.setInt(1, newObject.getNumero());
+            stmt.setString(2, newObject.getRua());
+            stmt.setString(3, newObject.getBairro());
+            stmt.setString(4, newObject.getCidade());
 
             result = stmt.getGeneratedKeys();
             if (result.next()) {
                 int id = result.getInt(1);
-                endereco.setId(id);
+                newObject.setId(id);
             }
-            stmt.execute();
-
+            return newObject;
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            String method = "Cadastrar(T newObject)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return endereco;
-    }
+        return null;
+    } // OK
 
     @Override
-    public boolean alterar(EnderecoVO entidade) {
-        String qry = " UPDATE ENDERECO E SET E.NUMERO = ?, E.RUA = ?, E.BAIRRO = ?, E.CIDADE = ? WHERE E.IDENDERECO = ? ";
-        EnderecoVO endereco = null;
-        ResultSet result = null;
-        PreparedStatement stmt = null;
-        Connection conn = Banco.getConnection();
+    public boolean alterar(EnderecoVO object) {
+        String qry = "UPDATE ENDERECO SET NUMERO=?, RUA=?, BAIRRO=?, CIDADE=? WHERE IDENDERECO=?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setInt(1, endereco.getNumero());
-            stmt.setString(2, endereco.getRua());
-            stmt.setString(3, endereco.getBairro());
-            stmt.setString(4, endereco.getCidade());
-            stmt.setInt(5, endereco.getId());
+            stmt.setInt(1, object.getNumero());
+            stmt.setString(2, object.getRua());
+            stmt.setString(3, object.getBairro());
+            stmt.setString(4, object.getCidade());
+            stmt.setInt(5, object.getId());
 
-            result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                endereco.setId(id);
+            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
             }
-
-            stmt.execute(qry);
-            return true;
-
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            String method = "Alterar(T object)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-
         return false;
-    }
+    } // OK
 
     @Override
-    public boolean excluir(int[] id) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean excluir(int id) {
+        String qry = "DELETE FROM ENDERECO WHERE IDENDERECO = ?";
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
+        try {
+            stmt.setInt(1, id);
+
+            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
+            }
+        } catch (SQLException e) {
+            String method = "excluir(int id)";
+            System.out.println("\n" +
+                    "Class: " + getClass().getSimpleName() + "\n" +
+                    "Method: " + method + "\n" +
+                    "Msg: " + e.getMessage() + "\n" +
+                    "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
+        return false;
+    } // OK
 }

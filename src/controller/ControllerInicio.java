@@ -3,7 +3,7 @@ package controller;
 import view.panels.InicioView;
 
 public class ControllerInicio {
-    private InicioView tela;
+    private final InicioView tela;
 
     public ControllerInicio(InicioView tela) {
         this.tela = tela;

@@ -11,7 +11,7 @@ import java.awt.*;
 public class CaixaView extends JPanel {
 
 	private static final long serialVersionUID = -4789193934965387787L;
-	private Modificacoes modificacao = new Modificacoes();
+	private final Modificacoes modificacao = new Modificacoes();
 	
 	private JTable table;
 	private JScrollPane scrollPane;
