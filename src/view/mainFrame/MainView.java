@@ -9,29 +9,19 @@ import java.awt.*;
 public class MainView extends JFrame {
 
 	private static final long serialVersionUID = 6514484047054253588L;
+	private static JLayeredPane layeredPane;
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainView window = new MainView();
-					window.setExtendedState(MAXIMIZED_BOTH);
-					window.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		EventQueue.invokeLater(() -> {
+			try {
+				MainView window = new MainView();
+				window.setExtendedState(MAXIMIZED_BOTH);
+				window.setVisible(true);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 	}
-
-	private final JLayeredPane layeredPane;
-	private JMenuBar menuBar;
-	private JButton btnInicio;
-	private JButton btnCaixa;
-	private JButton btnClientes;
-	private JButton btnTicketPerdido;
-	private JButton btnMovimento;
-	private JButton btnConfig;
 
 	public MainView() {
 		
@@ -54,11 +44,11 @@ public class MainView extends JFrame {
 
 	private void initialize() {
 
-		menuBar = new JMenuBar();
+		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(Color.WHITE);
 		setJMenuBar(menuBar);
-		
-		btnInicio = new JButton("INICIO");
+
+		JButton btnInicio = new JButton("INICIO");
 		btnInicio.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-fita-de-bookmark-50.png")));
 		btnInicio.setFont(new Font("Arial", Font.BOLD, 16));
 		btnInicio.setBackground(Color.WHITE);
@@ -73,8 +63,8 @@ public class MainView extends JFrame {
 		
 		Component strut1 = Box.createHorizontalStrut(20);
 		menuBar.add(strut1);
-		
-		btnCaixa = new JButton("CAIXA");
+
+		JButton btnCaixa = new JButton("CAIXA");
 		btnCaixa.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-caixa-registradora-50.png")));
 		btnCaixa.setFont(new Font("Arial", Font.BOLD, 16));
 		btnCaixa.setBackground(Color.WHITE);
@@ -89,8 +79,8 @@ public class MainView extends JFrame {
 		
 		Component strut2 = Box.createHorizontalStrut(20);
 		menuBar.add(strut2);
-		
-		btnClientes = new JButton("CLIENTES");
+
+		JButton btnClientes = new JButton("CLIENTES");
 		btnClientes.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-gestão-de-cliente-50.png")));
 		btnClientes.setFont(new Font("Arial", Font.BOLD, 16));
 		btnClientes.setBackground(Color.WHITE);
@@ -105,8 +95,8 @@ public class MainView extends JFrame {
 		
 		Component strut3 = Box.createHorizontalStrut(20);
 		menuBar.add(strut3);
-		
-		btnMovimento = new JButton("MOVIMENTO");
+
+		JButton btnMovimento = new JButton("MOVIMENTO");
 		btnMovimento.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-lista-50.png")));
 		btnMovimento.setFont(new Font("Arial", Font.BOLD, 16));
 		btnMovimento.setBackground(Color.WHITE);
@@ -121,8 +111,8 @@ public class MainView extends JFrame {
 		
 		Component strut4 = Box.createHorizontalStrut(20);
 		menuBar.add(strut4);
-		
-		btnTicketPerdido = new JButton("TICKET PERDIDO");
+
+		JButton btnTicketPerdido = new JButton("TICKET PERDIDO");
 		btnTicketPerdido.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-busca-50.png")));
 		btnTicketPerdido.setFont(new Font("Arial", Font.BOLD, 16));
 		btnTicketPerdido.setBackground(Color.WHITE);
@@ -130,14 +120,14 @@ public class MainView extends JFrame {
 		menuBar.add(btnTicketPerdido);
 		btnTicketPerdido.addActionListener(e -> {
 			
-			TicketPerdidoView ticketPerdidoView = new TicketPerdidoView();
+			LostTicketView ticketPerdidoView = new LostTicketView();
 			swithPanel(ticketPerdidoView);
 			
 		});
 		
 		menuBar.add(Box.createHorizontalGlue());
-		
-		btnConfig = new JButton("CONFIGURAÇÕES");
+
+		JButton btnConfig = new JButton("CONFIGURAÇÕES");
 		btnConfig.setIcon(new ImageIcon(MainView.class.getResource("/img/atutalizacao-50.png")));
 		btnConfig.setFont(new Font("Arial", Font.BOLD, 16));
 		btnConfig.setBorder(null);
@@ -155,8 +145,8 @@ public class MainView extends JFrame {
 		
 	}
 	
-	public void swithPanel(JPanel panel) {
-		
+	public static void swithPanel(JPanel panel) {
+
 		layeredPane.removeAll();
 		panel.setBorder(null);
 		panel.setBackground(Color.WHITE);
@@ -165,7 +155,6 @@ public class MainView extends JFrame {
 		layeredPane.add(panel, "grow");
 		layeredPane.repaint();
 		layeredPane.revalidate();
-		
-	}
 
+	}
 }

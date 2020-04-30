@@ -119,7 +119,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public PlanoVO consultarPorId(int id) {
-        String qry = "SELECT PLANO WHERE IDPLANO =?";
+        String qry = "SELECT * FROM PLANO WHERE IDPLANO = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

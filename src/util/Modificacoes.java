@@ -1,4 +1,4 @@
-package util.modifications;
+package util;
 
 import model.banco.BaseDAO;
 import model.dao.veiculos.MarcaDAO;
@@ -21,18 +21,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Modificacoes {
-
-    public static final int INICIO_VIEW = 1;
-    public static final int CAIXA = 2;
-    public static final int CLIENTE = 3;
-    public static final int CADASTRO = 4;
-    public static final int ATUALIZAR = 5;
-    public static final int FLUXO = 6;
-
-    public static final int TIPO_MENSAGEM = 1;
-    public static final int TIPO_CONFIRMACAO = 2;
-    public static final int TIPO_DIALOGO = 3;
-    public static final int TIPO_INTERNO = 4;
 
     /**
      * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
@@ -74,7 +62,8 @@ public class Modificacoes {
         table.setColumnSelectionAllowed(true);
         table.setCellSelectionEnabled(false);
         table.setRowSelectionAllowed(true);
-        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION  );
         table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 
         table.setRowHeight(35);
@@ -92,38 +81,12 @@ public class Modificacoes {
      * @param table
      * @return table
      */
-    public JTable tableConfigurations_(JTable table, int hashCode) {
+    public JTable tableConfigurations(JTable table) {
         DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
         DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
         @SuppressWarnings("unused")
         DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
 
-        DefaultTableModel model = new DefaultTableModel() {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                boolean a = false;
-                if (hashCode == INICIO_VIEW) {
-                    a = false;
-                }
-                if (hashCode == CAIXA) {
-                    a = false;
-                }
-                if (hashCode == CLIENTE) {
-                    a = false;
-                }
-                if (hashCode == CADASTRO) {
-                    a = true;
-                }
-                if (hashCode == ATUALIZAR) {
-                    a = true;
-                }
-                if (hashCode == FLUXO) {
-                    a = false;
-                }
-                return a;
-            }
-        };
-        table.setModel(model);
         table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
 
 //		Renderizar os valores dentro da celular
@@ -145,12 +108,12 @@ public class Modificacoes {
      * @param sportColumn escolher a coluna
      */
 //	 Fiddle with the Sport column's cell editors/renderers.
-    public void mostrarComboBoxJTable_Modelo(JTable table, TableColumn sportColumn) {
+    public void mostrarComboBoxJTable_ModeloVO(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
         BaseDAO<ModeloVO> bDAO = new ModeloDAO();
-        ArrayList<ModeloVO> vo = (ArrayList<ModeloVO>) bDAO.consultarTodos();
+        ArrayList<ModeloVO> list = (ArrayList<ModeloVO>) bDAO.consultarTodos();
         JComboBox<ModeloVO> cbModelo = new JComboBox<ModeloVO>();
-        cbModelo.setModel(new DefaultComboBoxModel(vo.toArray()));
+        cbModelo.setModel(new DefaultComboBoxModel(list.toArray()));
 
         sportColumn.setCellEditor(new DefaultCellEditor(cbModelo));
 
@@ -167,12 +130,12 @@ public class Modificacoes {
      * @param sportColumn escolher a coluna
      */
 //	 Fiddle with the Sport column's cell editors/renderers.
-    public void mostrarComboBoxJTabel_Marca(JTable table, TableColumn sportColumn) {
+    public void mostrarComboBoxJTabel_MarcaVO(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
         BaseDAO<MarcaVO> bDAO = new MarcaDAO();
-        ArrayList<MarcaVO> vo = (ArrayList<MarcaVO>) bDAO.consultarTodos();
+        ArrayList<MarcaVO> list = (ArrayList<MarcaVO>) bDAO.consultarTodos();
         JComboBox<MarcaVO> cbMarca = new JComboBox<MarcaVO>();
-        cbMarca.setModel(new DefaultComboBoxModel(vo.toArray()));
+        cbMarca.setModel(new DefaultComboBoxModel(list.toArray()));
 
         sportColumn.setCellEditor(new DefaultCellEditor(cbMarca));
 

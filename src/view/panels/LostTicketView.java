@@ -7,7 +7,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class TicketPerdidoView extends JPanel {
+public class LostTicketView extends JPanel {
 
 	private static final long serialVersionUID = -5438476599911734590L;
 	private static final String SELECIONE = "~ SELECIONE ~";
@@ -23,7 +23,7 @@ public class TicketPerdidoView extends JPanel {
 	/**
 	 * Inicia a Tela
 	 */
-	public TicketPerdidoView() {
+	public LostTicketView() {
 		
 		this.setBounds(100, 100, 902, 704);
 		this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));

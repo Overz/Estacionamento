@@ -2,7 +2,7 @@ package view.panels.cadastro;
 
 import model.vo.veiculo.CarroVO;
 import net.miginfocom.swing.MigLayout;
-import util.modifications.Modificacoes;
+import util.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -93,8 +93,8 @@ public class DadosCadastroView extends JPanel {
 		table = new JTable(new DefaultTableModel(data, colunmName));
 
 		modificacoes.tableLookAndFiel(table);
-		modificacoes.mostrarComboBoxJTabel_Marca(table, table.getColumnModel().getColumn(1));
-		modificacoes.mostrarComboBoxJTable_Modelo(table, table.getColumnModel().getColumn(2));
+		modificacoes.mostrarComboBoxJTabel_MarcaVO(table, table.getColumnModel().getColumn(1));
+		modificacoes.mostrarComboBoxJTable_ModeloVO(table, table.getColumnModel().getColumn(2));
 		scrollPane.setViewportView(table);
 		modificacoes.maskFormJTable(table, table.getColumnModel().getColumn(0));
 

@@ -1,6 +1,7 @@
 package view.panels;
 
 import net.miginfocom.swing.MigLayout;
+import view.mainFrame.MainView;
 import view.panels.cadastro.DadosCadastroView;
 import view.panels.cadastro.EnderecoCadastroView;
 import view.panels.cadastro.PlanoCadastroView;
@@ -9,15 +10,12 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class CadastroView extends JPanel {
+public class CadastroView extends JPanel implements BaseView{
 
 	private static final long serialVersionUID = -7538521065547926504L;
 	private JLayeredPane layeredPane;
 	private DadosCadastroView dadosCadastroView;
 
-	/**
-	 * Inicia a Tela
-	 */
 	public CadastroView() {
 		this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		this.setBounds(100, 100, 1145, 908);
@@ -28,13 +26,15 @@ public class CadastroView extends JPanel {
 		this.initialize();
 	}
 
-	/**
-	 * Adiciona Todos os Componentes para a Tela
-	 */
-	private void initialize() {
+	public void initialize() {
 		
-		setJLabels_JSeparator();
-		setValidationButtons();
+		this.setJLabels_JSeparator();
+
+		this.setInputFields();
+
+		this.setButtons();
+
+		this.setJTable();
 		
 		layeredPane = new JLayeredPane();
 		layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -47,21 +47,20 @@ public class CadastroView extends JPanel {
 
 	}
 
-	/**
-	 * Adiciona os JLabels a tela & JSeparators
-	 */
-	private void setJLabels_JSeparator() {
+	public void setJLabels_JSeparator() {
 		JLabel lblAdicionarCliente = new JLabel("Adicionar Cliente:");
 		lblAdicionarCliente.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAdicionarCliente.setFont(new Font("Arial", Font.BOLD, 22));
 		lblAdicionarCliente.setBackground(Color.WHITE);
 		add(lblAdicionarCliente, "cell 1 1 6 1,grow");
 	}
-	
-	/**
-	 * Adiciona os Botões para validação dos campos de entrada
-	 */
-	private void setValidationButtons() {
+
+	@Override
+	public void setInputFields() {
+
+	}
+
+	public void setButtons() {
 		
 		JButton btnDados = new JButton("Dados");
 		btnDados.setFont(new Font("Arial", Font.BOLD, 20));
@@ -131,23 +130,14 @@ public class CadastroView extends JPanel {
 
 		});
 	}
-	
-	/**
-	 * Realiza a troca de Telas(JPanels), impedindo que fiquem abertas
-	 * 
-	 * @param panel
-	 */
+
+	@Override
+	public void setJTable() {
+
+	}
+
 	public void swithPanel(JPanel panel) {
-
-		layeredPane.removeAll();
-		panel.setBorder(null);
-		panel.setBackground(Color.WHITE);
-		panel.repaint();
-		panel.revalidate();
-		layeredPane.add(panel, "grow");
-		layeredPane.repaint();
-		layeredPane.revalidate();
-
+		MainView.swithPanel(panel);
 	}
 
 }

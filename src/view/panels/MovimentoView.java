@@ -9,15 +9,18 @@ import model.seletor.SuperSeletor;
 import model.vo.movimentos.FluxoVO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
-import util.modifications.Modificacoes;
+import util.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class MovimentoView extends JPanel {
+public class MovimentoView extends JPanel implements BaseView{
 
     private static final long serialVersionUID = -194366357031753318L;
     private final Modificacoes modificacao = new Modificacoes();
@@ -41,24 +44,22 @@ public class MovimentoView extends JPanel {
         this.initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
 
         setJLabels_JSeparator();
 
         setInputFields();
 
-        setValidationButtons();
+        setButtons();
 
-        setJTable_And_Componentes();
+        setJTable();
 
-        //atualizarTabela(lista);
+        //TODO Trazer os Valores do Dia atual;
 
     }
 
-    /**
-     * Adiciona os JLabels a tela & JSeparators
-     */
-    private void setJLabels_JSeparator() {
+    @Override
+    public void setJLabels_JSeparator() {
 
         JLabel lblMovimento = new JLabel("Movimento:");
         lblMovimento.setHorizontalAlignment(SwingConstants.CENTER);
@@ -68,10 +69,8 @@ public class MovimentoView extends JPanel {
 
     }
 
-    /**
-     * Adiciona os campos de validação na tela;
-     */
-    private void setInputFields() {
+    @Override
+    public void setInputFields() {
         DatePickerSettings dateSettings = new DatePickerSettings();
         dateSettings.setAllowKeyboardEditing(false);
 
@@ -102,10 +101,8 @@ public class MovimentoView extends JPanel {
         this.add(dtFinal, "cell 11 1,grow");
     }
 
-    /**
-     * Adiciona os Botões para validação dos campos de entrada
-     */
-    private void setValidationButtons() {
+    @Override
+    public void setButtons() {
         JButton btnPesquisar = new JButton("Pesquisar");
         btnPesquisar.setPreferredSize(new Dimension(80, 25));
         btnPesquisar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -115,11 +112,18 @@ public class MovimentoView extends JPanel {
 
 //            Instanciar as Classes usadas
             BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
-            SeletorMovimento<MovimentoVO> seletorMovimento = new SeletorMovimento<MovimentoVO>();
+            SeletorMovimento<MovimentoVO> seletorMovimento = new SeletorMovimento<>();
 
 //            Setar os valores da Tela no Seletor para criar Filtro
-            seletorMovimento.setDtInicio(dtInicio.getText());
-            seletorMovimento.setDtFim(dtFinal.getText());
+            DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder()
+                    .parseCaseInsensitive().parseLenient()
+                    .appendPattern("yyyy-MMM-dd")
+                    .appendPattern("yyyy/MMM/dd")
+                    .appendPattern("d-MM-yyyy")
+                    .appendPattern("d-M-yy");
+            DateTimeFormatter dtf = builder.toFormatter(Locale.ENGLISH);
+            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
+            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
 
             SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
 
@@ -129,10 +133,8 @@ public class MovimentoView extends JPanel {
         });
     }
 
-    /**
-     * Adiciona a JTable com ALGUNS campos que intaragem com ela
-     */
-    private void setJTable_And_Componentes() {
+    @Override
+    public void setJTable() {
         scrollPane = new JScrollPane();
         scrollPane.setBackground(Color.WHITE);
         scrollPane.getViewport().setBackground(Color.WHITE);

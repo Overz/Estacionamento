@@ -1,9 +1,9 @@
 package model.seletor;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO>{
+public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO> {
 
     private LocalDateTime dtInicio, dtFim;
     private MovimentoVO movimentoVO;
@@ -46,10 +46,10 @@ public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO>{
     public void setDtInicio(String dtInicio) {
         try {
             this.dtInicio = LocalDateTime.parse(dtInicio);
-        } catch (DateTimeException e){
-            System.out.println(e.getCause() +"\n"+
-                    e.getMessage() +"\n"+
-                    e.getLocalizedMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            System.out.println(e.getLocalizedMessage());
         }
     }
 
@@ -62,7 +62,13 @@ public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO>{
     }
 
     public void setDtFim(String dtFim) {
-        this.dtFim = LocalDateTime.parse(dtFim);
+        try {
+            this.dtFim = LocalDateTime.parse(dtFim);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
+            System.out.println(e.getLocalizedMessage());
+        }
     }
 
     public MovimentoVO getMovimentoVO() {

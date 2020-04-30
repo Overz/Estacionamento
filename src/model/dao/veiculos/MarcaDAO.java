@@ -104,7 +104,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public MarcaVO consultarPorId(int id) {
-        String qry = "SELECT * FROM ENDERECO WHERE IDENDERECO = ?";
+        String qry = "SELECT * FROM MARCA WHERE IDMARCA = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

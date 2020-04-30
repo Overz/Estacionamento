@@ -5,7 +5,8 @@ import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
-import util.modifications.Modificacoes;
+import util.Constantes;
+import util.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -17,30 +18,24 @@ import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class InicioView extends JPanel {
+public class InicioView extends JPanel implements BaseView {
 
     private static final long serialVersionUID = -8394009250133780042L;
-    private static final String DINHEIRO = "1 - DINHEIRO";
-    private static final String CARTAO = "2 - CARTÃO";
 
     private final Modificacoes modificacao = new Modificacoes();
     private final ControllerInicio control = new ControllerInicio(this);
+
     private DefaultTableModel model = new DefaultTableModel();
-    private final String[] colunas = new String[]{"Ticket / Cartão", "Carro", "Placa", "Cliente", "Entrada"};
     private ArrayList<MovimentoVO> lista = new ArrayList<>();
     private String msg;
 
     private MaskFormatter mf1, mf2;
-    private JComboBox<?> cbFormaPgto;
-    private ArrayList<String> formaPgto;
-    private JScrollPane scrollPane;
     private JSplitPane splitPane;
     private JTable table;
     private JButton btnProcurar, btnCancelar, btnValidar, btnGerarTicket, btnImprimirComprovante,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
     private JTextField txtTicket, txtProcurar;
-    private JLabel lblTotalDeVeiculos, lblValorPgto, lblCancelaEntrada, lblCancelaSaída;
-    private JLabel lblMetodo;
+    private JLabel lblTotalDeVeiculos, lblValorPgto, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
 
     public InicioView() {
 
@@ -54,11 +49,7 @@ public class InicioView extends JPanel {
         this.initialize();
     }
 
-    /**
-     * Adiciona Todos os Componentes para a Tela
-     */
-    private void initialize() {
-
+    public void initialize() {
 
         splitPane = new JSplitPane();
         splitPane.setBorder(null);
@@ -70,24 +61,21 @@ public class InicioView extends JPanel {
 //		Mascara e PlaceHolder
         maskAndPlaceHolder();
 //		JLabels
-        setJlabels_JSeparator();
+        setJLabels_JSeparator();
 //		JTextFields - InputFields
         setInputFields();
 //		JButtons - Relacionados ao InputFields();
-        setValidationButtons();
+        setButtons();
 //		JTabel & JButtons - Tabela e Botões ligados Diretamente a TABELA
-        setJTable_And_Components();
-//		JButtons - Botões que SIMULAM a Abertura e Fechamento da Cancela
-        setSimulation();
+        setJTable();
+
 //		Timer para clicar no botão Procurar e Manter a Tabela Atualizada
 //		timerDoClick();
 
     }
 
-    /**
-     * Adiciona os JLabels a tela & JSeparators
-     */
-    private void setJlabels_JSeparator() {
+    @Override
+    public void setJLabels_JSeparator() {
         JSeparator separatorCima = new JSeparator();
         separatorCima.setBackground(Color.BLACK);
         separatorCima.setForeground(Color.BLACK);
@@ -136,15 +124,13 @@ public class InicioView extends JPanel {
         add(lblCancelaSaída, "cell 1 16 2 1,grow");
     }
 
-    /**
-     * Adiciona os campos de validação na tela;
-     */
-    private void setInputFields() {
-        formaPgto = new ArrayList<>();
-        formaPgto.add(DINHEIRO);
-        formaPgto.add(CARTAO);
+    @Override
+    public void setInputFields() {
+        ArrayList<String> formaPgto = new ArrayList<>();
+        formaPgto.add(Constantes.DINHEIRO);
+        formaPgto.add(Constantes.CARTAO);
 
-        cbFormaPgto = new JComboBox<>(formaPgto.toArray());
+        JComboBox<?> cbFormaPgto = new JComboBox<>(formaPgto.toArray());
         cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 1 8 2 1,grow");
@@ -168,10 +154,8 @@ public class InicioView extends JPanel {
         modificacao.adicionarRemoverFocus(txtTicket, "Digite o Número do Ticket");
     }
 
-    /**
-     * Adiciona os Botões para validação dos campos de entrada
-     */
-    private void setValidationButtons() {
+    @Override
+    public void setButtons() {
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-excluir-50.png")));
         btnCancelar.setFont(new Font("Arial", Font.BOLD, 18));
@@ -196,7 +180,7 @@ public class InicioView extends JPanel {
             String ticket = txtTicket.getText().trim();
             msg = control.validate(ticket);
 
-            JOptionPane.showMessageDialog(this, modificacao.labelConfig(lblMetodo, msg), "VALIDAÇÃO",
+            JOptionPane.showMessageDialog(this, modificacao.labelConfig(lblModificadoParaExibicao, msg), "VALIDAÇÃO",
                     JOptionPane.WARNING_MESSAGE);
         });
 
@@ -214,68 +198,6 @@ public class InicioView extends JPanel {
             atualizarTabela(lista);
 
         });
-
-    }
-
-    /**
-     * Botões que simulam a abertura e fechamento da cancela
-     */
-    private void setSimulation() {
-        btnAbrirEntrada = new JButton("Abrir Entrada");
-        btnAbrirEntrada.setBackground(Color.WHITE);
-        btnAbrirEntrada.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-sinal-de-aberto-54.png")));
-        btnAbrirEntrada.setFont(new Font("Arial", Font.BOLD, 16));
-        btnAbrirEntrada.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnAbrirEntrada, "cell 1 13 2 1,grow");
-        btnAbrirEntrada.addActionListener(e -> {
-
-            lblCancelaEntrada.setText("Abrindo Cancela");
-            lblCancelaEntrada.setBackground(Color.ORANGE);
-
-        });
-
-        btnAbrirSaida = new JButton("Abrir Saída");
-        btnAbrirSaida.setBackground(Color.WHITE);
-        btnAbrirSaida.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-sinal-de-aberto-54.png")));
-        btnAbrirSaida.setFont(new Font("Arial", Font.BOLD, 16));
-        btnAbrirSaida.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnAbrirSaida, "cell 1 15 2 1,grow");
-        btnAbrirSaida.addActionListener(e -> {
-
-        });
-    }
-
-    /**
-     * Itens Relacionados a TABELA
-     * Cria e Adiciona a tela
-     */
-    private void setJTable_And_Components() {
-
-        scrollPane = new JScrollPane();
-        scrollPane.setBackground(Color.WHITE);
-        scrollPane.getViewport().setBackground(Color.WHITE);
-        scrollPane.setBorder(null);
-
-        table = new JTable(model) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-//
-//		DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
-//		DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
-//		@SuppressWarnings("unused")
-//		DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
-//
-//		table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(1).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(2).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(3).setCellRenderer(centerRendererCenter);
-
-        modificacao.tableLookAndFiel(table);
-        scrollPane.setViewportView(table); // define a tabela no scrollpane, e seta o cabeçalho
-        add(scrollPane, "cell 4 3 11 14,grow");
 
         btnRemover = new JButton("Remover Ticket / Cliente");
         btnRemover.setFont(new Font("Arial", Font.BOLD, 16));
@@ -324,12 +246,73 @@ public class InicioView extends JPanel {
         btnImprimirComprovanteTabela.addActionListener(e -> {
 
         });
+
+
+        //Simulação para Abrir e Fechar Cancela
+        this.setSimulation();
+
+    }
+
+    @Override
+    public void setJTable() {
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBackground(Color.WHITE);
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setBorder(null);
+
+        table = new JTable(model) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+//
+//		DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
+//		DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
+//		@SuppressWarnings("unused")
+//		DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
+//
+//		table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
+//		table.getColumnModel().getColumn(1).setCellRenderer(centerRendererCenter);
+//		table.getColumnModel().getColumn(2).setCellRenderer(centerRendererCenter);
+//		table.getColumnModel().getColumn(3).setCellRenderer(centerRendererCenter);
+
+        modificacao.tableLookAndFiel(table);
+        scrollPane.setViewportView(table); // define a tabela no scrollpane, e seta o cabeçalho
+        add(scrollPane, "cell 4 3 11 14,grow");
+
+    }
+
+    private void setSimulation() {
+        btnAbrirEntrada = new JButton("Abrir Entrada");
+        btnAbrirEntrada.setBackground(Color.WHITE);
+        btnAbrirEntrada.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-sinal-de-aberto-54.png")));
+        btnAbrirEntrada.setFont(new Font("Arial", Font.BOLD, 16));
+        btnAbrirEntrada.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        add(btnAbrirEntrada, "cell 1 13 2 1,grow");
+        btnAbrirEntrada.addActionListener(e -> {
+
+            lblCancelaEntrada.setText("Abrindo Cancela");
+            lblCancelaEntrada.setBackground(Color.ORANGE);
+
+        });
+
+        btnAbrirSaida = new JButton("Abrir Saída");
+        btnAbrirSaida.setBackground(Color.WHITE);
+        btnAbrirSaida.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-sinal-de-aberto-54.png")));
+        btnAbrirSaida.setFont(new Font("Arial", Font.BOLD, 16));
+        btnAbrirSaida.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        add(btnAbrirSaida, "cell 1 15 2 1,grow");
+        btnAbrirSaida.addActionListener(e -> {
+
+        });
     }
 
     /**
      * Atualiza a JTable com Todos os Valores
      *
-     * @param lista MovimentoVO
+     * @param lista: MovimentoVO
      */
     private void atualizarTabela(ArrayList<MovimentoVO> lista) {
 
@@ -357,13 +340,14 @@ public class InicioView extends JPanel {
      * Limpa a tela para revalidar os valores
      */
     private void limparTabela() {
+        String[] colunas = new String[]{"Ticket / Cartão", "Carro", "Placa", "Cliente", "Entrada"};
         table.setModel(new DefaultTableModel(new Object[][]{}, colunas));
     }
 
     /**
      * Remover as linhas selecionadas da tablea;
      *
-     * @param table JTable
+     * @param table: JTable
      */
     public void removeSelectedRows(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
