@@ -9,6 +9,7 @@ import model.seletor.SuperSeletor;
 import model.vo.movimentos.FluxoVO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
+import util.Constantes;
 import util.Modificacoes;
 
 import javax.swing.*;
@@ -20,17 +21,15 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MovimentoView extends JPanel implements BaseView{
+public class MovimentoView extends JPanel implements BaseView {
 
     private static final long serialVersionUID = -194366357031753318L;
     private final Modificacoes modificacao = new Modificacoes();
 
     private DatePicker dtInicio, dtFinal;
-    private JScrollPane scrollPane;
     private JTable table;
 
     private ArrayList<MovimentoVO> lista;
-    private final String[] colunas = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     private DefaultTableModel model;
 
     public MovimentoView() {
@@ -122,7 +121,7 @@ public class MovimentoView extends JPanel implements BaseView{
                     .appendPattern("d-MM-yyyy")
                     .appendPattern("d-M-yy");
             DateTimeFormatter dtf = builder.toFormatter(Locale.ENGLISH);
-            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
+            seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
             seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
 
             SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
@@ -135,7 +134,7 @@ public class MovimentoView extends JPanel implements BaseView{
 
     @Override
     public void setJTable() {
-        scrollPane = new JScrollPane();
+        JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBackground(Color.WHITE);
         scrollPane.getViewport().setBackground(Color.WHITE);
         this.add(scrollPane, "cell 1 3 13 11,grow");
@@ -178,7 +177,7 @@ public class MovimentoView extends JPanel implements BaseView{
     }
 
     private void limparTabela() {
-        table.setModel(new DefaultTableModel(new Object[][]{}, colunas));
+        table.setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_MOVIMENTO));
     }
 
 }

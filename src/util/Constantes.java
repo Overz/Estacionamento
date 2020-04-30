@@ -14,6 +14,10 @@ public class Constantes {
     public static final int TIPO_DIALOGO = 3;
     public static final int TIPO_INTERNO = 4;
 
+    public static final String SELECIONE = "~ SELECIONE ~";
     public static final String DINHEIRO = "1 - DINHEIRO";
     public static final String CARTAO = "2 - CARTÃO";
+
+    public static final String[] COLUNAS_CAIXA = { "Ticket/Cartão", "Descrição", "Hora Entrada", "Hora Validação", "Pagamento", "Valor" };
+    public static final String[] COLUNAS_MOVIMENTO = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
 }
