@@ -49,7 +49,7 @@ public class Modificacoes {
     /**
      * Modifica e retorna fonte, cor, e tamanho, padronizados.
      *
-     * @param table
+     * @param table: JTable
      * @return table(Style da Table)
      */
     public JTable tableLookAndFiel(JTable table) {
