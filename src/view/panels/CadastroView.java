@@ -1,7 +1,6 @@
 package view.panels;
 
 import net.miginfocom.swing.MigLayout;
-import view.mainFrame.MainView;
 import view.panels.cadastro.DadosCadastroView;
 import view.panels.cadastro.EnderecoCadastroView;
 import view.panels.cadastro.PlanoCadastroView;
@@ -66,17 +65,15 @@ public class CadastroView extends JPanel {
         btnDados.addActionListener(e -> {
 
             dadosCadastroView = new DadosCadastroView();
-//            MainView.swithPanel(dadosCadastroView);
-//            if (dadosCadastroView.isShowing()) {
-//                if (btnDados.isSelected()) {
-//                    btnDados.setBackground(Color.WHITE);
-//                } else {
-//                    btnDados.setBackground(new JButton().getBackground());
-//                }
-//            }
-        	
-        	swithchPanel(dadosCadastroView);
-        	
+            swithchPanel(dadosCadastroView);
+            if (dadosCadastroView.isShowing()) {
+                if (btnDados.isSelected()) {
+                    btnDados.setBackground(Color.WHITE);
+                } else {
+                    btnDados.setBackground(new JButton().getBackground());
+                }
+            }
+
 
             // TODO SALVAR OS DADOS ANTES DE MUDAR DE TELA
 

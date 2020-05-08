@@ -110,7 +110,7 @@ public class Modificacoes {
     public void mostrarComboBoxJTable_ModeloVO(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
         BaseDAO<ModeloVO> bDAO = new ModeloDAO();
-        ArrayList<ModeloVO> list = (ArrayList<ModeloVO>) bDAO.consultarTodos();
+        ArrayList<ModeloVO> list = bDAO.consultarTodos();
         JComboBox<ModeloVO> cbModelo = new JComboBox<ModeloVO>();
         cbModelo.setModel(new DefaultComboBoxModel(list.toArray()));
 
@@ -132,7 +132,7 @@ public class Modificacoes {
     public void mostrarComboBoxJTabel_MarcaVO(JTable table, TableColumn sportColumn) {
 //		 Set up the editor for the sport cells.
         BaseDAO<MarcaVO> bDAO = new MarcaDAO();
-        ArrayList<MarcaVO> list = (ArrayList<MarcaVO>) bDAO.consultarTodos();
+        ArrayList<MarcaVO> list = bDAO.consultarTodos();
         JComboBox<MarcaVO> cbMarca = new JComboBox<MarcaVO>();
         cbMarca.setModel(new DefaultComboBoxModel(list.toArray()));
 

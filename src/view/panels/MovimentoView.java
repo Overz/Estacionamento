@@ -123,7 +123,7 @@ public class MovimentoView extends JPanel {
 
             SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
 
-            this.lista = (ArrayList<MovimentoVO>) bDAO.consultar(seletorMovimento);
+            this.lista = bDAO.consultar(seletorMovimento);
             atualizarTabela(this.lista);
 
         });
