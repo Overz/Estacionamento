@@ -17,14 +17,12 @@ import java.util.ArrayList;
 public class DadosCadastroView extends JPanel {
 
     private static final long serialVersionUID = 8795512428702538815L;
-
+    private final Modificacoes modificacoes = new Modificacoes();
     private JFormattedTextField ftfNome, ftfCPF, ftfRG, txtTelefone;
     private JTextField txtEmail;
     private JTable table;
     private MaskFormatter mfNome, mfCPF, mfRG, mfFone;
-
     private ArrayList<CarroVO> linhas;
-    private final Modificacoes modificacoes = new Modificacoes();
 
     public DadosCadastroView() {
 

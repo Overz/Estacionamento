@@ -1,6 +1,10 @@
 package view.panels;
 
+import model.banco.BaseDAO;
+import model.dao.movientos.MovimentoDAO;
+import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
+import util.Constantes;
 import util.Modificacoes;
 import view.mainFrame.MainView;
 
@@ -8,13 +12,23 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class ClienteView extends JPanel {
 
     private static final long serialVersionUID = 3752138783055180091L;
     private final Modificacoes modificacao = new Modificacoes();
+    private BaseDAO<MovimentoVO> daoM;
+    private ArrayList<MovimentoVO> lista;
+
+    private JTextField txtProcurar;
     private JLabel lblSelecioneUmaLinha;
     private JButton btnExcluir, btnAtualizar;
+    private JTable table;
+    private DefaultTableModel model;
 
     public ClienteView() {
 
@@ -38,6 +52,7 @@ public class ClienteView extends JPanel {
 
         this.setJTable();
 
+        this.atualizarTabela();
 
     }
 
@@ -86,7 +101,7 @@ public class ClienteView extends JPanel {
 
     public void setInputFields() {
 
-        JTextField txtProcurar = new JTextField();
+        txtProcurar = new JTextField();
         txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
         txtProcurar.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtProcurar.setBackground(Color.WHITE);
@@ -107,7 +122,7 @@ public class ClienteView extends JPanel {
 
             MainView topFrame = (MainView) SwingUtilities.getWindowAncestor(this);
             CadastroView cadastroView = new CadastroView();
-            topFrame.swithPanel(cadastroView);
+            MainView.swithPanel(cadastroView);
 
         });
 
@@ -118,11 +133,6 @@ public class ClienteView extends JPanel {
         btnAtualizar.setEnabled(false);
         add(btnAtualizar, "cell 3 1,grow");
         btnAtualizar.addActionListener(e -> {
-
-//			MainView topFrame = (MainView) SwingUtilities.getWindowAncestor(this);
-//			CadastroView cadastroView = new CadastroView();
-//			topFrame.swithPanel(cadastroView);
-//			PREENCHER OS CAMPOS AO CLICAR EM ATUALIZAR
 
 
         });
@@ -165,15 +175,69 @@ public class ClienteView extends JPanel {
         scrollPane.getViewport().setBackground(Color.WHITE);
         add(scrollPane, "cell 1 6 7 6,grow");
 
-        String[] colunmName = {"#", "Nome", "Plano", "Vencimento"};
-        Object[][] data = {};
+        table = new JTable(model) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-        DefaultTableModel model = new DefaultTableModel(data, colunmName);
-        JTable table = new JTable(model);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == MouseEvent.BUTTON1) {
+                    Object o = table.getModel().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
+                    int i = table.getSelectedRow();
+                    if (o != null) {
+                        btnAtualizar.setEnabled(true);
+                    }
+                }
+                /**
+                 * Remove o focus e as linhas selecionadas
+                 * da tabela e trasnfere para o campo de procura
+                 * apois 20 mili segundos
+                 */
+                if (table.hasFocus()) {
+                    ActionListener event = e1 -> txtProcurar.requestFocus();
+                    Timer timer = new Timer(20000, event);
+                    timer.start();
+                    if (timer.getDelay() == 20000) {
+                        table.getSelectionModel().clearSelection();
+                    }
+                }
+            }
+        });
+
         modificacao.tableLookAndFiel(table);
         scrollPane.setViewportView(table);
+    }
 
-        //TODO Acionar o Botao ATUALIZAR ao Selecionar uma Linha referente a um cliente
+    private void atualizarTabela() {
 
+        limparTabela();
+
+        daoM = new MovimentoDAO();
+        lista = daoM.consultarTodos();
+
+        model = (DefaultTableModel) table.getModel();
+
+        Object[] novaLinha = new Object[4];
+        for (MovimentoVO movimento : lista) {
+            novaLinha[0] = movimento.getPlano().getCliente().getId();
+            novaLinha[1] = movimento.getPlano().getCliente().getNome();
+            novaLinha[2] = movimento.getPlano().getTipo();
+            novaLinha[3] = calcularVencimento();
+
+            model.addRow(novaLinha);
+
+        }
+    }
+
+    private void limparTabela() {
+        table.setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_CLIENTE));
+    }
+
+    private String calcularVencimento() {
+        return "TESTE";
     }
 }

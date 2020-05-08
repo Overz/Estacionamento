@@ -381,7 +381,7 @@ public class InicioView extends JPanel {
     /**
      * Adiciona um Timer em Alguns Campos
      */
-    private void timerDoClick() {
+    private void timerClick() {
         ActionListener timerProcurar = actionEvent -> btnProcurar.doClick();
         Timer timer1 = new Timer(1000, timerProcurar);
         timer1.start();
