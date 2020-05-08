@@ -25,9 +25,9 @@ public class Modificacoes {
      * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
      * padronizados.
      *
-     * @param label
-     * @param text
-     * @return label+text
+     * @param label: JLabel
+     * @param text:  String
+     * @return label + text
      */
     public JLabel labelConfig(JLabel label, String text) {
 
@@ -39,7 +39,7 @@ public class Modificacoes {
 
         if (text.trim().isEmpty() || text.trim().equals("")) {
             label.setText(
-                    "<html><body>Erro: Line 76 >> Modificacoes.class<br>Method: labelConfig.<br>Motivo: Campo Vazio</body></html>");
+                    "<html><body>Erro: >> Modificacoes.class<br>Method: labelConfig.<br>Motivo: Campo Vazio</body></html>");
             return label;
         }
 
@@ -62,7 +62,7 @@ public class Modificacoes {
         table.setCellSelectionEnabled(false);
         table.setRowSelectionAllowed(true);
         table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION  );
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 
         table.setRowHeight(35);
@@ -77,7 +77,7 @@ public class Modificacoes {
     /**
      * Configura a Tabela para editar os campos de acordo com sua instancia
      *
-     * @param table
+     * @param table: JTable
      * @return table
      */
     public JTable tableConfigurations(JTable table) {
@@ -195,7 +195,7 @@ public class Modificacoes {
     }
 
     /**
-     * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
+     * Criação de uma mascara para o campo de acordo com a instancia, e um place holder(Palavras que somem ao
      * digitar)
      *
      * @param mask: MaskFormatter
@@ -205,22 +205,21 @@ public class Modificacoes {
     public MaskFormatter maskAndPlaceHolder(MaskFormatter mask, int tipo, String text) {
 
         try {
+            mask = new MaskFormatter();
             if (tipo == 1) {
-                mask = new MaskFormatter("###################################");
+                mask.setMask("###################################");
             }
 
             if (tipo == 2) {
-                mask = new MaskFormatter("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+                mask.setMask("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
             }
 
             if (tipo == 3) {
-                mask = new MaskFormatter("***********************************");
+                mask.setMask("***********************************");
             }
             mask.setPlaceholder(text);
         } catch (ParseException e) {
-            e.getMessage();
             e.printStackTrace();
-            e.getStackTrace();
         }
         return mask;
     }

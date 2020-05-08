@@ -12,7 +12,7 @@ public class SeletorInicio implements SuperSeletor<MovimentoVO> {
     public String criarFiltro(String qry, MovimentoVO object) {
         boolean primeiro = true;
 
-        if (txtProcurar != null && !txtProcurar.isEmpty() && !txtProcurar.isBlank()) {
+        if (txtProcurar != null && !txtProcurar.isEmpty() && !txtProcurar.isEmpty()) {
             if (!primeiro) {
                 qry += " inner join ";
             }
