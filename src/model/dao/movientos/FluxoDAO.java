@@ -45,7 +45,7 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<FluxoVO> consultarTodos() {
         String qry = "SELECT * FROM FLUXO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -75,7 +75,7 @@ public class FluxoDAO implements BaseDAO<FluxoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<FluxoVO> seletor) {
+    public ArrayList<FluxoVO> consultar(SuperSeletor<FluxoVO> seletor) {
         return null;
     } // NOT IMPLEMENTED
 

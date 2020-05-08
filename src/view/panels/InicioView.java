@@ -289,6 +289,7 @@ public class InicioView extends JPanel {
         add(btnAbrirEntrada, "cell 1 13 2 1,grow");
         btnAbrirEntrada.addActionListener(e -> {
 
+            //TODO ARRUMAR
             lblCancelaEntrada.setText("Abrindo Cancela");
             lblCancelaEntrada.setBackground(Color.ORANGE);
 
@@ -301,6 +302,8 @@ public class InicioView extends JPanel {
         btnAbrirSaida.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnAbrirSaida, "cell 1 15 2 1,grow");
         btnAbrirSaida.addActionListener(e -> {
+
+            //TODO FAZER IGUAL O DE CIMA
 
         });
     }
@@ -336,8 +339,7 @@ public class InicioView extends JPanel {
      * Limpa a tela para revalidar os valores
      */
     private void limparTabela() {
-        String[] colunas = new String[]{"Ticket / Cartão", "Carro", "Placa", "Cliente", "Entrada"};
-        table.setModel(new DefaultTableModel(new Object[][]{}, colunas));
+        table.setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_INICIO));
     }
 
     /**

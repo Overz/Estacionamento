@@ -40,7 +40,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<ContratoVO> consultarTodos() {
         String qry = "SELECT * FROM CONTRATO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -71,7 +71,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<ContratoVO> seletor) {
+    public ArrayList<ContratoVO> consultar(SuperSeletor<ContratoVO> seletor) {
         String qry = "SELECT * FROM CONTRATO";
         list = new ArrayList<>();
 

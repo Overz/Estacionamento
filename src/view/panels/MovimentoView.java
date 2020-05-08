@@ -168,7 +168,6 @@ public class MovimentoView extends JPanel {
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
-
         }
     }
 

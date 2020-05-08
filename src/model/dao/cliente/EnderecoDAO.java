@@ -42,7 +42,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<EnderecoVO> consultarTodos() {
         String qry = "SELECT * FROM ENDERECO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -72,7 +72,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<EnderecoVO> seletor) {
+    public ArrayList<EnderecoVO> consultar(SuperSeletor<EnderecoVO> seletor) {
         String qry = "SELECT * FROM ENDERECO ";
         list = new ArrayList<>();
 

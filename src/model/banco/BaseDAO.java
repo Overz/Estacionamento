@@ -10,14 +10,14 @@ public interface BaseDAO<T> {
 	 * Método para consultar tudo o que há no db;
 	 * @return ArrayList<?>
 	 */
-	ArrayList<?> consultarTodos();
+	ArrayList<T> consultarTodos();
 	
 	/**
 	 * Consulta algo especifico através de uma string;
 	 * @param seletor: Seletor
 	 * @return ArrayList<?>
 	 */
-    ArrayList<?> consultar(SuperSeletor<T> seletor);
+    ArrayList<T> consultar(SuperSeletor<T> seletor);
 
 	/**
 	 * Consulta algo especifico através de um id;
