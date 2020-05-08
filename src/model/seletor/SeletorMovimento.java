@@ -1,7 +1,6 @@
 package model.seletor;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO> {
 

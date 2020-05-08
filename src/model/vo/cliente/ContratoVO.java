@@ -1,6 +1,5 @@
 package model.vo.cliente;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class ContratoVO {

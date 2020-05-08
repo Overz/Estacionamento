@@ -1,13 +1,12 @@
 package view.panels.cadastro;
 
 import net.miginfocom.swing.MigLayout;
-import view.panels.BaseView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class PlanoCadastroView extends JPanel implements BaseView {
+public class PlanoCadastroView extends JPanel {
 
     private static final long serialVersionUID = -8178837282155450083L;
     private JComboBox<Object> cbPlano;
@@ -34,7 +33,6 @@ public class PlanoCadastroView extends JPanel implements BaseView {
         setJTable();
     }
 
-    @Override
     public void setJLabels_JSeparator() {
 
         JLabel lblPlano = new JLabel("Plano");
@@ -67,17 +65,14 @@ public class PlanoCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setInputFields() {
 
     }
 
-    @Override
     public void setButtons() {
 
     }
 
-    @Override
     public void setJTable() {
 
     }

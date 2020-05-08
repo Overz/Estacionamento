@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class MovimentoView extends JPanel implements BaseView {
+public class MovimentoView extends JPanel {
 
     private static final long serialVersionUID = -194366357031753318L;
     private final Modificacoes modificacao = new Modificacoes();
@@ -57,7 +57,6 @@ public class MovimentoView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJLabels_JSeparator() {
 
         JLabel lblMovimento = new JLabel("Movimento:");
@@ -68,7 +67,6 @@ public class MovimentoView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setInputFields() {
         DatePickerSettings dateSettings = new DatePickerSettings();
         dateSettings.setAllowKeyboardEditing(false);
@@ -100,7 +98,6 @@ public class MovimentoView extends JPanel implements BaseView {
         this.add(dtFinal, "cell 11 1,grow");
     }
 
-    @Override
     public void setButtons() {
         JButton btnPesquisar = new JButton("Pesquisar");
         btnPesquisar.setPreferredSize(new Dimension(80, 25));
@@ -132,7 +129,6 @@ public class MovimentoView extends JPanel implements BaseView {
         });
     }
 
-    @Override
     public void setJTable() {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBackground(Color.WHITE);

@@ -8,7 +8,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LostTicketView extends JPanel implements BaseView {
+public class LostTicketView extends JPanel  {
 
     private static final long serialVersionUID = -5438476599911734590L;
 
@@ -35,7 +35,6 @@ public class LostTicketView extends JPanel implements BaseView {
 
     }
 
-	@Override
 	public void setJLabels_JSeparator() {
         JLabel lblRegistroDeTicket = new JLabel("Registro de Ticket Perdido");
         lblRegistroDeTicket.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +127,6 @@ public class LostTicketView extends JPanel implements BaseView {
         });
     }
 
-	@Override
 	public void setJTable() {
 
 	}

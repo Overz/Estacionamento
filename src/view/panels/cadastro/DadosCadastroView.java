@@ -3,7 +3,6 @@ package view.panels.cadastro;
 import model.vo.veiculo.CarroVO;
 import net.miginfocom.swing.MigLayout;
 import util.Modificacoes;
-import view.panels.BaseView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -15,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class DadosCadastroView extends JPanel implements BaseView {
+public class DadosCadastroView extends JPanel {
 
     private static final long serialVersionUID = 8795512428702538815L;
 
@@ -53,7 +52,6 @@ public class DadosCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJLabels_JSeparator() {
         JLabel lblNome = new JLabel("Nome *");
         lblNome.setHorizontalAlignment(SwingConstants.CENTER);
@@ -86,7 +84,6 @@ public class DadosCadastroView extends JPanel implements BaseView {
         add(lblAdicionarVeculos, "cell 2 10 3 1,grow");
     }
 
-    @Override
     public void setInputFields() {
         ftfNome = new JFormattedTextField();
         ftfNome.setBorder(new LineBorder(Color.BLACK, 1, true));
@@ -121,7 +118,6 @@ public class DadosCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setButtons() {
 
         JButton btnAddRow = new JButton("Add Row Test");
@@ -137,7 +133,6 @@ public class DadosCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJTable() {
 
         JScrollPane scrollPane = new JScrollPane();

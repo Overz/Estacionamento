@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CaixaView extends JPanel implements BaseView {
+public class CaixaView extends JPanel {
 
     private static final long serialVersionUID = -4789193934965387787L;
     private final Modificacoes modificacao = new Modificacoes();
@@ -39,7 +39,6 @@ public class CaixaView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJLabels_JSeparator() {
 
         JLabel lblCaixa = new JLabel("Caixa");
@@ -71,11 +70,9 @@ public class CaixaView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setInputFields() {
     }
 
-    @Override
     public void setButtons() {
 
         String stringRelatorio = "<html><body>Relatorio do<br align=Center>Último Caixa</body></html>";
@@ -133,7 +130,6 @@ public class CaixaView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJTable() {
 
         JScrollPane scrollPane = new JScrollPane();

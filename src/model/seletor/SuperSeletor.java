@@ -1,7 +1,5 @@
 package model.seletor;
 
-import model.banco.BaseDAO;
-
 public interface SuperSeletor<T> {
 
     /**

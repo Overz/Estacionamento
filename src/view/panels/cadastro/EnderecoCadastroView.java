@@ -1,13 +1,12 @@
 package view.panels.cadastro;
 
 import net.miginfocom.swing.MigLayout;
-import view.panels.BaseView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class EnderecoCadastroView extends JPanel implements BaseView {
+public class EnderecoCadastroView extends JPanel {
 
     private static final long serialVersionUID = 6735598086664804404L;
     private JTextField txtRua, txtBairro, txtComplemento, txtNumero, txtCidade;
@@ -34,7 +33,6 @@ public class EnderecoCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJLabels_JSeparator() {
 
         JLabel lblRua = new JLabel("Rua");
@@ -64,7 +62,6 @@ public class EnderecoCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setInputFields() {
 
         txtRua = new JTextField();
@@ -99,12 +96,10 @@ public class EnderecoCadastroView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setButtons() {
 
     }
 
-    @Override
     public void setJTable() {
 
     }

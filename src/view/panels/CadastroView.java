@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class CadastroView extends JPanel implements BaseView {
+public class CadastroView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
     private DadosCadastroView dadosCadastroView;
@@ -54,7 +54,6 @@ public class CadastroView extends JPanel implements BaseView {
         add(lblAdicionarCliente, "cell 1 1 6 1,grow");
     }
 
-    @Override
     public void setInputFields() {
 
     }
@@ -130,7 +129,6 @@ public class CadastroView extends JPanel implements BaseView {
         });
     }
 
-    @Override
     public void setJTable() {
 
     }

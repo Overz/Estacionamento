@@ -9,7 +9,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class ClienteView extends JPanel implements BaseView {
+public class ClienteView extends JPanel {
 
     private static final long serialVersionUID = 3752138783055180091L;
     private final Modificacoes modificacao = new Modificacoes();
@@ -26,7 +26,6 @@ public class ClienteView extends JPanel implements BaseView {
         this.initialize();
     }
 
-    @Override
     public void initialize() {
 
         this.setJLabels_JSeparator();
@@ -63,7 +62,6 @@ public class ClienteView extends JPanel implements BaseView {
         });
     }
 
-    @Override
     public void setJLabels_JSeparator() {
 
         String text = "<html><body>Cadastrar um Novo Cliente<br><br>Selecione a Linha para Atualizar</body></html>";
@@ -86,7 +84,6 @@ public class ClienteView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setInputFields() {
 
         JTextField txtProcurar = new JTextField();
@@ -99,7 +96,6 @@ public class ClienteView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setButtons() {
 
         JButton btnCadastrar = new JButton("Cadatrar");
@@ -161,7 +157,6 @@ public class ClienteView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJTable() {
 
         JScrollPane scrollPane = new JScrollPane();

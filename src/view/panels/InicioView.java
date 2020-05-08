@@ -18,7 +18,7 @@ import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class InicioView extends JPanel implements BaseView {
+public class InicioView extends JPanel {
 
     private static final long serialVersionUID = -8394009250133780042L;
 
@@ -74,7 +74,6 @@ public class InicioView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJLabels_JSeparator() {
         JSeparator separatorCima = new JSeparator();
         separatorCima.setBackground(Color.BLACK);
@@ -124,7 +123,6 @@ public class InicioView extends JPanel implements BaseView {
         add(lblCancelaSaída, "cell 1 16 2 1,grow");
     }
 
-    @Override
     public void setInputFields() {
         ArrayList<String> formaPgto = new ArrayList<>();
         formaPgto.add(Constantes.DINHEIRO);
@@ -154,7 +152,6 @@ public class InicioView extends JPanel implements BaseView {
         modificacao.adicionarRemoverFocus(txtTicket, "Digite o Número do Ticket");
     }
 
-    @Override
     public void setButtons() {
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-excluir-50.png")));
@@ -253,7 +250,6 @@ public class InicioView extends JPanel implements BaseView {
 
     }
 
-    @Override
     public void setJTable() {
 
         JScrollPane scrollPane = new JScrollPane();
