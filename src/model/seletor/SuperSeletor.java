@@ -5,6 +5,7 @@ public interface SuperSeletor<T> {
     /**
      * Cria o filtro de acordo com a quantidade
      * de Parametros preenchidos na classe Objeto
+     *
      * @param string
      * @param object
      * @return String: String
@@ -13,6 +14,7 @@ public interface SuperSeletor<T> {
 
     /**
      * Verifica se os campos digitados Não estão vazios, para criar um Filtro
+     *
      * @param object
      * @return true/false
      */

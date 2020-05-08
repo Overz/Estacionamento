@@ -1,49 +1,49 @@
 package model.vo.veiculo;
 
 public class ModeloVO {
-	
-	private int id;
-	private String descricao;
-	private MarcaVO marca;
 
-	public ModeloVO(int id, String descricao, MarcaVO marca) {
-		super();
-		this.id = id;
-		this.descricao = descricao;
-		this.marca = marca;
-	}
-	
-	public ModeloVO() {
-		super();
-	}
+    private int id;
+    private String descricao;
+    private MarcaVO marca;
 
-	public int getId() {
-		return id;
-	}
+    public ModeloVO(int id, String descricao, MarcaVO marca) {
+        super();
+        this.id = id;
+        this.descricao = descricao;
+        this.marca = marca;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public ModeloVO() {
+        super();
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public MarcaVO getMarca() {
-		return marca;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setMarca(MarcaVO marca) {
-		this.marca = marca;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	@Override
-	public String toString() {
-		return "Modelo: " + this.descricao;
-	}
-	
+    public MarcaVO getMarca() {
+        return marca;
+    }
+
+    public void setMarca(MarcaVO marca) {
+        this.marca = marca;
+    }
+
+    @Override
+    public String toString() {
+        return "Modelo: " + this.descricao;
+    }
+
 }

@@ -89,7 +89,7 @@ $$ TO-FIX:
         ~
             -
 
--Arrumar as consultas por ID, baseado em ClienteDAO: ConsultarPorID
+- Arrumar as consultas por ID, baseado em ClienteDAO: ConsultarPorID
 
 
 $$ TO-FIX;

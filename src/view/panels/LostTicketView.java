@@ -8,7 +8,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LostTicketView extends JPanel  {
+public class LostTicketView extends JPanel {
 
     private static final long serialVersionUID = -5438476599911734590L;
 
@@ -27,7 +27,7 @@ public class LostTicketView extends JPanel  {
 
     public void initialize() {
 
-		setJLabels_JSeparator();
+        setJLabels_JSeparator();
 
         setInputFields();
 
@@ -35,7 +35,7 @@ public class LostTicketView extends JPanel  {
 
     }
 
-	public void setJLabels_JSeparator() {
+    public void setJLabels_JSeparator() {
         JLabel lblRegistroDeTicket = new JLabel("Registro de Ticket Perdido");
         lblRegistroDeTicket.setHorizontalAlignment(SwingConstants.CENTER);
         lblRegistroDeTicket.setFont(new Font("Arial", Font.BOLD, 30));
@@ -127,7 +127,7 @@ public class LostTicketView extends JPanel  {
         });
     }
 
-	public void setJTable() {
+    public void setJTable() {
 
-	}
+    }
 }

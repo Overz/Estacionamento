@@ -53,7 +53,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<PlanoVO> consultarTodos() {
         String qry = "SELECT * FROM PLANO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -83,7 +83,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<PlanoVO> seletor) {
+    public ArrayList<PlanoVO> consultar(SuperSeletor<PlanoVO> seletor) {
         String qry = "SELECT * FROM PLANO";
         list = new ArrayList<>();
 

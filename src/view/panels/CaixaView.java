@@ -1,5 +1,7 @@
 package view.panels;
 
+import model.banco.BaseDAO;
+import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
@@ -16,6 +18,9 @@ public class CaixaView extends JPanel {
     private static final long serialVersionUID = -4789193934965387787L;
     private final Modificacoes modificacao = new Modificacoes();
 
+    private BaseDAO<MovimentoVO> daoM;
+
+    private DefaultTableModel model;
     private JTable table;
 
     public CaixaView() {
@@ -36,6 +41,8 @@ public class CaixaView extends JPanel {
         this.setButtons();
 
         this.setJTable();
+
+        this.atualizarTabela();
 
     }
 
@@ -138,18 +145,36 @@ public class CaixaView extends JPanel {
         scrollPane.setBorder(null);
         add(scrollPane, "cell 1 5 17 7,grow");
 
-        String[] colunmName = {"Ticket / Cartão", "Descrição", "Hora de Entrada", "Hora de Validação", "Forma de Pagamento", "Valor"};
-        Object[][] data = {};
-
-        DefaultTableModel model = new DefaultTableModel(data, colunmName);
-        table = new JTable(model);
+        table = new JTable(model) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         modificacao.tableLookAndFiel(table);
         scrollPane.setViewportView(table);
 
     }
 
-    private void atualizarTabela(ArrayList<MovimentoVO> lista) {
+    private void atualizarTabela() {
+        daoM = new MovimentoDAO();
+        ArrayList<MovimentoVO> lista = daoM.consultarTodos();
 
+        limparTabela();
+
+        model = (DefaultTableModel) table.getModel();
+
+        Object[] novaLinha = new Object[6];
+        for (MovimentoVO movimento : lista) {
+            novaLinha[0] = movimento.getTicket().getNumero();
+            novaLinha[1] = movimento.getTicket().getCliente().getNome();
+            novaLinha[2] = movimento.getHr_entrada();
+            novaLinha[3] = movimento.getHr_saida();
+            novaLinha[4] = movimento.getTicket().getTipo();
+            novaLinha[5] = movimento.getTicket().getValor();
+
+            model.addRow(novaLinha);
+        }
     }
 
     private void limparTabela() {

@@ -39,7 +39,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<MarcaVO> consultarTodos() {
         String qry = "SELECT * FROM MARCA";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -69,7 +69,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<MarcaVO> seletor) {
+    public ArrayList<MarcaVO> consultar(SuperSeletor<MarcaVO> seletor) {
         String qry = "SELECT * FROM MARCA";
 
         if (seletor.temFiltro(marcaVO)) {

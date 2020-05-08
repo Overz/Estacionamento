@@ -31,6 +31,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
             ticketVO.setNumero(result.getLong("n_ticket"));
             ticketVO.setValor(result.getDouble("valor"));
+            ticketVO.setTipo(result.getString("tipo"));
             ticketVO.setDataValidacao(result.getTimestamp("hr_validacao").toLocalDateTime());
 
             return ticketVO;
@@ -47,7 +48,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<TicketVO> consultarTodos() {
         String qry = "SELECT * FROM TICKET";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -77,7 +78,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<TicketVO> seletor) {
+    public ArrayList<TicketVO> consultar(SuperSeletor<TicketVO> seletor) {
         String qry = "SELECT * FROM TICKET";
 
         if (seletor.temFiltro(ticketVO)) {

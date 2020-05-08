@@ -49,7 +49,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<CarroVO> consultarTodos() {
         String qry = "SELECT * FROM CARRO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -79,7 +79,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<CarroVO> seletor) {
+    public ArrayList<CarroVO> consultar(SuperSeletor<CarroVO> seletor) {
         String qry = "SELECT * FROM CARRO";
 
         if (seletor.temFiltro(carroVO)) {

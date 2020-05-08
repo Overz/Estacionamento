@@ -2,83 +2,83 @@ package model.vo.movimentos;
 
 public class LostTicketVO {
 
-	private int id;
-	private String nome;
-	private String cpf;
-	private String placa;
-	private String renavam;
-	private int formaPgto;
-	
-	public LostTicketVO(int id, String nome, String cpf, String placa, String renavam, int formaPgto) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.cpf = cpf;
-		this.placa = placa;
-		this.renavam = renavam;
-		this.formaPgto = formaPgto;
-	}
+    private int id;
+    private String nome;
+    private String cpf;
+    private String placa;
+    private String renavam;
+    private int formaPgto;
 
-	public LostTicketVO() {
-		super();
-	}
+    public LostTicketVO(int id, String nome, String cpf, String placa, String renavam, int formaPgto) {
+        super();
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.placa = placa;
+        this.renavam = renavam;
+        this.formaPgto = formaPgto;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public LostTicketVO() {
+        super();
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public String getCPF() {
-		return cpf;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public void setCPF(String cpf) {
-		this.cpf = cpf;
-	}
+    public String getCPF() {
+        return cpf;
+    }
 
-	public String getPlaca() {
-		return placa;
-	}
+    public void setCPF(String cpf) {
+        this.cpf = cpf;
+    }
 
-	public void setPlaca(String placa) {
-		this.placa = placa;
-	}
+    public String getPlaca() {
+        return placa;
+    }
 
-	public String getRenavam() {
-		return renavam;
-	}
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
 
-	public void setRenavam(String renavam) {
-		this.renavam = renavam;
-	}
+    public String getRenavam() {
+        return renavam;
+    }
 
-	public int getFormaPgto() {
-		return formaPgto;
-	}
+    public void setRenavam(String renavam) {
+        this.renavam = renavam;
+    }
 
-	public void setFormaPgto(int formaPgto) {
-		this.formaPgto = formaPgto;
-	}
+    public int getFormaPgto() {
+        return formaPgto;
+    }
 
-	
-	@Override
-	public String toString() {
-		return "Nome:" + nome +
-				" -  CPF: " + this.cpf + 
-				" - placa: " + this.placa +
-				" - renavam: " + this.renavam + 
-				" - formaPgto: " + this.formaPgto;
-	}
-	
+    public void setFormaPgto(int formaPgto) {
+        this.formaPgto = formaPgto;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Nome:" + nome +
+                " -  CPF: " + this.cpf +
+                " - placa: " + this.placa +
+                " - renavam: " + this.renavam +
+                " - formaPgto: " + this.formaPgto;
+    }
+
 }

@@ -47,7 +47,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<ModeloVO> consultarTodos() {
         String qry = "SELECT * FROM MODELO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -77,7 +77,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<ModeloVO> seletor) {
+    public ArrayList<ModeloVO> consultar(SuperSeletor<ModeloVO> seletor) {
         String qry = "SELECT * FROM MODELO";
 
         if (seletor.temFiltro(modeloVO)) {

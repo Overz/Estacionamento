@@ -52,7 +52,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultarTodos() {
+    public ArrayList<MovimentoVO> consultarTodos() {
         String qry = "SELECT * FROM MOVIMENTO";
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -82,7 +82,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public ArrayList<?> consultar(SuperSeletor<MovimentoVO> seletor) {
+    public ArrayList<MovimentoVO> consultar(SuperSeletor<MovimentoVO> seletor) {
         String qry = "SELECT * FROM MOVIMENTO";
 
         if (seletor.temFiltro(movimentoVO)) {
