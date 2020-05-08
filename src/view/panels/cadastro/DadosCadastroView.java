@@ -118,7 +118,7 @@ public class DadosCadastroView extends JPanel {
 
     public void setButtons() {
 
-        JButton btnAddRow = new JButton("Add Row Test");
+        JButton btnAddRow = new JButton("Adicionar Carro");
         add(btnAddRow, "cell 0 10 2 1,grow");
         btnAddRow.addActionListener(e -> {
 

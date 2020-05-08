@@ -14,6 +14,7 @@ public class CadastroView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
     private DadosCadastroView dadosCadastroView;
+    private JLayeredPane layeredPane;
 
     public CadastroView() {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -33,9 +34,7 @@ public class CadastroView extends JPanel {
 
         this.setButtons();
 
-        this.setJTable();
-
-        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane = new JLayeredPane();
         layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
         add(layeredPane, "cell 1 4 14 11,grow");
@@ -67,14 +66,17 @@ public class CadastroView extends JPanel {
         btnDados.addActionListener(e -> {
 
             dadosCadastroView = new DadosCadastroView();
-            swithPanel(dadosCadastroView);
-            if (dadosCadastroView.isShowing()) {
-                if (btnDados.isSelected()) {
-                    btnDados.setBackground(Color.WHITE);
-                } else {
-                    btnDados.setBackground(new JButton().getBackground());
-                }
-            }
+//            MainView.swithPanel(dadosCadastroView);
+//            if (dadosCadastroView.isShowing()) {
+//                if (btnDados.isSelected()) {
+//                    btnDados.setBackground(Color.WHITE);
+//                } else {
+//                    btnDados.setBackground(new JButton().getBackground());
+//                }
+//            }
+        	
+        	swithchPanel(dadosCadastroView);
+        	
 
             // TODO SALVAR OS DADOS ANTES DE MUDAR DE TELA
 
@@ -87,7 +89,7 @@ public class CadastroView extends JPanel {
         btnEndereco.addActionListener(e -> {
 
             EnderecoCadastroView enderecoCadastroView = new EnderecoCadastroView();
-            swithPanel(enderecoCadastroView);
+            swithchPanel(enderecoCadastroView);
             if (enderecoCadastroView.isShowing()) {
                 if (btnDados.isSelected()) {
                     btnDados.setBackground(Color.WHITE);
@@ -107,7 +109,7 @@ public class CadastroView extends JPanel {
         btnPlano.addActionListener(e -> {
 
             PlanoCadastroView planoCadastroView = new PlanoCadastroView();
-            swithPanel(planoCadastroView);
+            swithchPanel(planoCadastroView);
             if (planoCadastroView.isShowing()) {
                 if (btnDados.isSelected()) {
                     btnDados.setBackground(Color.WHITE);
@@ -128,13 +130,15 @@ public class CadastroView extends JPanel {
 
         });
     }
-
-    public void setJTable() {
-
+    
+    private void swithchPanel(JPanel panel) {
+        layeredPane.removeAll();
+        panel.setBorder(null);
+        panel.setBackground(Color.WHITE);
+        panel.repaint();
+        panel.revalidate();
+        layeredPane.add(panel, "grow");
+        layeredPane.repaint();
+        layeredPane.revalidate();
     }
-
-    public void swithPanel(JPanel panel) {
-        MainView.swithPanel(panel);
-    }
-
 }
