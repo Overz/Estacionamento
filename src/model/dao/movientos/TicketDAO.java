@@ -205,7 +205,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public boolean excluir(int id) {
+    public boolean excluirPorID(int id) {
         String qry = "DELETE FROM TICKET WHERE IDTICKET = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

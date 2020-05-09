@@ -207,8 +207,8 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public boolean excluir(int id) {
-        String qry = "DELETE FROM MOVIMENTO WHERE IDMOVIMENTO = 1";
+    public boolean excluirPorID(int id) {
+        String qry = "DELETE FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

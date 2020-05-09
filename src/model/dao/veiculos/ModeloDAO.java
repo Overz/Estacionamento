@@ -202,7 +202,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public boolean excluir(int id) {
+    public boolean excluirPorID(int id) {
         String qry = "DELETE FROM MODELO WHERE IDMODELO = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

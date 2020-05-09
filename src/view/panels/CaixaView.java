@@ -168,8 +168,8 @@ public class CaixaView extends JPanel {
         for (MovimentoVO movimento : lista) {
             novaLinha[0] = movimento.getTicket().getNumero();
             novaLinha[1] = movimento.getTicket().getCliente().getNome();
-            novaLinha[2] = movimento.getHr_entrada();
-            novaLinha[3] = movimento.getHr_saida();
+            novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
+            novaLinha[3] = movimento.getHr_saida().format(Constantes.dtf);
             novaLinha[4] = movimento.getTicket().getTipo();
             novaLinha[5] = movimento.getTicket().getValor();
 

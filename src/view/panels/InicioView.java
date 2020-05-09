@@ -23,12 +23,15 @@ public class InicioView extends JPanel {
     private static final long serialVersionUID = -8394009250133780042L;
 
     private final Modificacoes modificacao = new Modificacoes();
-    private final ControllerInicio control = new ControllerInicio(this);
+    private final ControllerInicio control = new ControllerInicio();
 
     private DefaultTableModel model = new DefaultTableModel();
     private ArrayList<MovimentoVO> lista = new ArrayList<>();
+    private final BaseDAO<MovimentoVO> daoM = new MovimentoDAO();
+    private MovimentoVO m;
     private String msg;
 
+    private JComboBox cbFormaPgto;
     private MaskFormatter mf1, mf2;
     private JSplitPane splitPane;
     private JTable table;
@@ -58,19 +61,22 @@ public class InicioView extends JPanel {
         splitPane.setBackground(Color.WHITE);
         this.add(splitPane, "cell 4 2 11 1,grow");
 
-//		Mascara e PlaceHolder
         maskAndPlaceHolder();
-//		JLabels
+
         setJLabels_JSeparator();
-//		JTextFields - InputFields
+
         setInputFields();
-//		JButtons - Relacionados ao InputFields();
+
         setButtons();
-//		JTabel & JButtons - Tabela e Botões ligados Diretamente a TABELA
+
         setJTable();
 
-//		Timer para clicar no botão Procurar e Manter a Tabela Atualizada
-//		timerDoClick();
+        if (table.getRowCount() == 0 || table.getColumnCount() == 0) {
+            atualizarTabela();
+        }
+
+//		Timer para manter a Tabela Atualizada
+//        timerRefreshData();
 
     }
 
@@ -128,7 +134,7 @@ public class InicioView extends JPanel {
         formaPgto.add(Constantes.DINHEIRO);
         formaPgto.add(Constantes.CARTAO);
 
-        JComboBox<?> cbFormaPgto = new JComboBox<>(formaPgto.toArray());
+        cbFormaPgto = new JComboBox<>(formaPgto.toArray());
         cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 1 8 2 1,grow");
@@ -171,10 +177,8 @@ public class InicioView extends JPanel {
         add(btnValidar, "cell 2 6,grow");
         btnValidar.addActionListener(e -> {
 
-//			modificacao.joptionConfig(1, this, mensagem, "VALIDAÇÃO", Modificacoes.JOPTION_ATENCAO,
-//			Modificacoes.JOPTION_K_C, null, null);
-
             String ticket = txtTicket.getText().trim();
+            String tipoPgto = cbFormaPgto.getSelectedItem().toString();
             msg = control.validate(ticket);
 
             JOptionPane.showMessageDialog(this, modificacao.labelConfig(lblModificadoParaExibicao, msg), "VALIDAÇÃO",
@@ -189,10 +193,7 @@ public class InicioView extends JPanel {
         splitPane.setLeftComponent(btnProcurar);
         btnProcurar.addActionListener(e -> {
 
-            BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
-            MovimentoDAO mDAO = new MovimentoDAO();
-            lista = (ArrayList<MovimentoVO>) mDAO.consultarTodos();
-            atualizarTabela(lista);
+            this.atualizarTabela();
 
         });
 
@@ -202,12 +203,7 @@ public class InicioView extends JPanel {
         btnRemover.setToolTipText("Remove os Clientes ou Tickets na Tabela");
         add(btnRemover, "cell 11 18 3 2,grow");
         btnRemover.addActionListener(e -> {
-
-//			JOptionPane.showConfirmDialog(this, modificacao.labelConfig(lblMetodo, msg), "EXCLUIR CITKER / CARTÃO?",
-//					JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE);
-
-            removeSelectedRows(table);
-
+            this.removeSelectedRow();
         });
 
         btnGerarTicket = new JButton("Gerar Ticket");
@@ -263,19 +259,9 @@ public class InicioView extends JPanel {
                 return false;
             }
         };
-//
-//		DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
-//		DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
-//		@SuppressWarnings("unused")
-//		DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
-//
-//		table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(1).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(2).setCellRenderer(centerRendererCenter);
-//		table.getColumnModel().getColumn(3).setCellRenderer(centerRendererCenter);
 
-        modificacao.tableLookAndFiel(table);
-        scrollPane.setViewportView(table); // define a tabela no scrollpane, e seta o cabeçalho
+        table = modificacao.tableLookAndFiel(table);
+        scrollPane.setViewportView(table);
         add(scrollPane, "cell 4 3 11 14,grow");
 
     }
@@ -310,13 +296,12 @@ public class InicioView extends JPanel {
 
     /**
      * Atualiza a JTable com Todos os Valores
-     *
-     * @param lista: MovimentoVO
      */
-    private void atualizarTabela(ArrayList<MovimentoVO> lista) {
-
+    private void atualizarTabela() {
         // Limpa a tabela
         limparTabela();
+
+        lista = daoM.consultarTodos();
 
         // Obtém o model da tabela
         model = (DefaultTableModel) table.getModel();
@@ -328,7 +313,7 @@ public class InicioView extends JPanel {
             novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
             novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
             novaLinha[3] = movimento.getTicket().getCliente().getNome();
-            novaLinha[4] = String.valueOf(movimento.getHr_entrada().toLocalDate());
+            novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
@@ -344,18 +329,23 @@ public class InicioView extends JPanel {
 
     /**
      * Remover as linhas selecionadas da tablea;
-     *
-     * @param table: JTable
      */
-    public void removeSelectedRows(JTable table) {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        MovimentoDAO dao = new MovimentoDAO();
+    public void removeSelectedRow() {
+
         int row = table.getSelectedRow();
+        MovimentoVO m = lista.get(row);
         model.removeRow(row);
-        if (dao.excluir(row)) {
-            //TODO
+
+        if (daoM.excluirPorID(m.getId())) {
+            msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
+            JOptionPane.showMessageDialog(this, modificacao.labelConfig(lblModificadoParaExibicao, msg), "EXCLUSÂO",
+                    JOptionPane.OK_OPTION);
+            System.out.println(m.toString());
         } else {
-            //TODO
+            msg = "ERRO AO REALIZAR EXCLUSÃO!";
+            JOptionPane.showMessageDialog(this, modificacao.labelConfig(lblModificadoParaExibicao, msg), "EXCLUSÂO",
+                    JOptionPane.WARNING_MESSAGE);
+            System.out.println(m.toString());
         }
     }
 
@@ -381,10 +371,10 @@ public class InicioView extends JPanel {
     /**
      * Adiciona um Timer em Alguns Campos
      */
-    private void timerClick() {
-        ActionListener timerProcurar = actionEvent -> btnProcurar.doClick();
-        Timer timer1 = new Timer(1000, timerProcurar);
-        timer1.start();
+    private void timerRefreshData() {
+        ActionListener event = actionEvent -> atualizarTabela();
+        Timer timer = new Timer(10000, event);
+        timer.start();
     }
 
 }

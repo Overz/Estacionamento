@@ -99,11 +99,11 @@ CREATE TABLE `dbestacionamento`.`movimento`
     CONSTRAINT `fk_movimento_plano` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`idplano`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE `dbestacionamento`.`fluxo`
-(
-    `idfluxo`     INT NOT NULL AUTO_INCREMENT,
-    `idMovimento` INT NOT NULL,
-    CONSTRAINT `pk_fluxo` PRIMARY KEY (`idfluxo`),
-    CONSTRAINT `fk_fluxo_movimento` FOREIGN KEY (`idMovimento`) REFERENCES `dbestacionamento`.`movimento` (`idmovimento`)
-) ENGINE = InnoDB;
+# CREATE TABLE `dbestacionamento`.`fluxo`
+# (
+#     `idfluxo`     INT NOT NULL AUTO_INCREMENT,
+#     `idMovimento` INT NOT NULL,
+#     CONSTRAINT `pk_fluxo` PRIMARY KEY (`idfluxo`),
+#     CONSTRAINT `fk_fluxo_movimento` FOREIGN KEY (`idMovimento`) REFERENCES `dbestacionamento`.`movimento` (`idmovimento`)
+# ) ENGINE = InnoDB;
 

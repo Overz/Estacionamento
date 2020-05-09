@@ -51,6 +51,6 @@ public interface BaseDAO<T> {
      * @param id: Int array
      * @return true/false
      */
-    boolean excluir(int id);
+    boolean excluirPorID(int id);
 
 }

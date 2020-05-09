@@ -1,6 +1,10 @@
 package util;
 
+import java.time.format.DateTimeFormatter;
+
 public class Constantes {
+
+    public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:a");
 
     public static final String SELECIONE = "~ SELECIONE ~";
     public static final String DINHEIRO = "1 - DINHEIRO";

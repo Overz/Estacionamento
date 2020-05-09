@@ -58,9 +58,6 @@ public class Modificacoes {
         table.setFont(new Font("Arial", Font.BOLD, 16));
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
         table.getTableHeader().setBackground(Color.WHITE);
-        table.setColumnSelectionAllowed(true);
-        table.setCellSelectionEnabled(false);
-        table.setRowSelectionAllowed(true);
         table.getTableHeader().setReorderingAllowed(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -83,19 +80,12 @@ public class Modificacoes {
     public JTable tableConfigurations(JTable table) {
         DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
         DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
-        @SuppressWarnings("unused")
         DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
-
-        table.getColumnModel().getColumn(0).setCellRenderer(centerRendererCenter);
 
 //		Renderizar os valores dentro da celular
         for (int i = 0; i < table.getModel().getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRendererCenter);
-            if (i == 3) {
-                table.getColumnModel().getColumn(1).setCellRenderer(centerRendererLeft);
-            }
         }
-
 
         return table;
     }

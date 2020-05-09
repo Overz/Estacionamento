@@ -203,7 +203,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public boolean excluir(int id) {
+    public boolean excluirPorID(int id) {
         String qry = "DELETE FROM CARRO WHERE IDCARRO = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

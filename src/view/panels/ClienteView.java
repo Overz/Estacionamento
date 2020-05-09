@@ -79,7 +79,7 @@ public class ClienteView extends JPanel {
 
     public void setJLabels_JSeparator() {
 
-        String text = "<html><body>Cadastrar um Novo Cliente<br><br>Selecione a Linha para Atualizar</body></html>";
+        String text = "<html><body>Cadastrar um Novo Cliente<p text-align:center> Ou </p><p>Selecione a Linha para Atualizar</p></body></html>";
         JLabel lblSelecionar = new JLabel(text);
         lblSelecionar.setBackground(Color.WHITE);
         lblSelecionar.setHorizontalAlignment(SwingConstants.LEFT);
@@ -201,9 +201,9 @@ public class ClienteView extends JPanel {
                     ActionListener event = e1 -> txtProcurar.requestFocus();
                     Timer timer = new Timer(20000, event);
                     timer.start();
-                    if (timer.getDelay() == 20000) {
-                        table.getSelectionModel().clearSelection();
-                    }
+//                    if (timer.getDelay() == 20000) {
+//                        table.getSelectionModel().clearSelection();
+//                    }
                 }
             }
         });

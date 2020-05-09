@@ -6,7 +6,6 @@ import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.seletor.SeletorMovimento;
 import model.seletor.SuperSeletor;
-import model.vo.movimentos.FluxoVO;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
@@ -121,7 +120,7 @@ public class MovimentoView extends JPanel {
             seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
             seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
 
-            SuperSeletor<FluxoVO> seletor = new SeletorMovimento<FluxoVO>();
+            SuperSeletor<MovimentoVO> seletor = new SeletorMovimento<MovimentoVO>();
 
             this.lista = bDAO.consultar(seletorMovimento);
             atualizarTabela(this.lista);
@@ -160,11 +159,11 @@ public class MovimentoView extends JPanel {
         for (MovimentoVO movimento : lista) {
             novaLinha[0] = movimento.getTicket().getNumero();
             novaLinha[1] = movimento.getTicket().getCliente().getNome();
-            novaLinha[2] = movimento.getPlano().getDescircao();
+            novaLinha[2] = movimento.getPlano().getTipo();
             novaLinha[3] = movimento.getTicket().getCliente().getCarro().getPlaca();
             novaLinha[4] = movimento.getTicket().getValor();
-            novaLinha[5] = movimento.getHr_entrada();
-            novaLinha[6] = movimento.getHr_saida();
+            novaLinha[5] = movimento.getHr_entrada().format(Constantes.dtf);
+            novaLinha[6] = movimento.getHr_saida().format(Constantes.dtf);
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);

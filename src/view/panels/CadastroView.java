@@ -8,12 +8,19 @@ import view.panels.cadastro.PlanoCadastroView;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CadastroView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
     private DadosCadastroView dadosCadastroView;
+    private EnderecoCadastroView enderecoCadastroView;
+    private PlanoCadastroView planoCadastroView;
+
     private JLayeredPane layeredPane;
+
+    private JButton btnPlano, btnDados, btnEndereco;
 
     public CadastroView() {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -58,62 +65,73 @@ public class CadastroView extends JPanel {
 
     public void setButtons() {
 
-        JButton btnDados = new JButton("Dados");
+        btnDados = new JButton("Dados");
         btnDados.setFont(new Font("Arial", Font.BOLD, 20));
         btnDados.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnDados, "cell 1 3 2 1,grow");
         btnDados.addActionListener(e -> {
 
             dadosCadastroView = new DadosCadastroView();
-            swithchPanel(dadosCadastroView);
-            if (dadosCadastroView.isShowing()) {
-                if (btnDados.isSelected()) {
-                    btnDados.setBackground(Color.WHITE);
-                } else {
-                    btnDados.setBackground(new JButton().getBackground());
+            boolean bool = swithchPanel(dadosCadastroView);
+            btnDados.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (bool) {
+                        btnDados.setBackground(new Color(100, 149, 237));
+                        btnEndereco.setBackground(new JButton().getBackground());
+                        btnPlano.setBackground(new JButton().getBackground());
+                    }
                 }
-            }
-
+            });
 
             // TODO SALVAR OS DADOS ANTES DE MUDAR DE TELA
 
         });
 
-        JButton btnEndereco = new JButton("Endereço");
+        btnEndereco = new JButton("Endereço");
         btnEndereco.setFont(new Font("Arial", Font.BOLD, 20));
         btnEndereco.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnEndereco, "cell 3 3 2 1,grow");
         btnEndereco.addActionListener(e -> {
 
-            EnderecoCadastroView enderecoCadastroView = new EnderecoCadastroView();
-            swithchPanel(enderecoCadastroView);
-            if (enderecoCadastroView.isShowing()) {
-                if (btnDados.isSelected()) {
-                    btnDados.setBackground(Color.WHITE);
-                } else {
-                    btnDados.setBackground(new JButton().getBackground());
+            enderecoCadastroView = new EnderecoCadastroView();
+            boolean bool = swithchPanel(enderecoCadastroView);
+
+            btnEndereco.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (bool) {
+                        btnEndereco.setBackground(new Color(100, 149, 237));
+                        btnDados.setBackground(new JButton().getBackground());
+                        btnPlano.setBackground(new JButton().getBackground());
+                    }
                 }
-            }
+            });
 
             // TODO SALVAR OS DADOS ANTES DE MUDAR DE TELA
 
         });
 
-        JButton btnPlano = new JButton("Plano");
+        btnPlano = new JButton("Plano");
         btnPlano.setFont(new Font("Arial", Font.BOLD, 20));
         btnPlano.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnPlano, "cell 5 3 2 1,grow");
         btnPlano.addActionListener(e -> {
 
-            PlanoCadastroView planoCadastroView = new PlanoCadastroView();
-            swithchPanel(planoCadastroView);
-            if (planoCadastroView.isShowing()) {
-                if (btnDados.isSelected()) {
-                    btnDados.setBackground(Color.WHITE);
-                } else {
-                    btnDados.setBackground(new JButton().getBackground());
+            planoCadastroView = new PlanoCadastroView();
+            boolean bool = swithchPanel(planoCadastroView);
+
+            btnPlano.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (bool) {
+                        btnPlano.setBackground(new Color(100, 149, 237));
+                        btnDados.setBackground(new JButton().getBackground());
+                        btnEndereco.setBackground(new JButton().getBackground());
+                    }
                 }
-            }
+            });
+
 
             // TODO SALVAR OS DADOS ANTES DE MUDAR DE TELA
 
@@ -127,8 +145,8 @@ public class CadastroView extends JPanel {
 
         });
     }
-    
-    private void swithchPanel(JPanel panel) {
+
+    private boolean swithchPanel(JPanel panel) {
         layeredPane.removeAll();
         panel.setBorder(null);
         panel.setBackground(Color.WHITE);
@@ -137,5 +155,6 @@ public class CadastroView extends JPanel {
         layeredPane.add(panel, "grow");
         layeredPane.repaint();
         layeredPane.revalidate();
+        return panel.isVisible();
     }
 }
