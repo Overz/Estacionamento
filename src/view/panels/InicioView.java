@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class InicioView extends JPanel {
@@ -20,8 +19,6 @@ public class InicioView extends JPanel {
 
     private ControllerInicio control;
     private Modificacoes modificacao;
-
-    private String msg;
 
     private JComboBox cbFormaPgto;
     private MaskFormatter mf1, mf2;
@@ -73,7 +70,7 @@ public class InicioView extends JPanel {
 //		Timer para manter a Tabela Atualizada
 //        timerRefreshData();
 
-        this.maskAndPlaceHolder();
+        control.maskAndPlaceHolder();
 
     }
 
@@ -142,7 +139,7 @@ public class InicioView extends JPanel {
         txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
         txtProcurar.setFocusAccelerator((char) KeyEvent.VK_F6);
         txtProcurar.setColumns(10);
-        modificacao.adicionarRemoverFocus(txtProcurar, "Pesquisar... (F6)");
+        txtProcurar = modificacao.adicionarRemoverFocus(txtProcurar, "Pesquisar... (F6)");
         splitPane.setRightComponent(txtProcurar);
 
         txtTicket = new JFormattedTextField(mf1);
@@ -176,7 +173,7 @@ public class InicioView extends JPanel {
 
             String ticket = txtTicket.getText().trim();
             String tipoPgto = cbFormaPgto.getSelectedItem().toString();
-            msg = control.validate(ticket, tipoPgto);
+            String msg = control.validate(ticket, tipoPgto);
 
             if (msg.equals("")) {
                 control.validarTicket(ticket);
@@ -282,24 +279,6 @@ public class InicioView extends JPanel {
 
     }
 
-    /**
-     * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
-     * digitar)
-     */
-    private void maskAndPlaceHolder() {
-        try {
-            mf1.setMask("#############################################");
-            mf1.setPlaceholder("Digite o Número do Ticket");
-            mf2.setMask("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-            mf2.setPlaceholder("Pesquisar... (F6)");
-        } catch (ParseException e) {
-            System.out.println("Message:" + e.getMessage());
-            System.out.println("Cause:" + e.getCause());
-            System.out.println("ErrorOffSet:" + e.getErrorOffset());
-            System.out.println("LocalizedMessage:" + e.getLocalizedMessage());
-        }
-    }
-
     public JTable getTable() {
         return table;
     }
@@ -346,5 +325,13 @@ public class InicioView extends JPanel {
 
     public JLabel getLblModificadoParaExibicao() {
         return lblModificadoParaExibicao;
+    }
+
+    public MaskFormatter getMf1() {
+        return mf1;
+    }
+
+    public MaskFormatter getMf2() {
+        return mf2;
     }
 }

@@ -10,16 +10,19 @@ import view.panels.InicioView;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ControllerInicio {
     private final InicioView inicioViewview;
-    private final BaseDAO<MovimentoVO> daoM = new MovimentoDAO();
+    private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
     private String msg;
 
     public ControllerInicio(InicioView inicioView) {
         this.inicioViewview = inicioView;
+        daoM = new MovimentoDAO();
+        lista = new ArrayList<>();
     }
 
     /**
@@ -71,6 +74,24 @@ public class ControllerInicio {
             JOptionPane.showMessageDialog(inicioViewview, inicioViewview.getModificacao().labelConfig(inicioViewview.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
                     JOptionPane.ERROR_MESSAGE);
             System.out.println(m.toString());
+        }
+    }
+
+    /**
+     * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
+     * digitar)
+     */
+    public void maskAndPlaceHolder() {
+        try {
+            inicioViewview.getMf1().setMask("####################");
+            inicioViewview.getMf1().setPlaceholder("Digite o Número do Ticket");
+            inicioViewview.getMf2().setMask("HHHHHHHHHHHHHHHHHHHH");
+            inicioViewview.getMf2().setPlaceholder("Pesquisar... (F6)");
+        } catch (ParseException e) {
+            System.out.println("Message:" + e.getMessage());
+            System.out.println("Cause:" + e.getCause());
+            System.out.println("ErrorOffSet:" + e.getErrorOffset());
+            System.out.println("LocalizedMessage:" + e.getLocalizedMessage());
         }
     }
 

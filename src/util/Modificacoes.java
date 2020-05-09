@@ -215,8 +215,7 @@ public class Modificacoes {
     }
 
     /**
-     * Remove os espaçoes em branco do campo, iniciando a digitação no começo do
-     * campo.
+     * Remove os espaçoes em branco do campo, iniciando a digitação no começo do campo
      *
      * @param txt: JTextField
      * @return cast(JFormatedTextField)

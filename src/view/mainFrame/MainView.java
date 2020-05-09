@@ -1,6 +1,7 @@
 package view.mainFrame;
 
 import net.miginfocom.swing.MigLayout;
+import util.Constantes;
 import view.panels.*;
 
 import javax.swing.*;
@@ -10,6 +11,8 @@ public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
     private static JLayeredPane layeredPane;
+    private static final InicioView inicioView = new InicioView();
+    private static final CaixaView caixaView = new CaixaView();
 
     public MainView() {
 
@@ -23,7 +26,6 @@ public class MainView extends JFrame {
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
         this.getContentPane().add(layeredPane, "cell 0 0,grow");
-        InicioView inicioView = new InicioView();
         inicioView.setBorder(null);
         layeredPane.add(inicioView, "grow");
 
@@ -42,9 +44,26 @@ public class MainView extends JFrame {
         });
     }
 
+    private static void manterDadosImportantes() {
+        String a = caixaView.getLblSaldoEmDinheiror().getText();
+        String b = caixaView.getLblSaldoEmDinheiror().getText();
+        String c = caixaView.getLblTotalCaixa().getText();
+        if (a == null || a.equals("") || b == null || b.equals("") || c == null || c.equals("")) {
+            caixaView.getLblSaldoEmDinheiror().setText(String.valueOf(Constantes.VALOR_DINHEIRO));
+            caixaView.getLblSaldoEmCarto().setText(String.valueOf(Constantes.VALOR_CARTAO));
+            caixaView.getLblTotalCaixa().setText(String.valueOf(Constantes.VALOR_TOTAL));
+        }
+        inicioView.getTxtTicket().repaint();
+        inicioView.getTxtTicket().revalidate();
+        inicioView.getTxtProcurar().repaint();
+        inicioView.getTxtProcurar().revalidate();
+    }
+
     public static void swithPanel(JPanel panel) {
 
         layeredPane.removeAll();
+
+        manterDadosImportantes();
         panel.setBorder(null);
         panel.setBackground(Color.WHITE);
         panel.repaint();
@@ -67,12 +86,7 @@ public class MainView extends JFrame {
         btnInicio.setBackground(Color.WHITE);
         btnInicio.setBorder(null);
         menuBar.add(btnInicio);
-        btnInicio.addActionListener(e -> {
-
-            InicioView panelInicio = new InicioView();
-            swithPanel(panelInicio);
-
-        });
+        btnInicio.addActionListener(e -> swithPanel(inicioView));
 
         Component strut1 = Box.createHorizontalStrut(20);
         menuBar.add(strut1);
@@ -83,12 +97,7 @@ public class MainView extends JFrame {
         btnCaixa.setBackground(Color.WHITE);
         btnCaixa.setBorder(null);
         menuBar.add(btnCaixa);
-        btnCaixa.addActionListener(e -> {
-
-            CaixaView caixaPanel = new CaixaView();
-            swithPanel(caixaPanel);
-
-        });
+        btnCaixa.addActionListener(e -> swithPanel(caixaView));
 
         Component strut2 = Box.createHorizontalStrut(20);
         menuBar.add(strut2);
