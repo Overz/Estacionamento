@@ -6,6 +6,7 @@ import model.dao.cliente.ClienteDAO;
 import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
+import util.Constantes;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));
             ticketVO.setDataValidacao(result.getTimestamp("hr_validacao").toLocalDateTime());
+            ticketVO.setStatus(result.getBoolean("statusTicket"));
 
             return ticketVO;
         } catch (SQLException e) {
@@ -113,6 +115,36 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
+    public ArrayList<TicketVO> consultarObjeto(String... values) {
+        int id;
+        long numero;
+        String qry = null;
+        if (Constantes.FLAG == 1) {
+            qry = "SELECT " + Constantes.DB_TICKET_NUM_TICKET + " FROM TICKET WHERE " + Constantes.DB_TICKET_ID + " = ?";
+        }
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            numero = Long.parseLong(values[0]);
+            id = Integer.parseInt(values[values.length - 1]);
+
+            stmt.setLong(1, numero);
+            stmt.setLong(2, id);
+            result = stmt.executeQuery();
+            while (result.next()) {
+                ticketVO = criarResultSet(result);
+                list.add(ticketVO);
+            }
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public TicketVO consultarPorId(int id) {
         String qry = "SELECT * FROM TICKET WHERE IDTICKET = ?";
         conn = Banco.getConnection();
@@ -176,14 +208,27 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean alterar(TicketVO object) {
-        String qry = "UPDATE TICKET SET N_TICKET=?, VALOR=?, HR_VALIDACAO=?";
+        String qry = null;
+        if (Constantes.FLAG == 1) {
+            qry = "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?";
+        } else {
+            qry = "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?";
+        }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setLong(1, object.getNumero());
-            stmt.setDouble(1, object.getValor());
-            stmt.setTimestamp(1, Timestamp.valueOf(object.getDataValidacao()));
+            if (Constantes.FLAG == 1) {
+                stmt.setBoolean(1, object.getStatus());
+                stmt.setInt(2, object.getId());
+            } else {
+                stmt.setLong(1, object.getNumero());
+                stmt.setDouble(2, object.getValor());
+                stmt.setString(3, object.getTipo());
+                stmt.setTimestamp(4, Timestamp.valueOf(object.getDataValidacao()));
+                stmt.setBoolean(5, object.getStatus());
+                stmt.setInt(6, object.getId());
+            }
 
             if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;

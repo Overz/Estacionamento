@@ -49,9 +49,9 @@ public class MainView extends JFrame {
         String b = caixaView.getLblSaldoEmDinheiror().getText();
         String c = caixaView.getLblTotalCaixa().getText();
         if (a == null || a.equals("") || b == null || b.equals("") || c == null || c.equals("")) {
-            caixaView.getLblSaldoEmDinheiror().setText(String.valueOf(Constantes.VALOR_DINHEIRO));
-            caixaView.getLblSaldoEmCarto().setText(String.valueOf(Constantes.VALOR_CARTAO));
-            caixaView.getLblTotalCaixa().setText(String.valueOf(Constantes.VALOR_TOTAL));
+            caixaView.getLblSaldoEmDinheiror().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_DINHEIRO));
+            caixaView.getLblSaldoEmCarto().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_CARTAO));
+            caixaView.getLblTotalCaixa().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_TOTAL));
         }
         inicioView.getTxtTicket().repaint();
         inicioView.getTxtTicket().revalidate();

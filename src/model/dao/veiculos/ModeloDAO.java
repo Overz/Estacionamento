@@ -112,6 +112,11 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public ModeloVO consultarPorId(int id) {
         String qry = "SELECT * FROM MODELO WHERE IDMODELO = ?";
         conn = Banco.getConnection();

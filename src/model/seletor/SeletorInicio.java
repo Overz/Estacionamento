@@ -1,8 +1,6 @@
 package model.seletor;
 
-import model.vo.movimentos.MovimentoVO;
-
-public class SeletorInicio implements SuperSeletor<MovimentoVO> {
+public class SeletorInicio<MovimentoVO> implements SuperSeletor<MovimentoVO> {
 
     private String txtProcurar;
     private String txtTicketCartao;

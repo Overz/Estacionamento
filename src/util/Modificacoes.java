@@ -12,8 +12,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
 import java.text.ParseException;
@@ -154,34 +152,6 @@ public class Modificacoes {
         }
         sportColumn.setCellEditor(new DefaultCellEditor(placa));
 
-    }
-
-    /**
-     * Adicionar e Remover o PlaceHolder
-     *
-     * @param field: JTextField
-     * @param msg:   String
-     */
-    public JFormattedTextField adicionarRemoverFocus(JTextField field, String msg) {
-
-        field.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (field.getText().trim().toLowerCase().equals(msg.toLowerCase())) {
-                    field.setText("");
-                }
-                field.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (field.getText().trim().toLowerCase().equals("")) {
-                    field.setText(msg);
-                }
-                field.setForeground(Color.BLACK);
-            }
-        });
-        return (JFormattedTextField) field;
     }
 
     /**

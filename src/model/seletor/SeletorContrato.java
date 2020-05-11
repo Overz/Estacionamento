@@ -1,8 +1,6 @@
 package model.seletor;
 
-import model.vo.cliente.ContratoVO;
-
-public class SeletorContrato implements SuperSeletor<ContratoVO> {
+public class SeletorContrato<ContratoVO> implements SuperSeletor<ContratoVO> {
     @Override
     public String criarFiltro(String string, ContratoVO object) {
         return null;

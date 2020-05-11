@@ -121,6 +121,11 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public ClienteVO consultarPorId(int id) {
         String qry = "SELECT * FROM CLIENTE WHERE IDCLIENTE =?";
         conn = Banco.getConnection();

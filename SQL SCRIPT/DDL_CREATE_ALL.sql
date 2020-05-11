@@ -55,11 +55,13 @@ CREATE TABLE `dbestacionamento`.`cliente`
 
 CREATE TABLE `dbestacionamento`.`ticket`
 (
-    `idticket`     INT       NOT NULL AUTO_INCREMENT,
-    `idCliente`    INT       NOT NULL,
-    `n_ticket`     LONG      NOT NULL,
-    `valor`        DECIMAL   NOT NULL,
-    `hr_validacao` TIMESTAMP NOT NULL,
+    `idticket`     INT                        NOT NULL AUTO_INCREMENT,
+    `idCliente`    INT                        NOT NULL,
+    `n_ticket`     LONG                       NOT NULL,
+    `valor`        DECIMAL                    NOT NULL,
+    `tipo`         ENUM ("DINHEIRO","CARTÃO") NOT NULL,
+    `hr_validacao` TIMESTAMP                  NOT NULL,
+    `statusTicket` TINYINT(1)                 NOT NULL DEFAULT 1,
     CONSTRAINT `pk_ticket` PRIMARY KEY (`idticket`),
     CONSTRAINT `fk_ticket_cliente` FOREIGN KEY (`idCliente`) REFERENCES `dbestacionamento`.`cliente` (`idcliente`)
 ) ENGINE = InnoDB;
@@ -99,11 +101,10 @@ CREATE TABLE `dbestacionamento`.`movimento`
     CONSTRAINT `fk_movimento_plano` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`idplano`)
 ) ENGINE = InnoDB;
 
-# CREATE TABLE `dbestacionamento`.`fluxo`
-# (
-#     `idfluxo`     INT NOT NULL AUTO_INCREMENT,
-#     `idMovimento` INT NOT NULL,
-#     CONSTRAINT `pk_fluxo` PRIMARY KEY (`idfluxo`),
-#     CONSTRAINT `fk_fluxo_movimento` FOREIGN KEY (`idMovimento`) REFERENCES `dbestacionamento`.`movimento` (`idmovimento`)
-# ) ENGINE = InnoDB;
+#CREATE TABLE `dbestacionamento`.`fluxo` (
+#  `idfluxo` INT NOT NULL AUTO_INCREMENT,
+#  `idMovimento` INT NOT NULL,
+#  CONSTRAINT `pk_fluxo` PRIMARY KEY (`idfluxo`),
+#  CONSTRAINT `fk_fluxo_movimento` FOREIGN KEY (`idMovimento`) REFERENCES `dbestacionamento`.`movimento` (`idmovimento`)
+#) ENGINE = InnoDB;
 

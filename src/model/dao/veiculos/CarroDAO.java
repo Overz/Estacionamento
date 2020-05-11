@@ -113,6 +113,11 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public CarroVO consultarPorId(int id) {
         String qry = "SELECT * FROM CARRO WHERE IDCARRO = ?";
         conn = Banco.getConnection();

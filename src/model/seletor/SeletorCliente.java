@@ -1,8 +1,6 @@
 package model.seletor;
 
-import model.vo.cliente.ClienteVO;
-
-public class SeletorCliente implements SuperSeletor<ClienteVO> {
+public class SeletorCliente<ClienteVO> implements SuperSeletor<ClienteVO> {
 
     @Override
     public String criarFiltro(String string, ClienteVO object) {

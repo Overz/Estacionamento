@@ -118,6 +118,11 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public PlanoVO consultarPorId(int id) {
         String qry = "SELECT * FROM PLANO WHERE IDPLANO = ?";
         conn = Banco.getConnection();

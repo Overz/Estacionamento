@@ -107,6 +107,11 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public EnderecoVO consultarPorId(int id) {
         String qry = "SELECT * FROM ENDERECO WHERE IDENDERECO = ?";
         conn = Banco.getConnection();

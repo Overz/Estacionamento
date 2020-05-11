@@ -1,8 +1,6 @@
 package model.seletor;
 
-import model.vo.cliente.EnderecoVO;
-
-public class SeletorEndereco implements SuperSeletor<EnderecoVO> {
+public class SeletorEndereco<EnderecoVO> implements SuperSeletor<EnderecoVO> {
 
     private EnderecoVO enderecoVO;
 
@@ -15,7 +13,7 @@ public class SeletorEndereco implements SuperSeletor<EnderecoVO> {
             if (!primeiro) {
                 string += " AND ";
             }
-            string += "IDENDERECO = " + object.getId();
+//            string += "IDENDERECO = " + this.enderecoVO.get;
             primeiro = false;
         }
         return string;

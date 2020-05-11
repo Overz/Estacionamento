@@ -103,6 +103,11 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public MarcaVO consultarPorId(int id) {
         String qry = "SELECT * FROM MARCA WHERE IDMARCA = ?";
         conn = Banco.getConnection();

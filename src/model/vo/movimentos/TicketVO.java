@@ -11,15 +11,17 @@ public class TicketVO {
     private double valor;
     private String tipo;
     private LocalDateTime dataValidacao;
+    private Boolean status;
     private ClienteVO cliente;
 
-    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataValidacao, ClienteVO cliente) {
+    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataValidacao, Boolean status, ClienteVO cliente) {
         super();
         this.id = id;
         this.numero = numero;
         this.valor = valor;
         this.tipo = tipo;
         this.dataValidacao = dataValidacao;
+        this.status = status;
         this.cliente = cliente;
     }
 
@@ -75,6 +77,14 @@ public class TicketVO {
         this.dataValidacao = dataValidacao;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "ID: " + this.id +
@@ -83,4 +93,5 @@ public class TicketVO {
                 " -  dataValidacao: " + this.dataValidacao +
                 " -  cliente: " + this.cliente;
     }
+
 }

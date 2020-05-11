@@ -117,6 +117,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
+    public <T> T consultarObjeto(T object) {
+        return null;
+    }
+
+    @Override
     public MovimentoVO consultarPorId(int id) {
         String qry = "SELECT * FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
         conn = Banco.getConnection();

@@ -2,6 +2,7 @@ package view.panels;
 
 import controller.ControllerCaixa;
 import net.miginfocom.swing.MigLayout;
+import util.Constantes;
 import util.Modificacoes;
 
 import javax.swing.*;
@@ -33,8 +34,6 @@ public class CaixaView extends JPanel {
 
         this.setJLabels_JSeparator();
 
-        this.setInputFields();
-
         this.setButtons();
 
         this.setJTable();
@@ -56,19 +55,19 @@ public class CaixaView extends JPanel {
         lblDados.setBackground(Color.WHITE);
         add(lblDados, "cell 1 3,grow");
 
-        lblSaldoEmDinheiror = new JLabel("Saldo em Dinheiro(R$):");
+        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO);
         lblSaldoEmDinheiror.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmDinheiror.setForeground(Color.BLACK);
         lblSaldoEmDinheiror.setBackground(Color.WHITE);
         add(lblSaldoEmDinheiror, "cell 10 3 2 1,grow");
 
-        lblSaldoEmCarto = new JLabel("Saldo em Cartão:");
+        lblSaldoEmCarto = new JLabel(Constantes.LBL_TEXT_CAIXA_CARTAO);
         lblSaldoEmCarto.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmCarto.setForeground(Color.BLACK);
         lblSaldoEmCarto.setBackground(Color.WHITE);
         add(lblSaldoEmCarto, "cell 13 3 2 1,grow");
 
-        lblTotalCaixa = new JLabel("Total(R$):");
+        lblTotalCaixa = new JLabel(Constantes.LBL_TEXT_CAIXA_TOTAL);
         lblTotalCaixa.setForeground(Color.BLACK);
         lblTotalCaixa.setFont(new Font("Arial", Font.BOLD, 14));
         lblTotalCaixa.setBackground(Color.WHITE);
@@ -76,43 +75,42 @@ public class CaixaView extends JPanel {
 
     }
 
-    private void setInputFields() {
-    }
-
     private void setButtons() {
 
-        String stringRelatorio = "<html><body>Relatorio do<br align=Center>Último Caixa</body></html>";
-        JButton btnRelatorio = new JButton(stringRelatorio);
-        btnRelatorio.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-enviar-para-a-impressora-50.png")));
-//		btnRelatorioDoltimo.setBackground(new Color(100, 149, 237));
-        btnRelatorio.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        btnRelatorio.setFont(new Font("Arial", Font.BOLD, 16));
-        add(btnRelatorio, "cell 7 1 2 1,grow");
-        btnRelatorio.addActionListener(e -> control.imprimirRelatorio());
+//        String stringRelatorio = "<html><body>Relatorio do<br align=Center>Último Caixa</body></html>";
+//        JButton btnRelatorio = new JButton(stringRelatorio);
+//        btnRelatorio.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-enviar-para-a-impressora-50.png")));
+////		btnRelatorioDoltimo.setBackground(new Color(100, 149, 237));
+//        btnRelatorio.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+//        btnRelatorio.setFont(new Font("Arial", Font.BOLD, 16));
+//        add(btnRelatorio, "cell 7 1 2 1,grow");
+//        btnRelatorio.addActionListener(e -> control.imprimirRelatorio());
 
         JButton btnAdicionarValor = new JButton("Adicionar Valor");
         btnAdicionarValor.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-mais-50.png")));
-//		btnAdicionarValor.setBackground(new Color(100, 149, 237));
+        btnAdicionarValor.setBackground(Color.decode("#35D073"));
         btnAdicionarValor.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnAdicionarValor.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnAdicionarValor, "cell 10 1 2 1,grow");
         btnAdicionarValor.addActionListener(e -> {
-
+            Constantes.FLAG = 1;
             control.showInputDialog();
-
         });
 
         JButton btnRetirarValor = new JButton("Retirar Valor");
         btnRetirarValor.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-menos-50.png")));
-//		btnRetirarValor.setBackground(new Color(100, 149, 237));
+        btnRetirarValor.setBackground(Color.decode("#F85C50"));
         btnRetirarValor.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnRetirarValor.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnRetirarValor, "cell 13 1 2 1,grow");
-        btnRetirarValor.addActionListener(e -> control.removerValor());
+        btnRetirarValor.addActionListener(e -> {
+            Constantes.FLAG = 0;
+            control.showInputDialog();
+        });
 
         JButton btnFecharCaixa = new JButton("Fechar Caixa");
         btnFecharCaixa.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-cadeado-2-50.png")));
-//		btnFecharCaixa.setBackground(new Color(100, 149, 237));
+        btnFecharCaixa.setBackground(new Color(100, 149, 237));
         btnFecharCaixa.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnFecharCaixa.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnFecharCaixa, "cell 16 1 2 1,grow");
@@ -171,4 +169,5 @@ public class CaixaView extends JPanel {
     public Modificacoes getModificacao() {
         return modificacao;
     }
+
 }

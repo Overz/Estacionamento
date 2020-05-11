@@ -21,6 +21,8 @@ public interface BaseDAO<T> {
      */
     ArrayList<T> consultar(SuperSeletor<T> seletor);
 
+    <T> T consultarObjeto(String... values);
+
     /**
      * Consulta algo especifico através de um id;
      *

@@ -4,25 +4,28 @@ import java.time.format.DateTimeFormatter;
 
 public class Constantes {
 
+    public static final String LBL_TEXT_CAIXA_TOTAL = "Total(R$):";
+    public static final String LBL_TEXT_CAIXA_CARTAO = "Saldo em Cartão:";
+    public static final String LBL_TEXT_CAIXA_DINHEIRO = "Saldo em Dinheiro(R$):";
+    public static final String JOP_SELECIONE = "~ SELECIONE ~";
+    public static final String JOP_DINHEIRO = "1 - DINHEIRO";
+    public static final String JOP_CARTAO = "2 - CARTÃO";
     /**
      * Valores referentes aos Campos do Banco de Dados
      */
     public static final String DB_MOVIMENTO_ID = "idmovimento";
-    public static double VALOR_DINHEIRO;
-    public static double VALOR_CARTAO;
+    public static int FLAG = 0;
+    public static double LBL_VALOR_CAIXA_TOTAL;
+    public static double LBL_VALOR_CAIXA_DINHEIRO;
 
     public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:a");
-
-    public static final String SELECIONE = "~ SELECIONE ~";
-    public static final String DINHEIRO = "1 - DINHEIRO";
-    public static final String CARTAO = "2 - CARTÃO";
 
     public static final String[] COLUNAS_INICIO = {"Ticket/Cartão", "CARRO", "PLACA", "CLIENTE", "ENTRADA"};
     public static final String[] COLUNAS_CAIXA = {"Ticket/Cartão", "Descrição", "Hora Entrada", "Hora Validação", "Pagamento", "Valor"};
     public static final String[] COLUNAS_CLIENTE = {"#", "NOME", "PLANO", "VENCIMENTO"};
     public static final String[] COLUNAS_MOVIMENTO = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     public static final String[] COLUNAS_CADASTRO_CLIENTE = {"PLACA", "MARCA", "MODELO", "DESCRIÇÃO", "CÓDIGO CARTÃO"};
-    public static double VALOR_TOTAL;
+    public static double LBL_VALOR_CAIXA_CARTAO;
     public static final String DB_MOVIMENTO_FK_TICKET = "idTicket";
     public static final String DB_MOVIMENTO_FK_PLANO = "idPlano";
     public static final String DB_MOVIMENTO_ENTRADA = "hr_entrada";
