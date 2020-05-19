@@ -1,6 +1,9 @@
 package view.panels;
 
 import controller.ControllerInicio;
+import model.seletor.SeletorInicio;
+import model.seletor.SuperSeletor;
+import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
@@ -10,7 +13,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class InicioView extends JPanel {
@@ -137,21 +142,19 @@ public class InicioView extends JPanel {
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 1 8 2 1,grow");
 
-        txtProcurar = new JFormattedTextField(mf2);
-        txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        txtProcurar.setText("Pesquisar... (F6)");
-        txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
-        txtProcurar.setFocusAccelerator((char) KeyEvent.VK_F6);
-        txtProcurar.setColumns(10);
-        splitPane.setRightComponent(txtProcurar);
-
-        txtTicket = new JFormattedTextField(mf1);
-        txtTicket.setText("Digite o Número do Ticket");
+        txtTicket = new JTextField("Nº Ticket");
         txtTicket.setFont(new Font("Arial", Font.BOLD, 20));
         txtTicket.setBorder(new LineBorder(Color.BLACK));
         txtTicket.setBackground(Color.WHITE);
         txtTicket.setColumns(10);
         add(txtTicket, "cell 1 5 2 1,grow");
+
+        txtProcurar = new JTextField("Procurar...");
+        txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
+        txtProcurar.setFocusAccelerator((char) KeyEvent.VK_F6);
+        txtProcurar.setColumns(10);
+        splitPane.setRightComponent(txtProcurar);
 
     }
 
@@ -236,31 +239,19 @@ public class InicioView extends JPanel {
     }
 
     private void addListeners() {
-        txtProcurar.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtProcurar.setText("");
-                txtProcurar.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                txtProcurar.setText("Pesquisar... (F6)");
-                txtProcurar.setForeground(Color.BLACK);
-            }
-        });
-
         txtTicket.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 txtTicket.setText("");
-                txtTicket.setForeground(Color.BLACK);
+                txtProcurar.setForeground(Color.BLACK);
             }
+        });
 
+        txtProcurar.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusLost(FocusEvent e) {
-                txtTicket.setText("Digite o Número do Ticket");
-                txtTicket.setForeground(Color.BLACK);
+            public void focusGained(FocusEvent e) {
+                txtProcurar.setText("");
+                txtProcurar.setForeground(Color.BLACK);
             }
         });
 
@@ -269,7 +260,12 @@ public class InicioView extends JPanel {
         btnValidar.addActionListener(e -> {
             String ticket = txtTicket.getText().trim();
             String tipoPgto = cbFormaPgto.getSelectedItem().toString();
-            control.validate(ticket, tipoPgto);
+            SuperSeletor<MovimentoVO> seletor = new SeletorInicio();
+            SeletorInicio s = new SeletorInicio();
+            s.setTxtTicketCartao(ticket);
+            control.validate(tipoPgto, ticket);
+            control.timerTicket();
+            control.atualizarTabela();
         });
 
         btnProcurar.addActionListener(e -> control.atualizarTabela());
@@ -280,69 +276,9 @@ public class InicioView extends JPanel {
 
         btnImprimirComprovanteTabela.addActionListener(e -> control.gerarComprovantePorLinha());
 
-        btnAbrirEntrada.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                lblCancelaEntrada.setText("Abrindo Cancela");
-                lblCancelaEntrada.setBackground(Color.decode("#35D073"));
-                btnAbrirEntrada.setBackground(Color.decode("#35D073"));
-                ActionListener event = actionEvent -> {
-                    lblCancelaEntrada.setText("Cancela Fechada");
-                    lblCancelaEntrada.setBackground(Color.decode("#F85C50"));
-                    btnAbrirEntrada.setBackground(Color.WHITE);
-                };
-                javax.swing.Timer timer = new Timer(10000, event);
-                timer.start();
-            }
+        control.controlarCancela(btnAbrirEntrada, lblCancelaEntrada);
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
-        btnAbrirSaida.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                lblCancelaSaída.setText("Abrindo Cancela");
-                lblCancelaSaída.setBackground(Color.decode("#35D073"));
-                btnAbrirSaida.setBackground(Color.decode("#35D073"));
-                ActionListener event = actionEvent -> {
-                    lblCancelaSaída.setText("Cancela Fechada");
-                    lblCancelaSaída.setBackground(Color.decode("#F85C50"));
-                    btnAbrirSaida.setBackground(Color.WHITE);
-                };
-                javax.swing.Timer timer = new Timer(10000, event);
-                timer.start();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-            }
-        });
+        control.controlarCancela(btnAbrirSaida, lblCancelaSaída);
     }
 
     public JTable getTable() {

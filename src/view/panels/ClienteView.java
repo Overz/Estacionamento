@@ -52,7 +52,9 @@ public class ClienteView extends JPanel {
 
         this.addListeners();
 
-        control.atualizarTabela();
+        if (table.getRowCount() == 0 || table.getColumnCount() == 0) {
+            control.atualizarTabela();
+        }
 
     }
 

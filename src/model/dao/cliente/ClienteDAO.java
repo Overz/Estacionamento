@@ -121,7 +121,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
-    public <T> T consultarObjeto(T object) {
+    public <T> T consultarObjeto(String... values) {
         return null;
     }
 

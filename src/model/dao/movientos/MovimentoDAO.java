@@ -117,7 +117,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public <T> T consultarObjeto(T object) {
+    public MovimentoVO consultarObjeto(String... values) {
         return null;
     }
 

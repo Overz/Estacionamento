@@ -118,7 +118,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
-    public <T> T consultarObjeto(T object) {
+    public <T> T consultarObjeto(String... values) {
         return null;
     }
 

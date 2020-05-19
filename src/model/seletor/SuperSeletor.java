@@ -6,16 +6,16 @@ public interface SuperSeletor<T> {
      * Cria o filtro de acordo com a quantidade
      * de Parametros preenchidos na classe Objeto
      *
-     * @param string
-     * @param object
+     * @param values: String
+     * @param object: T
      * @return String: String
      */
-    String criarFiltro(String string, T object);
+    String criarFiltro(String values, T object);
 
     /**
      * Verifica se os campos digitados Não estão vazios, para criar um Filtro
      *
-     * @param object
+     * @param object: T
      * @return true/false
      */
     boolean temFiltro(T object);

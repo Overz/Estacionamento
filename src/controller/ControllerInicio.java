@@ -11,23 +11,25 @@ import view.panels.InicioView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class ControllerInicio {
     private final InicioView inicioViewview;
     private final BaseDAO<MovimentoVO> daoM;
     private final BaseDAO<TicketVO> daoT;
     private ArrayList<MovimentoVO> lista;
-    private final TicketVO t;
+    private MovimentoVO m;
+    private TicketVO t;
     private String msg;
 
     public ControllerInicio(InicioView inicioView) {
         this.inicioViewview = inicioView;
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
+        m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
     }
@@ -90,9 +92,7 @@ public class ControllerInicio {
     public void maskAndPlaceHolder() {
         try {
             inicioViewview.getMf1().setMask("####################");
-            inicioViewview.getMf1().setPlaceholder("Nº Ticket");
             inicioViewview.getMf2().setMask("********************");
-            inicioViewview.getMf2().setPlaceholder("Pesquisar... (F6)");
         } catch (ParseException e) {
             System.out.println("Message:" + e.getMessage());
             System.out.println("Cause:" + e.getCause());
@@ -110,57 +110,65 @@ public class ControllerInicio {
         timer.start();
     }
 
-    public void validate(String... values) {
-        if (InicioBO.validarNumberoTicket(values)) {
-            if (validarTicket(values)) {
+    public void validate(String tipoPgto, String ticket) {
+        if (InicioBO.validarNumberoTicket(ticket)) {
+            if (validarTicket(ticket)) {
                 msg = "Ticket Validado!";
             } else {
-                msg += "Erro no Calculo de Validação!\n";
+                msg = "Erro ao Validar o Ticket\n";
+                msg += "Erro no Calculo de Validação!";
             }
-        } else {
-            msg += "Erro ao Validar o Ticket";
         }
+
+        this.gambiarra();
         JOptionPane.showMessageDialog(inicioViewview, msg, "Validação", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public boolean validarTicket(String... values) {
-        String ticket = null;
-        String idString = null;
+    public boolean validarTicket(String ticket) {
         int id = 0;
-        for (MovimentoVO movimento : lista) {
-            ticket = values[values.length - 1];
-            if (ticket.equals(movimento.getTicket().getNumero())) {
-                id = movimento.getTicket().getId();
+        for (MovimentoVO movimentoVO : lista) {
+            String numero = String.valueOf(movimentoVO.getTicket().getNumero());
+            if (ticket.equals(numero)) {
+                id = movimentoVO.getTicket().getId();
+                break;
             }
         }
 
         try {
-            idString = String.valueOf(id);
-
             Constantes.FLAG = 1;
-            ArrayList<TicketVO> listaTicket = new ArrayList<>();
-            listaTicket = daoT.consultarObjeto(ticket, idString);
-            lista.sort((Comparator<? super MovimentoVO>) listaTicket);
-            if (lista.contains(listaTicket)) {
-                // TODO OQUE FAZER?
+
+            t = daoT.consultarPorId(id);
+            if (t != null) {
+                m = daoM.consultarPorId(t.getId());
+            } else {
+                throw new Exception("Erro ao Preencher o Ticket em Movimento");
             }
+
+            for (MovimentoVO movimentoVO : lista) {
+//                id = movimentoVO.getId();
+                if (m.getId() == movimentoVO.getId()) {
+                    JOptionPane.showMessageDialog(inicioViewview, "Ticket Valido Por 10 Minutos!",
+                            "Validação", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                }
+            }
+
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
+    }
 
-        // TODO Consultar no banco o ticket da tela, e validar
-        // TODO utilizar Label para notificar a validação na View
-
+    public synchronized void timerTicket() {
         ActionListener event = e -> {
-            // TODO validar o ticket por 10minutos
+            // validar o tipoPgto por 10minutos
             Constantes.FLAG = 1;
             t.setStatus(false);
             daoT.alterar(t);
         };
-
-        Timer timer = new Timer(600000, event);
-        timer.start();
-        return false;
+        Timer timer = new Timer(60000, event);
+        timer.setRepeats(false);
     }
 
     public void gerarTicket() {
@@ -172,5 +180,33 @@ public class ControllerInicio {
 
     public void gerarComprovantePorLinha() {
         //TODO Usar a Classe GerarRelatorio para gerar um comprovante
+    }
+
+    public void controlarCancela(JButton button, JLabel label) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                label.setText("Abrindo Cancela");
+                label.setBackground(Color.decode("#35D073"));
+                button.setBackground(Color.decode("#35D073"));
+                ActionListener event = actionEvent -> {
+                    label.setText("Cancela Fechada");
+                    label.setBackground(Color.decode("#F85C50"));
+                    button.setBackground(Color.WHITE);
+                };
+                Timer timer = new Timer(10000, event);
+                timer.start();
+            }
+        });
+    }
+
+    private void gambiarra() {
+        inicioViewview.getTxtTicket().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                inicioViewview.getTxtTicket().setText("Nº Ticket");
+                inicioViewview.setForeground(Color.BLACK);
+            }
+        });
     }
 }

@@ -106,7 +106,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public <T> T consultarObjeto(T object) {
+    public <T> T consultarObjeto(String... values) {
         return null;
     }
 

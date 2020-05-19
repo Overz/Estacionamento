@@ -113,7 +113,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public <T> T consultarObjeto(T object) {
+    public <T> T consultarObjeto(String... values) {
         return null;
     }
 

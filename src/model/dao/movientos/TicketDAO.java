@@ -115,32 +115,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public ArrayList<TicketVO> consultarObjeto(String... values) {
-        int id;
-        long numero;
-        String qry = null;
-        if (Constantes.FLAG == 1) {
-            qry = "SELECT " + Constantes.DB_TICKET_NUM_TICKET + " FROM TICKET WHERE " + Constantes.DB_TICKET_ID + " = ?";
-        }
-        list = new ArrayList<>();
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            numero = Long.parseLong(values[0]);
-            id = Integer.parseInt(values[values.length - 1]);
-
-            stmt.setLong(1, numero);
-            stmt.setLong(2, id);
-            result = stmt.executeQuery();
-            while (result.next()) {
-                ticketVO = criarResultSet(result);
-                list.add(ticketVO);
-            }
-            return list;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public TicketVO consultarObjeto(String... values) {
         return null;
     }
 
