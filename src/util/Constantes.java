@@ -4,11 +4,11 @@ import java.time.format.DateTimeFormatter;
 
 public class Constantes {
 
+    public static final String LBL_TEXT_TICKET_TOTAL = "Total(R$):";
     /**
      * Valores referentes aos Campos do Banco de Dados
      */
     public static final String DB_MOVIMENTO_ID = "idmovimento";
-
     public static final String LBL_TEXT_CAIXA_TOTAL = "Total(R$):";
     public static final String LBL_TEXT_CAIXA_CARTAO = "Saldo em Cartão:";
     public static final String LBL_TEXT_CAIXA_DINHEIRO = "Saldo em Dinheiro(R$):";
@@ -28,14 +28,10 @@ public class Constantes {
     public static final String[] COLUNAS_MOVIMENTO = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     public static final String[] COLUNAS_CADASTRO_CLIENTE = {"PLACA", "MARCA", "MODELO", "DESCRIÇÃO", "CÓDIGO CARTÃO"};
     public static double LBL_VALOR_CAIXA_CARTAO;
-    public static final String DB_MOVIMENTO_FK_TICKET = "idTicket";
-    public static final String DB_MOVIMENTO_FK_PLANO = "idPlano";
     public static final String DB_MOVIMENTO_ENTRADA = "hr_entrada";
     public static final String DB_MOVIMENTO_SAIDA = "hr_saida";
 
     public static final String DB_PLANO_ID = "idplano";
-    public static final String DB_PLANO_FK_CONTRATO = "idContrato";
-    public static final String DB_PLANO_FK_CLIENTE = "idCliente";
     public static final String DB_PLANO_TIPO = "tipo";
     public static final String DB_PLANO_DESCRICAO = "tipo";
 
@@ -47,15 +43,11 @@ public class Constantes {
     public static final String DB_CONTRATO_VALOR = "valor";
 
     public static final String DB_TICKET_ID = "idticket";
-    public static final String DB_TICKET_FK_CLIENTE = "idCliente";
     public static final String DB_TICKET_NUM_TICKET = "n_ticket";
     public static final String DB_TICKET_VALOR = "valor";
     public static final String DB_TICKET_DT_VALIDACAO = "hr_validacao";
 
-
     public static final String DB_CLIENTE_ID = "idcliente";
-    public static final String DB_CLIENTE_FK_ENDERECO = "idEndereco";
-    public static final String DB_CLIENTE_FK_CARRO = "idCarro";
     public static final String DB_CLIENTE_NOME = "nome";
     public static final String DB_CLIENTE_CPF = "cpf";
     public static final String DB_CLIENTE_RG = "rg";
@@ -63,14 +55,11 @@ public class Constantes {
     public static final String DB_CLIENTE_TELEFONE = "telefone";
 
     public static final String DB_CARRO_ID = "idcarro";
-    public static final String DB_CARRO_FK_MODELO = "idModelo";
     public static final String DB_CARRO_PLACA = "placa";
     public static final String DB_CARRO_COR = "cor";
 
     public static final String DB_MODELO_ID = "idmodelo";
-    public static final String DB_MODELO_FK_MARCA = "idMarca";
     public static final String DB_MODELO_DESCRICAO = "descricao";
-
 
     public static final String DB_MARCA_ID = "idmarca";
     public static final String DB_MARCA_NOME = "nome";
@@ -80,5 +69,4 @@ public class Constantes {
     public static final String DB_ENDERECO_RUA = "rua";
     public static final String DB_ENDERECO_BAIRRO = "bairro";
     public static final String DB_ENDERECO_CIDADE = "cidade";
-
 }

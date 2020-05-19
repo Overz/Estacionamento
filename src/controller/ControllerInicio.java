@@ -25,6 +25,7 @@ public class ControllerInicio {
     private MovimentoVO m;
     private TicketVO t;
     private String msg = "";
+    private String title = "";
     private long minutes;
 
     public ControllerInicio(InicioView inicioView) {
@@ -75,13 +76,14 @@ public class ControllerInicio {
         MovimentoVO m = lista.get(row);
         inicioView.getTable().remove(row);
 
+        title = "Exclusão";
         if (daoM.excluirPorID(m.getId())) {
             msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             msg = "ERRO AO REALIZAR EXCLUSÃO!";
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
                     JOptionPane.ERROR_MESSAGE);
         }
         System.out.println(m.toString());
@@ -110,18 +112,43 @@ public class ControllerInicio {
     }
 
     public void validate(String tipoPgto, String ticket) {
-        if (InicioBO.validarNumberoTicket(ticket)) {
-            if (validarTicket(ticket)) {
-                msg = "Ticket Valido Por: " + minutes + " minuto's!";
-            } else {
-                msg = "Erro ao Validar o Ticket\n";
+        if (calcular(tipoPgto)) {
+            if (InicioBO.validarNumberoTicket(ticket)) {
+                if (validarTicket(ticket)) {
+                    msg = "Ticket Valido Por: " + minutes + " minuto's!";
+                } else {
+                    msg = "Erro ao Validar o Ticket\n";
+                }
             }
+            this.gambiarra();
+            int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                    title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            msg += "Ação Cancelada\nO Ticket não foi validado!";
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                    title, JOptionPane.INFORMATION_MESSAGE);
         }
-
-        this.gambiarra();
-        JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "Validação", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private boolean calcular(String tipoPgto) {
+        //TODO Realizar o Calculo do valor do ticket baseado em horas
+
+
+        title = "Validação";
+        double total = m.getTicket().getValor();
+        msg = "Total: " + total + "\nDeseja Validar este Ticket?";
+        int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        return i == JOptionPane.YES_OPTION;
+    }
+
+    /**
+     * Valida o Ticket com Status True no banco, com Timer para X tempo,
+     * Após esse tempo o status atualiza para false;
+     *
+     * @param ticket String
+     * @return true/false
+     */
     public boolean validarTicket(String ticket) {
         int id = 0;
         for (MovimentoVO movimentoVO : lista) {
@@ -159,6 +186,9 @@ public class ControllerInicio {
         return false;
     }
 
+    /**
+     * Cria o Timer para atualizar o Status do ticket
+     */
     public synchronized void timerTicket() {
         ActionListener event = e -> {
             // validar o tipoPgto por X minutos
@@ -172,6 +202,14 @@ public class ControllerInicio {
         minutes = TimeUnit.MILLISECONDS.toMinutes(timer.getDelay());
     }
 
+    /**
+     * Controla os campos da Cancela na tela, atualizando a cor ao clicar
+     * e com um timer para retornar ao status original
+     * simulando a abertura da cancela
+     *
+     * @param button JButton
+     * @param label  JLabel
+     */
     public void controlarCancela(JButton button, JLabel label) {
         button.addMouseListener(new MouseAdapter() {
             @Override
@@ -190,6 +228,9 @@ public class ControllerInicio {
         });
     }
 
+    /**
+     * Atualiza o foco do campo TxtTicket na tela após a validação
+     */
     private void gambiarra() {
         inicioView.getTxtTicket().addFocusListener(new FocusAdapter() {
             @Override
