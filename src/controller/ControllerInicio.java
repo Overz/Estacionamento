@@ -15,18 +15,20 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class ControllerInicio {
-    private final InicioView inicioViewview;
+    private final InicioView inicioView;
     private final BaseDAO<MovimentoVO> daoM;
     private final BaseDAO<TicketVO> daoT;
     private ArrayList<MovimentoVO> lista;
     private MovimentoVO m;
     private TicketVO t;
-    private String msg;
+    private String msg = "";
+    private long minutes;
 
     public ControllerInicio(InicioView inicioView) {
-        this.inicioViewview = inicioView;
+        this.inicioView = inicioView;
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
         m = new MovimentoVO();
@@ -42,7 +44,7 @@ public class ControllerInicio {
         this.limparTabela();
 
         lista = daoM.consultarTodos();
-        DefaultTableModel model = (DefaultTableModel) inicioViewview.getTable().getModel();
+        DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         Object[] novaLinha = new Object[5];
         for (MovimentoVO movimento : lista) {
@@ -61,7 +63,7 @@ public class ControllerInicio {
      * Limpa a tela para revalidar os valores
      */
     private void limparTabela() {
-        inicioViewview.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_INICIO));
+        inicioView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_INICIO));
     }
 
     /**
@@ -69,17 +71,17 @@ public class ControllerInicio {
      */
     public void removeSelectedRow() {
 
-        int row = inicioViewview.getTable().getSelectedRow();
+        int row = inicioView.getTable().getSelectedRow();
         MovimentoVO m = lista.get(row);
-        inicioViewview.getTable().remove(row);
+        inicioView.getTable().remove(row);
 
         if (daoM.excluirPorID(m.getId())) {
             msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
-            JOptionPane.showMessageDialog(inicioViewview, inicioViewview.getModificacao().labelConfig(inicioViewview.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             msg = "ERRO AO REALIZAR EXCLUSÃO!";
-            JOptionPane.showMessageDialog(inicioViewview, inicioViewview.getModificacao().labelConfig(inicioViewview.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "EXCLUSÂO",
                     JOptionPane.ERROR_MESSAGE);
         }
         System.out.println(m.toString());
@@ -91,8 +93,8 @@ public class ControllerInicio {
      */
     public void maskAndPlaceHolder() {
         try {
-            inicioViewview.getMf1().setMask("####################");
-            inicioViewview.getMf2().setMask("********************");
+            inicioView.getMf1().setMask("####################");
+            inicioView.getMf2().setMask("********************");
         } catch (ParseException e) {
             System.out.println("Message:" + e.getMessage());
             System.out.println("Cause:" + e.getCause());
@@ -101,27 +103,23 @@ public class ControllerInicio {
         }
     }
 
-    /**
-     * Adiciona um Timer em Alguns Campos
-     */
     public void timerRefreshData() {
         ActionListener event = actionEvent -> atualizarTabela();
-        Timer timer = new Timer(10000, event);
+        Timer timer = new Timer(60000, event);
         timer.start();
     }
 
     public void validate(String tipoPgto, String ticket) {
         if (InicioBO.validarNumberoTicket(ticket)) {
             if (validarTicket(ticket)) {
-                msg = "Ticket Validado!";
+                msg = "Ticket Valido Por: " + minutes + " minuto's!";
             } else {
                 msg = "Erro ao Validar o Ticket\n";
-                msg += "Erro no Calculo de Validação!";
             }
         }
 
         this.gambiarra();
-        JOptionPane.showMessageDialog(inicioViewview, msg, "Validação", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), "Validação", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public boolean validarTicket(String ticket) {
@@ -135,25 +133,26 @@ public class ControllerInicio {
         }
 
         try {
-            Constantes.FLAG = 1;
-
             t = daoT.consultarPorId(id);
-            if (t != null) {
+            if (t != null && t.getStatus().equals(false)) {
                 m = daoM.consultarPorId(t.getId());
-            } else {
-                throw new Exception("Erro ao Preencher o Ticket em Movimento");
-            }
 
-            for (MovimentoVO movimentoVO : lista) {
-//                id = movimentoVO.getId();
-                if (m.getId() == movimentoVO.getId()) {
-                    JOptionPane.showMessageDialog(inicioViewview, "Ticket Valido Por 10 Minutos!",
-                            "Validação", JOptionPane.INFORMATION_MESSAGE);
-                    break;
+                for (MovimentoVO movimentoVO : lista) {
+                    if (m.getId() == movimentoVO.getId()) {
+                        Constantes.FLAG = 1;
+                        t.setStatus(true);
+                        boolean a = daoT.alterar(t);
+                        this.timerTicket();
+                        if (a) {
+                            return true;
+                        }
+                        break;
+                    }
                 }
+            } else {
+                msg += "Erro no Calculo de Validação!\n";
+                msg += "Ticket já Validado!\n";
             }
-
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,24 +161,15 @@ public class ControllerInicio {
 
     public synchronized void timerTicket() {
         ActionListener event = e -> {
-            // validar o tipoPgto por 10minutos
+            // validar o tipoPgto por X minutos
             Constantes.FLAG = 1;
             t.setStatus(false);
             daoT.alterar(t);
         };
         Timer timer = new Timer(60000, event);
         timer.setRepeats(false);
-    }
-
-    public void gerarTicket() {
-        //TODO Gerar um numero aleatorio, salvar no banco, e consultar na tela
-        //TODO ticket gerado com valor agregado
-        // verificar se ele já existe, e se tem necessidade de existir somente uma vez
-
-    }
-
-    public void gerarComprovantePorLinha() {
-        //TODO Usar a Classe GerarRelatorio para gerar um comprovante
+        timer.start();
+        minutes = TimeUnit.MILLISECONDS.toMinutes(timer.getDelay());
     }
 
     public void controlarCancela(JButton button, JLabel label) {
@@ -201,12 +191,23 @@ public class ControllerInicio {
     }
 
     private void gambiarra() {
-        inicioViewview.getTxtTicket().addFocusListener(new FocusAdapter() {
+        inicioView.getTxtTicket().addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                inicioViewview.getTxtTicket().setText("Nº Ticket");
-                inicioViewview.setForeground(Color.BLACK);
+                inicioView.getTxtTicket().setText("Nº Ticket");
+                inicioView.setForeground(Color.BLACK);
             }
         });
+    }
+
+    public void gerarTicket() {
+        //TODO Gerar um numero aleatorio, salvar no banco, e consultar na tela
+        //TODO ticket gerado com valor agregado
+        // verificar se ele já existe, e se tem necessidade de existir somente uma vez
+
+    }
+
+    public void gerarComprovantePorLinha() {
+        //TODO Usar a Classe GerarRelatorio para gerar um comprovante
     }
 }

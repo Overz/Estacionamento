@@ -183,7 +183,9 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean alterar(TicketVO object) {
-        String qry = null;
+        String qry;
+//        String qry = Constantes.FLAG == 1 ? "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?" : null;
+//        String qry = Constantes.FLAG == 2 ? "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?" : null;
         if (Constantes.FLAG == 1) {
             qry = "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?";
         } else {

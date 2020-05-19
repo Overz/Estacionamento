@@ -72,8 +72,8 @@ public class InicioView extends JPanel {
             control.atualizarTabela();
         }
 
-//		Timer para manter a Tabela Atualizada
-//        timerRefreshData();
+//		Timer para manter a Tabela Atualizada a cada 1 minuto
+        control.timerRefreshData();
 
         control.maskAndPlaceHolder();
 
@@ -264,7 +264,6 @@ public class InicioView extends JPanel {
             SeletorInicio s = new SeletorInicio();
             s.setTxtTicketCartao(ticket);
             control.validate(tipoPgto, ticket);
-            control.timerTicket();
             control.atualizarTabela();
         });
 
