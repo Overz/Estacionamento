@@ -30,7 +30,7 @@ public class InicioView extends JPanel {
     private JButton btnProcurar, btnCancelar, btnValidar, btnGerarTicket,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
     private JTextField txtTicket, txtProcurar;
-    private JLabel lblTotalDeVeiculos, lblValorPgto, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
+    private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
 
     public InicioView() {
 
@@ -112,11 +112,6 @@ public class InicioView extends JPanel {
         lblTotalDeVeiculos = new JLabel("Total de Veiculos:");
         lblTotalDeVeiculos.setFont(new Font("Arial", Font.BOLD, 14));
         add(lblTotalDeVeiculos, "cell 4 1 2 1,grow");
-
-        lblValorPgto = new JLabel("Valor a Ser Pago:");
-        lblValorPgto.setFont(new Font("Arial", Font.BOLD, 16));
-        lblValorPgto.setBackground(Color.WHITE);
-        add(lblValorPgto, "cell 1 7 2 1,grow");
 
         lblCancelaEntrada = new JLabel("Cancela Fechada");
         lblCancelaEntrada.setBackground(Color.decode("#F85C50"));
@@ -256,7 +251,7 @@ public class InicioView extends JPanel {
             }
         });
 
-        btnCancelar.addActionListener(e -> txtTicket.setText("Digite o Número do Ticket"));
+        btnCancelar.addActionListener(e -> txtTicket.setText("Nº Ticket"));
 
         btnValidar.addActionListener(e -> {
             String ticket = txtTicket.getText().trim();
@@ -308,10 +303,6 @@ public class InicioView extends JPanel {
 
     public JLabel getLblTotalDeVeiculos() {
         return lblTotalDeVeiculos;
-    }
-
-    public JLabel getLblValorPgto() {
-        return lblValorPgto;
     }
 
     public JLabel getLblCancelaEntrada() {

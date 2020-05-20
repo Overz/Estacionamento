@@ -187,6 +187,8 @@ public class ControllerInicio {
         // Diferença entre Milisegundos de Agora com a Entrada
         long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
 
+        // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
+        // Ambos estão iguais
         long days =                                                 TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
         long remainingHoursInMillis =   diff -                      TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
         long hours =                                                TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
@@ -195,17 +197,17 @@ public class ControllerInicio {
         long remainingSecondsInMillis = remainingMinutesInMillis -  TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
         long seconds =                                              TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
 
-        System.out.println("Dados Formatados:");
-        System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
-
         // Diferença entre Segundos Totais e Atuais (Atual - Total)
+        // Calculos feitos a mão
         long diffSeconds = diff / 1000 % 60;
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000) % 24;
         long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        System.out.println("Dados de Diferença: ");
-        System.out.println(diffDays + " days, " + diffHours + " hours, " + diffMinutes + " minutes, " + diffSeconds + " seconds");
+        System.out.println("Dados Formatados:");
+        System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
+        System.out.println("Dados de Feitos: ");
+        System.out.println("Days: " + diffDays + ", hours: " + diffHours + ", minutes: " + diffMinutes + ", seconds: " + diffSeconds);
 
         // Calculo Final
         double valorDia = 10.0; // Valor da Hora
