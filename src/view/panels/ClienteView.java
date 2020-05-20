@@ -37,8 +37,6 @@ public class ClienteView extends JPanel {
 
     private void initialize() {
 
-        MainView.jopLocale();
-
         control = new ControllerCliente(this);
         modificacao = new Modificacoes();
 

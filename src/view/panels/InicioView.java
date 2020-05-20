@@ -37,7 +37,9 @@ public class InicioView extends JPanel {
         this.setBounds(100, 100, 1122, 789);
         this.setBackground(Color.WHITE);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
+        this.setLayout(new MigLayout("",
+                "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]",
+                "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
 
         this.initialize();
     }

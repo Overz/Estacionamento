@@ -4,7 +4,6 @@ import controller.ControllerCaixa;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
-import view.mainFrame.MainView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -30,8 +29,6 @@ public class CaixaView extends JPanel {
     }
 
     private void initialize() {
-
-        MainView.jopLocale();
 
         control = new ControllerCaixa(this);
 

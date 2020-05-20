@@ -6,7 +6,6 @@ import view.panels.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Locale;
 
 public class MainView extends JFrame {
 
@@ -60,11 +59,6 @@ public class MainView extends JFrame {
         inicioView.getTxtProcurar().revalidate();
     }
 
-    public static void jopLocale(){
-        Locale locale = new Locale("pt", "BR");
-        JOptionPane.setDefaultLocale(locale);
-    }
-
     public static void swithPanel(JPanel panel) {
 
         layeredPane.removeAll();
@@ -81,8 +75,6 @@ public class MainView extends JFrame {
     }
 
     private void initialize() {
-
-        jopLocale();
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.setBackground(Color.WHITE);

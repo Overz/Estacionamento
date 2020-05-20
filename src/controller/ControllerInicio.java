@@ -7,7 +7,6 @@ import model.dao.movientos.TicketDAO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
-import view.mainFrame.MainView;
 import view.panels.InicioView;
 
 import javax.swing.*;
@@ -41,7 +40,6 @@ public class ControllerInicio {
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
-        MainView.jopLocale();
     }
 
     /**
@@ -65,6 +63,10 @@ public class ControllerInicio {
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
         }
+    }
+
+    private void addTotalVeiculos() {
+
     }
 
     /**
@@ -122,7 +124,7 @@ public class ControllerInicio {
      * Valida o ticket por algum tempo, e atualiza o Status no banco
      *
      * @param tipoPgto String
-     * @param ticket String
+     * @param ticket   String
      */
     public void validate(String tipoPgto, String ticket) {
         if (InicioBO.validarNumberoTicket(ticket)) {
@@ -132,10 +134,9 @@ public class ControllerInicio {
                 } else {
                     msg = "Erro ao Validar o Ticket\n";
                 }
-                this.gambiarra();
                 JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                         title, JOptionPane.INFORMATION_MESSAGE);
-            } else if (Constantes.INTERNAL_MESSAGE == 0){
+            } else if (Constantes.INTERNAL_MESSAGE == 0) {
                 title = "Erro";
                 msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!<br>Motivo: Já Validado!</body></html>";
                 JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
@@ -145,19 +146,20 @@ public class ControllerInicio {
             msg = "Por Favor, Digite o Ticket Corretamente!";
             JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title, JOptionPane.WARNING_MESSAGE);
         }
+        this.gambiarra();
     }
 
     /**
      * Método para Calcula o valor TOTAL(Desde o Inicio, até o Tempo Atual(Agora))
      * do Valor do Ticket. Utilizando de Valores Iniciais, e Valores de Diferença (Fim - Inicio).
-     *
+     * <p>
      * Se o TICKET estiver com o Status Flase(Não Validado), o Método permite a Possibilidade
      * de Perguntar se deseja Validar o Ticket quando o evento acontece.
-     *
+     * <p>
      * Formata e Acumula o valor em uma variavel Constante para a tela CaixaView.
      *
      * @param tipoPgto String
-     * @param ticket String
+     * @param ticket   String
      * @return true/false
      */
     private boolean calcular(String tipoPgto, String ticket) {
@@ -169,53 +171,53 @@ public class ControllerInicio {
                 break;
             }
         }
-        if (t != null && t.getStatus().equals(false)){
+        if (t != null && t.getStatus().equals(false)) {
             m = daoM.consultarPorId(t.getId());
 
             Date date1 = new Date();
             Date date2 = new Date();
 
-        try {
-            LocalDateTime ldtEntrada = m.getHr_entrada();
-            LocalDateTime now = LocalDateTime.now();
-            date1 = Date.from(ldtEntrada.atZone(ZoneId.systemDefault()).toInstant());
-            date2 = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            try {
+                LocalDateTime ldtEntrada = m.getHr_entrada();
+                LocalDateTime now = LocalDateTime.now();
+                date1 = Date.from(ldtEntrada.atZone(ZoneId.systemDefault()).toInstant());
+                date2 = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        // Diferença entre Milisegundos de Agora com a Entrada
-        long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
+            // Diferença entre Milisegundos de Agora com a Entrada
+            long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
 
-        // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
-        // Ambos estão iguais
-        long days =                                                 TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
-        long remainingHoursInMillis =   diff -                      TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
-        long hours =                                                TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
-        long remainingMinutesInMillis = remainingHoursInMillis -    TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
-        long minutes =                                              TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
-        long remainingSecondsInMillis = remainingMinutesInMillis -  TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
-        long seconds =                                              TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
+            // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
+            // Ambos estão iguais
+            long days =                                                 TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
+            long remainingHoursInMillis = diff -                        TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
+            long hours =                                                TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
+            long remainingMinutesInMillis = remainingHoursInMillis -    TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
+            long minutes =                                              TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
+            long remainingSecondsInMillis = remainingMinutesInMillis -  TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
+            long seconds =                                              TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
 
-        // Diferença entre Segundos Totais e Atuais (Atual - Total)
-        // Calculos feitos a mão
-        long diffSeconds = diff / 1000 % 60;
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000) % 24;
-        long diffDays = diff / (24 * 60 * 60 * 1000);
+            // Diferença entre Segundos Totais e Atuais (Atual - Total)
+            // Calculos feitos a mão
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
 
-        System.out.println("Dados Formatados:");
-        System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
-        System.out.println("Dados de Feitos: ");
-        System.out.println("Days: " + diffDays + ", hours: " + diffHours + ", minutes: " + diffMinutes + ", seconds: " + diffSeconds);
+            System.out.println("Dados Formatados:");
+            System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
+            System.out.println("Dados de Feitos: ");
+            System.out.println("Days: " + diffDays + ", hours: " + diffHours + ", minutes: " + diffMinutes + ", seconds: " + diffSeconds);
 
-        // Calculo Final
-        double valorDia = 10.0; // Valor da Hora
-        double valorMinuto = valorDia / 60.0; // Valor do Minuto
-        double minPorDia = 24 * 60; // Minutos totais de 24h(1 Dia)
-        double minRestantes = (diffHours * 60.0) + diffMinutes; // Minutos Restantes do Dia atual (Hora + Minuto)
-        double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
-        double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
+            // Calculo Final
+            double valorDia = 10.0; // Valor da Hora
+            double valorMinuto = valorDia / 60.0; // Valor do Minuto
+            double minPorDia = 24 * 60; // Minutos totais de 24h(1 Dia)
+            double minRestantes = (diffHours * 60.0) + diffMinutes; // Minutos Restantes do Dia atual (Hora + Minuto)
+            double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
+            double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
 
             if (tipoPgto.equals(Constantes.JOP_CARTAO)) {
                 Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
@@ -223,18 +225,18 @@ public class ControllerInicio {
                 Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
             }
 
-        Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-        NumberFormat formatter = NumberFormat.getInstance(locale);
-        formatter.setMinimumFractionDigits(2);
-        formatter.setMaximumFractionDigits(2);
-        String format = formatter.format(valor);
-        System.out.println(format);
+            Locale locale = Locale.getDefault(Locale.Category.FORMAT);
+            NumberFormat formatter = NumberFormat.getInstance(locale);
+            formatter.setMinimumFractionDigits(2);
+            formatter.setMaximumFractionDigits(2);
+            String format = formatter.format(valor);
+            System.out.println(format);
 
-        title = "Validação";
-        msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
-        int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
-                title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-        return i == JOptionPane.YES_OPTION;
+            title = "Validação";
+            msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
+            int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                    title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            return i == JOptionPane.YES_OPTION;
         } else {
             Constantes.INTERNAL_MESSAGE = 0;
             return false;

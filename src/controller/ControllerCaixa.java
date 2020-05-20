@@ -6,7 +6,6 @@ import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.Constantes;
 import util.relatorio.GeradorRelatorioCaixa;
-import view.mainFrame.MainView;
 import view.panels.CaixaView;
 
 import javax.swing.*;
@@ -27,7 +26,6 @@ public class ControllerCaixa {
         this.caixaView = caixaView;
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
-        MainView.jopLocale();
     }
 
     public void atualizarTabela() {
