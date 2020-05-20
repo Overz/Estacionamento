@@ -4,6 +4,7 @@ import model.banco.BaseDAO;
 import model.bo.InicioBO;
 import model.dao.movientos.MovimentoDAO;
 import model.dao.movientos.TicketDAO;
+import model.seletor.SeletorInicio;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
@@ -14,7 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public class ControllerInicio {
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
+        this.timerRefreshData();
     }
 
     /**
@@ -68,7 +69,7 @@ public class ControllerInicio {
     }
 
     private void addTotalVeiculos(int total) {
-        inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos:" + total);
+        inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos: " + total);
     }
 
     /**
@@ -101,25 +102,9 @@ public class ControllerInicio {
     }
 
     /**
-     * Criação de uma mascara para o campo, e um place holder(Palavras que somem ao
-     * digitar)
-     */
-    public void maskAndPlaceHolder() {
-        try {
-            inicioView.getMf1().setMask("####################");
-            inicioView.getMf2().setMask("********************");
-        } catch (ParseException e) {
-            System.out.println("Message:" + e.getMessage());
-            System.out.println("Cause:" + e.getCause());
-            System.out.println("ErrorOffSet:" + e.getErrorOffset());
-            System.out.println("LocalizedMessage:" + e.getLocalizedMessage());
-        }
-    }
-
-    /**
      * Timer que mantém a tabela atualizada a cada 1 minuto
      */
-    public void timerRefreshData() {
+    private void timerRefreshData() {
         ActionListener event = actionEvent -> atualizarTabela();
         Timer timer = new Timer(60000, event);
         timer.start();
@@ -255,7 +240,7 @@ public class ControllerInicio {
      * @param ticket String
      * @return true/false
      */
-    public boolean validarTicket(String ticket) {
+    private boolean validarTicket(String ticket) {
         int id = 0;
         for (MovimentoVO movimentoVO : lista) {
             String numero = String.valueOf(movimentoVO.getTicket().getNumero());
@@ -294,7 +279,7 @@ public class ControllerInicio {
     /**
      * Cria o Timer para atualizar o Status do ticket
      */
-    public synchronized void timerTicket() {
+    private synchronized void timerTicket() {
         ActionListener event = e -> {
             // validar o tipoPgto por X minutos
             Constantes.FLAG = 1;
@@ -355,5 +340,9 @@ public class ControllerInicio {
 
     public void gerarComprovantePorLinha() {
         //TODO Usar a Classe GerarRelatorio para gerar um comprovante
+    }
+
+    public void consultar(SeletorInicio seletor) {
+        //TODO Consultar
     }
 }

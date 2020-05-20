@@ -9,7 +9,7 @@ import java.awt.*;
 public class EnderecoCadastroView extends JPanel {
 
     private static final long serialVersionUID = 6735598086664804404L;
-    private JTextField txtRua, txtBairro, txtComplemento, txtNumero, txtCidade;
+    private JTextField txtRua, txtBairro, txtNumero, txtCidade;
 
     public EnderecoCadastroView() {
 
@@ -55,11 +55,6 @@ public class EnderecoCadastroView extends JPanel {
         lblCidade.setFont(new Font("Arial", Font.BOLD, 14));
         add(lblCidade, "cell 0 5 2 1,grow");
 
-        JLabel lbl = new JLabel("Complemento");
-        lbl.setHorizontalAlignment(SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 14));
-        add(lbl, "cell 0 6 2 1,grow");
-
     }
 
     public void setInputFields() {
@@ -87,12 +82,6 @@ public class EnderecoCadastroView extends JPanel {
         txtCidade.setColumns(10);
         txtCidade.setBorder(new LineBorder(Color.BLACK, 1, true));
         add(txtCidade, "cell 2 5 3 1,grow");
-
-        txtComplemento = new JTextField();
-        txtComplemento.setFont(new Font("Arial", Font.BOLD, 14));
-        txtComplemento.setBorder(new LineBorder(Color.BLACK, 1, true));
-        txtComplemento.setColumns(10);
-        add(txtComplemento, "cell 2 6 3 1,grow");
 
     }
 

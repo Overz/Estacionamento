@@ -9,7 +9,6 @@ import util.Modificacoes;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -24,7 +23,6 @@ public class InicioView extends JPanel {
     private Modificacoes modificacao;
 
     private JComboBox cbFormaPgto;
-    private MaskFormatter mf1, mf2;
     private JSplitPane splitPane;
     private JTable table;
     private JButton btnProcurar, btnCancelar, btnValidar, btnGerarTicket,
@@ -53,10 +51,8 @@ public class InicioView extends JPanel {
         splitPane.setBackground(Color.WHITE);
         this.add(splitPane, "cell 4 2 11 1,grow");
 
-        control = new ControllerInicio(this);
         modificacao = new Modificacoes();
-        mf1 = new MaskFormatter();
-        mf2 = new MaskFormatter();
+        control = new ControllerInicio(this);
 
         setJLabels_JSeparator();
 
@@ -70,11 +66,7 @@ public class InicioView extends JPanel {
             control.atualizarTabela();
         }
 
-        control.timerRefreshData();
-
-        control.maskAndPlaceHolder();
-
-        this.addListeners();
+        addListeners();
 
     }
 
@@ -258,7 +250,8 @@ public class InicioView extends JPanel {
 
         btnProcurar.addActionListener(e -> {
             SeletorInicio seletor = new SeletorInicio();
-
+            seletor.setTxtProcurar(this.getTxtProcurar().getText());
+            control.consultar(seletor);
             control.atualizarTabela();
         });
 
@@ -317,11 +310,4 @@ public class InicioView extends JPanel {
         return lblModificadoParaExibicao;
     }
 
-    public MaskFormatter getMf1() {
-        return mf1;
-    }
-
-    public MaskFormatter getMf2() {
-        return mf2;
-    }
 }

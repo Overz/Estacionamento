@@ -70,6 +70,11 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
+    public <T> T consultar(String... values) {
+        return null;
+    }
+
+    @Override
     public ContratoVO consultarPorId(int id) {
         String qry = "SELECT * FROM CONTRATO WHERE IDCONTRATO = ?";
         conn = Banco.getConnection();

@@ -34,10 +34,6 @@ public class CadastroView extends JPanel {
 
     public void initialize() {
 
-        this.setJLabels_JSeparator();
-
-        this.setInputFields();
-
         this.setButtons();
 
         layeredPane = new JLayeredPane();
@@ -48,18 +44,6 @@ public class CadastroView extends JPanel {
         dadosCadastroView = new DadosCadastroView();
         dadosCadastroView.setBorder(null);
         layeredPane.add(dadosCadastroView, "cell 0 0,grow");
-
-    }
-
-    public void setJLabels_JSeparator() {
-        JLabel lblAdicionarCliente = new JLabel("Adicionar Cliente:");
-        lblAdicionarCliente.setHorizontalAlignment(SwingConstants.CENTER);
-        lblAdicionarCliente.setFont(new Font("Arial", Font.BOLD, 22));
-        lblAdicionarCliente.setBackground(Color.WHITE);
-        add(lblAdicionarCliente, "cell 1 1 6 1,grow");
-    }
-
-    public void setInputFields() {
 
     }
 
