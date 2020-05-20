@@ -60,7 +60,7 @@ public class MainView extends JFrame {
         inicioView.getTxtProcurar().revalidate();
     }
 
-    public static void jopLocale() {
+    public static void jopLocale(){
         Locale locale = new Locale("pt", "BR");
         JOptionPane.setDefaultLocale(locale);
     }

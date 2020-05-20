@@ -20,7 +20,7 @@ public class Constantes {
     public static double LBL_VALOR_CAIXA_CARTAO;
     /**
      * Flag para Sinalizar algumas Ações
-     * <p>
+     *
      * 0 : 1
      */
     public static int FLAG = 0;
@@ -34,9 +34,9 @@ public class Constantes {
     public static final String[] COLUNAS_CADASTRO_CLIENTE = {"PLACA", "MARCA", "MODELO", "DESCRIÇÃO", "CÓDIGO CARTÃO"};
     /**
      * Flag para Auxiliar a Sinalizar Respostas mais Internas
-     * <p>
+     *
      * 0 : 1
-     */
+      */
     public static int INTERNAL_MESSAGE = 0;
     public static final String DB_MOVIMENTO_ENTRADA = "hr_entrada";
     public static final String DB_MOVIMENTO_SAIDA = "hr_saida";
