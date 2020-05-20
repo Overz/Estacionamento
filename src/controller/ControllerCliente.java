@@ -4,6 +4,7 @@ import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.Constantes;
+import view.mainFrame.MainView;
 import view.panels.ClienteView;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class ControllerCliente {
         this.clienteView = clienteView;
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
+        MainView.jopLocale();
     }
 
     public void atualizarTabela() {

@@ -6,6 +6,7 @@ import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.Constantes;
 import util.relatorio.GeradorRelatorioCaixa;
+import view.mainFrame.MainView;
 import view.panels.CaixaView;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class ControllerCaixa {
         this.caixaView = caixaView;
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
+        MainView.jopLocale();
     }
 
     public void atualizarTabela() {
@@ -97,7 +99,13 @@ public class ControllerCaixa {
         }
     }
 
-    //TODO Realizar ação para abrir jopotin pane, digitar valor, salvar, e usar o Label para atualizar esse valor
+    /**
+     * Adiciona um valor digitado, em um Label Constante na tela CaixaView
+     *
+     * @param tipo   String
+     * @param values Array Double
+     * @return true/false
+     */
     private boolean addValor(String tipo, Double... values) {
         boolean bool = false;
         if (tipo.equals(Constantes.JOP_DINHEIRO)) {
@@ -125,6 +133,12 @@ public class ControllerCaixa {
         return bool;
     }
 
+    /**
+     * Remove um valor digitado, em um label Constante na tela CaixaView
+     *
+     * @param values Array Double
+     * @return true/false
+     */
     private boolean removerValor(Double... values) {
         //TODO Realizar ação para abrir jopotin pane, digitar valor, salvar, e usar o Label para atualizar esse valor
         boolean bool = false;
@@ -138,6 +152,11 @@ public class ControllerCaixa {
         return bool;
     }
 
+    /**
+     * Mensagem para add valor
+     *
+     * @param r boolean
+     */
     private void msgAdicionar(boolean r) {
         this.title = "Adicionar Valor";
         if (r) {
@@ -150,6 +169,11 @@ public class ControllerCaixa {
                 this.title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Mensagem para remover valor
+     *
+     * @param r boolean
+     */
     private void msgRemover(boolean r) {
         title = "Remover Valor";
         if (r) {

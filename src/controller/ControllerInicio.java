@@ -7,14 +7,21 @@ import model.dao.movientos.TicketDAO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
+import view.mainFrame.MainView;
 import view.panels.InicioView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class ControllerInicio {
@@ -35,6 +42,7 @@ public class ControllerInicio {
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
+        MainView.jopLocale();
     }
 
     /**
@@ -111,35 +119,115 @@ public class ControllerInicio {
         timer.start();
     }
 
+    /**
+     * Valida o ticket por algum tempo, e atualiza o Status no banco
+     *
+     * @param tipoPgto String
+     * @param ticket   String
+     */
     public void validate(String tipoPgto, String ticket) {
-        if (calcular(tipoPgto)) {
-            if (InicioBO.validarNumberoTicket(ticket)) {
+        if (InicioBO.validarNumberoTicket(ticket)) {
+            if (calcular(tipoPgto, ticket)) {
                 if (validarTicket(ticket)) {
                     msg = "Ticket Valido Por: " + minutes + " minuto's!";
                 } else {
                     msg = "Erro ao Validar o Ticket\n";
                 }
+                this.gambiarra();
+                JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                        title, JOptionPane.INFORMATION_MESSAGE);
+            } else if (Constantes.INTERNAL_MESSAGE == 0) {
+                title = "Erro";
+                msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!<br>Motivo: Já Validado!</body></html>";
+                JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                        title, JOptionPane.WARNING_MESSAGE);
             }
-            this.gambiarra();
-            int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
-                    title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
         } else {
-            msg += "Ação Cancelada\nO Ticket não foi validado!";
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
-                    title, JOptionPane.INFORMATION_MESSAGE);
+            msg = "Por Favor, Digite o Ticket Corretamente!";
+            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title, JOptionPane.WARNING_MESSAGE);
         }
     }
 
-    private boolean calcular(String tipoPgto) {
-        //TODO Realizar o Calculo do valor do ticket baseado em horas
+    private boolean calcular(String tipoPgto, String ticket) {
+        Date date1 = new Date();
+        Date date2 = new Date();
 
+        int id;
+        for (MovimentoVO movimentoVO : lista) {
+            String numero = String.valueOf(movimentoVO.getTicket().getNumero());
+            if (ticket.equals(numero)) {
+                id = movimentoVO.getTicket().getId();
+                t = daoT.consultarPorId(id);
+                break;
+            }
+        }
+        if (t != null && t.getStatus().equals(false)) {
+            m = daoM.consultarPorId(t.getId());
 
-        title = "Validação";
-        double total = m.getTicket().getValor();
-        msg = "Total: " + total + "\nDeseja Validar este Ticket?";
-        int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
-                title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-        return i == JOptionPane.YES_OPTION;
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd hh:mm:ss");
+                LocalDateTime ldtEntrada = m.getHr_entrada();
+                date1 = Date.from(ldtEntrada.atZone(ZoneId.systemDefault()).toInstant());
+                String dateString = String.valueOf(LocalDateTime.now());
+                date2 = format.parse(dateString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Diferença entre Milisegundos de Agora com a Entrada
+            long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
+
+            long days = TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
+            long remainingHoursInMillis = diff - TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
+            long hours = TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
+            long remainingMinutesInMillis = remainingHoursInMillis - TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
+            long remainingSecondsInMillis = remainingMinutesInMillis - TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
+
+            System.out.println("Dados Formatados:");
+            System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
+
+            // Diferença entre Segundos Totais e Atuais (Atual - Total)
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+
+            System.out.println("Dados de Diferença: ");
+            System.out.println(diffDays + " days, " + diffHours + " hours, " + diffMinutes + " minutes, " + diffSeconds + " seconds");
+
+            // Calculo Final
+            double valorDia = 10.0; // Valor da Hora
+            double valorMinuto = valorDia / 60.0; // Valor do Minuto
+            double minPorDia = 24 * 60; // Minutos totais de 24h(1 Dia)
+            double minRestantes = (diffHours * 60.0) + diffMinutes; // Minutos Restantes do Dia atual (Hora + Minuto)
+            double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
+            double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
+
+            if (tipoPgto.equals(Constantes.JOP_CARTAO)) {
+                Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
+            } else if (tipoPgto.equals(Constantes.JOP_DINHEIRO)) {
+                Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
+            }
+
+            Locale locale = Locale.getDefault(Locale.Category.FORMAT);
+            NumberFormat formatter = NumberFormat.getInstance(locale);
+            formatter.setMinimumFractionDigits(2);
+            formatter.setMaximumFractionDigits(2);
+            String format = formatter.format(valor);
+
+            System.out.println(format);
+
+            title = "Validação";
+            msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
+            int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                    title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            return i == JOptionPane.YES_OPTION;
+        } else {
+            Constantes.INTERNAL_MESSAGE = 0;
+            return false;
+        }
     }
 
     /**
@@ -169,16 +257,15 @@ public class ControllerInicio {
                         Constantes.FLAG = 1;
                         t.setStatus(true);
                         boolean a = daoT.alterar(t);
-                        this.timerTicket();
                         if (a) {
+                            this.timerTicket();
                             return true;
                         }
                         break;
                     }
                 }
             } else {
-                msg += "Erro no Calculo de Validação!\n";
-                msg += "Ticket já Validado!\n";
+                msg += "<html><body>Erro no Calculo de Validação!<br>Ticket já Validado!</body></html>";
             }
         } catch (Exception e) {
             e.printStackTrace();

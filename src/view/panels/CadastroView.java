@@ -1,6 +1,7 @@
 package view.panels;
 
 import net.miginfocom.swing.MigLayout;
+import view.mainFrame.MainView;
 import view.panels.cadastro.DadosCadastroView;
 import view.panels.cadastro.EnderecoCadastroView;
 import view.panels.cadastro.PlanoCadastroView;
@@ -33,6 +34,8 @@ public class CadastroView extends JPanel {
     }
 
     public void initialize() {
+
+        MainView.jopLocale();
 
         this.setJLabels_JSeparator();
 

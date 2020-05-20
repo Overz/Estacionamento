@@ -1,9 +1,6 @@
 package view.panels;
 
 import controller.ControllerInicio;
-import model.seletor.SeletorInicio;
-import model.seletor.SuperSeletor;
-import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
@@ -17,6 +14,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class InicioView extends JPanel {
 
@@ -54,6 +52,9 @@ public class InicioView extends JPanel {
         splitPane.setPreferredSize(new Dimension(500, 35));
         splitPane.setBackground(Color.WHITE);
         this.add(splitPane, "cell 4 2 11 1,grow");
+
+        Locale locale = new Locale("pt", "BR");
+        JOptionPane.setDefaultLocale(locale);
 
         control = new ControllerInicio(this);
         modificacao = new Modificacoes();
@@ -260,9 +261,6 @@ public class InicioView extends JPanel {
         btnValidar.addActionListener(e -> {
             String ticket = txtTicket.getText().trim();
             String tipoPgto = cbFormaPgto.getSelectedItem().toString();
-            SuperSeletor<MovimentoVO> seletor = new SeletorInicio();
-            SeletorInicio s = new SeletorInicio();
-            s.setTxtTicketCartao(ticket);
             control.validate(tipoPgto, ticket);
             control.atualizarTabela();
         });
