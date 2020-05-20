@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -148,15 +147,24 @@ public class ControllerInicio {
         }
     }
 
+    /**
+     * Método para Calcula o valor TOTAL(Desde o Inicio, até o Tempo Atual(Agora))
+     * do Valor do Ticket. Utilizando de Valores Iniciais, e Valores de Diferença (Fim - Inicio).
+     *
+     * Se o TICKET estiver com o Status Flase(Não Validado), o Método permite a Possibilidade
+     * de Perguntar se deseja Validar o Ticket quando o evento acontece.
+     *
+     * Formata e Acumula o valor em uma variavel Constante para a tela CaixaView.
+     *
+     * @param tipoPgto String
+     * @param ticket String
+     * @return true/false
+     */
     private boolean calcular(String tipoPgto, String ticket) {
-        Date date1 = new Date();
-        Date date2 = new Date();
-
-        int id;
         for (MovimentoVO movimentoVO : lista) {
             String numero = String.valueOf(movimentoVO.getTicket().getNumero());
             if (ticket.equals(numero)) {
-                id = movimentoVO.getTicket().getId();
+                int id = movimentoVO.getTicket().getId();
                 t = daoT.consultarPorId(id);
                 break;
             }
@@ -164,12 +172,14 @@ public class ControllerInicio {
         if (t != null && t.getStatus().equals(false)){
             m = daoM.consultarPorId(t.getId());
 
+            Date date1 = new Date();
+            Date date2 = new Date();
+
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd hh:mm:ss");
             LocalDateTime ldtEntrada = m.getHr_entrada();
+            LocalDateTime now = LocalDateTime.now();
             date1 = Date.from(ldtEntrada.atZone(ZoneId.systemDefault()).toInstant());
-            String dateString = String.valueOf(LocalDateTime.now());
-            date2 = format.parse(dateString);
+            date2 = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +188,7 @@ public class ControllerInicio {
         long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
 
         long days =                                                 TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
-        long remainingHoursInMillis = diff -                        TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
+        long remainingHoursInMillis =   diff -                      TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
         long hours =                                                TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
         long remainingMinutesInMillis = remainingHoursInMillis -    TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
         long minutes =                                              TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
@@ -216,7 +226,6 @@ public class ControllerInicio {
         formatter.setMinimumFractionDigits(2);
         formatter.setMaximumFractionDigits(2);
         String format = formatter.format(valor);
-
         System.out.println(format);
 
         title = "Validação";
@@ -265,7 +274,7 @@ public class ControllerInicio {
                     }
                 }
             } else {
-                msg += "<html><body>Erro no Calculo de Validação!<br>Ticket já Validado!</body></html>";
+                msg += "<html><body>Erro no Calculo de Validação!</body></html>";
             }
         } catch (Exception e) {
             e.printStackTrace();

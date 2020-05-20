@@ -29,7 +29,7 @@ public class Constantes {
      */
     public static int INTERNAL_MESSAGE = 0;
 
-    public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:a");
+    public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss");
 
     public static final String[] COLUNAS_INICIO = {"Ticket/Cartão", "CARRO", "PLACA", "CLIENTE", "ENTRADA"};
     public static final String[] COLUNAS_CAIXA = {"Ticket/Cartão", "Descrição", "Hora Entrada", "Hora Validação", "Pagamento", "Valor"};
