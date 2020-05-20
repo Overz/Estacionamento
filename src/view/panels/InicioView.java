@@ -203,7 +203,6 @@ public class InicioView extends JPanel {
     }
 
     private void setJTable() {
-
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBackground(Color.WHITE);
         scrollPane.getViewport().setBackground(Color.WHITE);
@@ -219,7 +218,6 @@ public class InicioView extends JPanel {
         table = modificacao.tableLookAndFiel(table);
         scrollPane.setViewportView(table);
         add(scrollPane, "cell 4 3 11 14,grow");
-
     }
 
     private void addListeners() {
@@ -251,7 +249,7 @@ public class InicioView extends JPanel {
         btnProcurar.addActionListener(e -> {
             SeletorInicio seletor = new SeletorInicio();
             seletor.setTxtProcurar(this.getTxtProcurar().getText());
-            control.consultar(seletor);
+
             control.atualizarTabela();
         });
 

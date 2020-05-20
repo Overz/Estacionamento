@@ -25,9 +25,7 @@ public class CadastroView extends JPanel {
     public CadastroView() {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBounds(100, 100, 1145, 908);
-        this.setLayout(new MigLayout("",
-                "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]",
-                "[10px][50px][10px][50px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][20px][35px][35px][10px]"));
+        this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[50px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px][35px][35px][10px]"));
 
         this.initialize();
     }
@@ -39,7 +37,7 @@ public class CadastroView extends JPanel {
         layeredPane = new JLayeredPane();
         layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        add(layeredPane, "cell 1 4 14 11,grow");
+        add(layeredPane, "cell 1 1 14 11,grow");
 
         dadosCadastroView = new DadosCadastroView();
         dadosCadastroView.setBorder(null);
@@ -52,7 +50,7 @@ public class CadastroView extends JPanel {
         btnDados = new JButton("Dados");
         btnDados.setFont(new Font("Arial", Font.BOLD, 20));
         btnDados.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnDados, "cell 1 3 2 1,grow");
+        add(btnDados, "cell 1 0 2 1,grow");
         btnDados.addActionListener(e -> {
 
             dadosCadastroView = new DadosCadastroView();
@@ -75,7 +73,7 @@ public class CadastroView extends JPanel {
         btnEndereco = new JButton("Endereço");
         btnEndereco.setFont(new Font("Arial", Font.BOLD, 20));
         btnEndereco.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnEndereco, "cell 3 3 2 1,grow");
+        add(btnEndereco, "cell 3 0 2 1,grow");
         btnEndereco.addActionListener(e -> {
 
             enderecoCadastroView = new EnderecoCadastroView();
@@ -99,7 +97,7 @@ public class CadastroView extends JPanel {
         btnPlano = new JButton("Plano");
         btnPlano.setFont(new Font("Arial", Font.BOLD, 20));
         btnPlano.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnPlano, "cell 5 3 2 1,grow");
+        add(btnPlano, "cell 5 0 2 1,grow");
         btnPlano.addActionListener(e -> {
 
             planoCadastroView = new PlanoCadastroView();
@@ -124,7 +122,7 @@ public class CadastroView extends JPanel {
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.setFont(new Font("Arial", Font.BOLD, 20));
         btnSalvar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnSalvar, "cell 5 16 3 2,grow");
+        add(btnSalvar, "cell 5 13 3 2,grow");
         btnSalvar.addActionListener(e -> {
 
         });

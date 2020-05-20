@@ -27,10 +27,6 @@ public class EnderecoCadastroView extends JPanel {
 
         setInputFields();
 
-        setButtons();
-
-        setJTable();
-
     }
 
     public void setJLabels_JSeparator() {
@@ -85,12 +81,19 @@ public class EnderecoCadastroView extends JPanel {
 
     }
 
-    public void setButtons() {
-
+    public JTextField getTxtRua() {
+        return txtRua;
     }
 
-    public void setJTable() {
-
+    public JTextField getTxtBairro() {
+        return txtBairro;
     }
 
+    public JTextField getTxtNumero() {
+        return txtNumero;
+    }
+
+    public JTextField getTxtCidade() {
+        return txtCidade;
+    }
 }

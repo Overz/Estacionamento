@@ -24,13 +24,7 @@ public class PlanoCadastroView extends JPanel {
 
         setJLabels_JSeparator();
 
-        setInputFields();
-
-        setButtons();
-
         setComboBox();
-
-        setJTable();
     }
 
     public void setJLabels_JSeparator() {
@@ -62,18 +56,6 @@ public class PlanoCadastroView extends JPanel {
         cbFormaPgto.setBorder(new LineBorder(Color.BLACK, 1, true));
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 2 4 4 1,grow");
-
-    }
-
-    public void setInputFields() {
-
-    }
-
-    public void setButtons() {
-
-    }
-
-    public void setJTable() {
 
     }
 }
