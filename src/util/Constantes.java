@@ -13,17 +13,21 @@ public class Constantes {
 
     public static double LBL_VALOR_CAIXA_TOTAL;
     public static double LBL_VALOR_CAIXA_DINHEIRO;
-    /**
-     * Valores referentes aos Campos do Banco de Dados
-     */
-    public static final String DB_MOVIMENTO_ID = "idmovimento";
     public static double LBL_VALOR_CAIXA_CARTAO;
+
     /**
      * Flag para Sinalizar algumas Ações
-     *
+     * <p>
      * 0 : 1
      */
     public static int FLAG = 0;
+
+    /**
+     * Flag para Auxiliar a Sinalizar Respostas mais Internas
+     * <p>
+     * 0 : 1
+     */
+    public static int INTERNAL_MESSAGE = 0;
 
     public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:a");
 
@@ -32,12 +36,11 @@ public class Constantes {
     public static final String[] COLUNAS_CLIENTE = {"#", "NOME", "PLANO", "VENCIMENTO"};
     public static final String[] COLUNAS_MOVIMENTO = {"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"};
     public static final String[] COLUNAS_CADASTRO_CLIENTE = {"PLACA", "MARCA", "MODELO", "DESCRIÇÃO", "CÓDIGO CARTÃO"};
+
     /**
-     * Flag para Auxiliar a Sinalizar Respostas mais Internas
-     *
-     * 0 : 1
-      */
-    public static int INTERNAL_MESSAGE = 0;
+     * Valores referentes aos Campos do Banco de Dados
+     */
+    public static final String DB_MOVIMENTO_ID = "idmovimento";
     public static final String DB_MOVIMENTO_ENTRADA = "hr_entrada";
     public static final String DB_MOVIMENTO_SAIDA = "hr_saida";
 
