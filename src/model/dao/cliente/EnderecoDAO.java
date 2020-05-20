@@ -71,42 +71,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public ArrayList<EnderecoVO> consultar(SuperSeletor<EnderecoVO> seletor) {
-        String qry = "SELECT * FROM ENDERECO ";
-        list = new ArrayList<>();
-
-        if (seletor.temFiltro(enderecoVO)) {
-            qry += (seletor.criarFiltro(qry, enderecoVO));
-        }
-
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                enderecoVO = criarResultSet(result);
-                list.add(enderecoVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "Consultar(SuperSeletor<?> seletor)";
-            System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
-
-    @Override
-    public <T> T consultarObjeto(String... values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 

@@ -1,6 +1,8 @@
 package model.seletor;
 
-public class SeletorCliente<ClienteVO> {
+import model.vo.cliente.ClienteVO;
+
+public class SeletorCliente {
 
     public String criarFiltro(String string, ClienteVO object) {
         string = " WHERE ";

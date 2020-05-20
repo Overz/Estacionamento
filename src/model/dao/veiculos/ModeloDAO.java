@@ -76,42 +76,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public ArrayList<ModeloVO> consultar(SuperSeletor<ModeloVO> seletor) {
-        String qry = "SELECT * FROM MODELO";
-
-        if (seletor.temFiltro(modeloVO)) {
-            qry += seletor.criarFiltro(qry, modeloVO);
-        }
-
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                modeloVO = criarResultSet(result);
-                list.add(modeloVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "Consultar(SuperSeletor<?> seletor)";
-            System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
-            );
-
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
-
-    @Override
-    public <T> T consultarObjeto(String... values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 

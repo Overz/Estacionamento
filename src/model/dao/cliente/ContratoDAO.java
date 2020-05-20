@@ -70,46 +70,6 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public ArrayList<ContratoVO> consultar(SuperSeletor<ContratoVO> seletor) {
-        String qry = "SELECT * FROM CONTRATO";
-        list = new ArrayList<>();
-
-        if (seletor.temFiltro(contratoVO)) {
-            qry += seletor.criarFiltro(qry, contratoVO);
-        }
-
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                contratoVO = criarResultSet(result);
-                list.add(contratoVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "Consultar(SuperSeletor<?> seletor)";
-            System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
-
-    @Override
-    public <T> T consultarObjeto(String... values) {
-        return null;
-    }
-
-    @Override
     public ContratoVO consultarPorId(int id) {
         String qry = "SELECT * FROM CONTRATO WHERE IDCONTRATO = ?";
         conn = Banco.getConnection();

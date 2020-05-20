@@ -119,9 +119,6 @@ public class MovimentoView extends JPanel {
             seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
             seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
 
-            SuperSeletor<MovimentoVO> seletor = new SeletorMovimento<MovimentoVO>();
-
-            this.lista = bDAO.consultar(seletorMovimento);
             atualizarTabela(this.lista);
 
         });

@@ -63,10 +63,12 @@ public class ControllerInicio {
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
         }
+        int total = lista.size();
+        this.addTotalVeiculos(total);
     }
 
-    private void addTotalVeiculos() {
-
+    private void addTotalVeiculos(int total) {
+        inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos:" + total);
     }
 
     /**

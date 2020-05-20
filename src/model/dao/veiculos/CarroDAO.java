@@ -78,41 +78,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public ArrayList<CarroVO> consultar(SuperSeletor<CarroVO> seletor) {
-        String qry = "SELECT * FROM CARRO";
-
-        if (seletor.temFiltro(carroVO)) {
-            qry += seletor.criarFiltro(qry, carroVO);
-        }
-
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                carroVO = criarResultSet(result);
-                list.add(carroVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "Consultar(SuperSeletor<?> seletor)";
-            System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
-
-    @Override
-    public <T> T consultarObjeto(String... values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 

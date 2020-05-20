@@ -3,6 +3,7 @@ package model.dao.cliente;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.veiculos.CarroDAO;
+import model.seletor.SeletorCliente;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.veiculo.CarroVO;
@@ -85,7 +86,11 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
-    public ArrayList<ClienteVO> consultar(SuperSeletor<ClienteVO> seletor) {
+    public <T> T consultar(String... values) {
+        return null;
+    }
+
+    public ArrayList<ClienteVO> consultar(SeletorCliente seletor) {
         String qry = "SELECT * FROM CLIENTE";
         list = new ArrayList<>();
 
@@ -118,11 +123,6 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
         }
         return null;
     } // OK
-
-    @Override
-    public <T> T consultarObjeto(String... values) {
-        return null;
-    }
 
     @Override
     public ClienteVO consultarPorId(int id) {
