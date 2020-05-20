@@ -2,12 +2,15 @@ package model.seletor;
 
 import model.vo.movimentos.MovimentoVO;
 
-public class SeletorInicio implements SuperSeletor<MovimentoVO> {
+public class SeletorInicio {
 
     private String txtProcurar;
     private String txtTicketCartao;
+    private String ticket;
+    private String carro;
+    private String placa;
+    private String cliente;
 
-    @Override
     public String criarFiltro(String qry, MovimentoVO object) {
         boolean primeiro = true;
         qry += " WHERE ";
@@ -28,7 +31,6 @@ public class SeletorInicio implements SuperSeletor<MovimentoVO> {
         return null;
     }
 
-    @Override
     public boolean temFiltro(MovimentoVO object) {
         return false;
     }

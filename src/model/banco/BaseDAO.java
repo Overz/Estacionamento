@@ -1,7 +1,5 @@
 package model.banco;
 
-import model.seletor.SuperSeletor;
-
 import java.util.ArrayList;
 
 public interface BaseDAO<T> {

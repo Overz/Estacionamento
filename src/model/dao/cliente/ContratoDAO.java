@@ -2,7 +2,6 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.ContratoVO;
 
 import java.sql.*;

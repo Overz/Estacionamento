@@ -5,7 +5,6 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.seletor.SeletorMovimento;
-import model.seletor.SuperSeletor;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;

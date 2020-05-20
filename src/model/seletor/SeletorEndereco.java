@@ -1,10 +1,9 @@
 package model.seletor;
 
-public class SeletorEndereco<EnderecoVO> implements SuperSeletor<EnderecoVO> {
+public class SeletorEndereco<EnderecoVO> {
 
     private EnderecoVO enderecoVO;
 
-    @Override
     public String criarFiltro(String string, EnderecoVO object) {
         string += " WHERE ";
         boolean primeiro = true;
@@ -19,7 +18,6 @@ public class SeletorEndereco<EnderecoVO> implements SuperSeletor<EnderecoVO> {
         return string;
     }
 
-    @Override
     public boolean temFiltro(EnderecoVO object) {
         return object != null;
     }

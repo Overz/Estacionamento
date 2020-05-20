@@ -1,6 +1,7 @@
 package view.panels;
 
 import controller.ControllerInicio;
+import model.seletor.SeletorInicio;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
@@ -14,7 +15,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class InicioView extends JPanel {
 
@@ -53,9 +53,6 @@ public class InicioView extends JPanel {
         splitPane.setBackground(Color.WHITE);
         this.add(splitPane, "cell 4 2 11 1,grow");
 
-        Locale locale = new Locale("pt", "BR");
-        JOptionPane.setDefaultLocale(locale);
-
         control = new ControllerInicio(this);
         modificacao = new Modificacoes();
         mf1 = new MaskFormatter();
@@ -73,7 +70,6 @@ public class InicioView extends JPanel {
             control.atualizarTabela();
         }
 
-//		Timer para manter a Tabela Atualizada a cada 1 minuto
         control.timerRefreshData();
 
         control.maskAndPlaceHolder();
@@ -260,7 +256,11 @@ public class InicioView extends JPanel {
             control.atualizarTabela();
         });
 
-        btnProcurar.addActionListener(e -> control.atualizarTabela());
+        btnProcurar.addActionListener(e -> {
+            SeletorInicio seletor = new SeletorInicio();
+
+            control.atualizarTabela();
+        });
 
         btnRemover.addActionListener(e -> control.removeSelectedRow());
 

@@ -3,7 +3,6 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;

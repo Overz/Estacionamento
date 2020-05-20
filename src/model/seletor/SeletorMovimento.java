@@ -2,12 +2,11 @@ package model.seletor;
 
 import java.time.LocalDateTime;
 
-public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO> {
+public class SeletorMovimento<MovimentoVO>{
 
     private LocalDateTime dtInicio, dtFim;
     private MovimentoVO movimentoVO;
 
-    @Override
     public String criarFiltro(String qry, MovimentoVO object) {
         qry += " WHERE ";
         boolean primeiro = true;
@@ -29,7 +28,6 @@ public class SeletorMovimento<MovimentoVO> implements SuperSeletor<MovimentoVO> 
         return qry;
     }
 
-    @Override
     public boolean temFiltro(MovimentoVO object) {
         return false;
     }

@@ -114,6 +114,9 @@ public class ControllerInicio {
         }
     }
 
+    /**
+     * Timer que mantém a tabela atualizada a cada 1 minuto
+     */
     public void timerRefreshData() {
         ActionListener event = actionEvent -> atualizarTabela();
         Timer timer = new Timer(60000, event);

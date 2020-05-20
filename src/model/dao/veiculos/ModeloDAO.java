@@ -2,7 +2,6 @@ package model.dao.veiculos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SuperSeletor;
 import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
 

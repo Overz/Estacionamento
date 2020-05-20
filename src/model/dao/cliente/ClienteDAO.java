@@ -3,7 +3,6 @@ package model.dao.cliente;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.veiculos.CarroDAO;
-import model.seletor.SuperSeletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.veiculo.CarroVO;
