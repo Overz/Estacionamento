@@ -1,18 +1,15 @@
 package view.panels;
 
 import controller.ControllerInicio;
-import model.seletor.SeletorInicio;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class InicioView extends JPanel {
@@ -22,34 +19,28 @@ public class InicioView extends JPanel {
     private ControllerInicio control;
     private Modificacoes modificacao;
 
-    private JComboBox cbFormaPgto;
-    private JSplitPane splitPane;
+    private JComboBox cbFormaPgto, cbxProcurar;
     private JTable table;
-    private JButton btnProcurar, btnCancelar, btnValidar, btnGerarTicket,
+    private JButton btnCancelar, btnValidar, btnGerarTicket,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
-    private JTextField txtTicket, txtProcurar;
+    private JTextField txtTicket;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
+    private JTextField txtProcurar;
+    private JButton btnProcurar;
 
     public InicioView() {
 
         this.setBounds(100, 100, 1122, 789);
         this.setBackground(Color.WHITE);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        this.setLayout(new MigLayout("",
-                "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]",
-                "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
+        this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
 
         this.initialize();
     }
 
     private void initialize() {
-
-        splitPane = new JSplitPane();
-        splitPane.setBorder(null);
-        splitPane.setDividerSize(10);
-        splitPane.setPreferredSize(new Dimension(500, 35));
-        splitPane.setBackground(Color.WHITE);
-        this.add(splitPane, "cell 4 2 11 1,grow");
+        Constantes.FLAG = 0;
+        Constantes.INTERNAL_MESSAGE = 0;
 
         modificacao = new Modificacoes();
         control = new ControllerInicio(this);
@@ -61,6 +52,8 @@ public class InicioView extends JPanel {
         setButtons();
 
         setJTable();
+
+        setComboBox();
 
         if (table.getRowCount() == 0 || table.getColumnCount() == 0) {
             control.atualizarTabela();
@@ -95,7 +88,7 @@ public class InicioView extends JPanel {
         JLabel lblImprimirLinhaSelecionada = new JLabel("Imprimir / Remover Linha Selecionada:");
         lblImprimirLinhaSelecionada.setFont(new Font("Arial", Font.BOLD, 16));
         lblImprimirLinhaSelecionada.setBackground(Color.WHITE);
-        add(lblImprimirLinhaSelecionada, "cell 5 18 3 2,grow");
+        add(lblImprimirLinhaSelecionada, "cell 4 18 4 2,grow");
 
         lblTotalDeVeiculos = new JLabel("Total de Veiculos:");
         lblTotalDeVeiculos.setFont(new Font("Arial", Font.BOLD, 14));
@@ -117,15 +110,6 @@ public class InicioView extends JPanel {
     }
 
     private void setInputFields() {
-        ArrayList<String> formaPgto = new ArrayList<>();
-        formaPgto.add(Constantes.JOP_DINHEIRO);
-        formaPgto.add(Constantes.JOP_CARTAO);
-
-        cbFormaPgto = new JComboBox<>(formaPgto.toArray());
-        cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
-        cbFormaPgto.setBackground(Color.WHITE);
-        add(cbFormaPgto, "cell 1 8 2 1,grow");
-
         txtTicket = new JTextField("Nº Ticket");
         txtTicket.setFont(new Font("Arial", Font.BOLD, 20));
         txtTicket.setBorder(new LineBorder(Color.BLACK));
@@ -134,12 +118,11 @@ public class InicioView extends JPanel {
         add(txtTicket, "cell 1 5 2 1,grow");
 
         txtProcurar = new JTextField("Procurar...");
-        txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
-        txtProcurar.setFocusAccelerator((char) KeyEvent.VK_F6);
+        txtProcurar.setFocusAccelerator('u');
         txtProcurar.setColumns(10);
-        splitPane.setRightComponent(txtProcurar);
-
+        txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        add(txtProcurar, "cell 6 2 7 1,grow");
     }
 
     private void setButtons() {
@@ -159,19 +142,12 @@ public class InicioView extends JPanel {
         btnValidar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnValidar, "cell 2 6,grow");
 
-        btnProcurar = new JButton("Procurar?");
-        btnProcurar.setPreferredSize(new Dimension(300, 50));
-        btnProcurar.setFont(new Font("Arial", Font.BOLD, 16));
-        btnProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        btnProcurar.setBackground(new Color(100, 149, 237));
-        splitPane.setLeftComponent(btnProcurar);
-
         btnRemover = new JButton("Remover Ticket / Cliente");
         btnRemover.setBackground(Color.decode("#FF8C00"));
         btnRemover.setFont(new Font("Arial", Font.BOLD, 16));
         btnRemover.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnRemover.setToolTipText("Remove os Clientes ou Tickets na Tabela");
-        add(btnRemover, "cell 11 18 3 2,grow");
+        add(btnRemover, "cell 12 18 3 2,grow");
 
         btnGerarTicket = new JButton("Gerar Ticket");
         btnGerarTicket.setBackground(new Color(100, 149, 237));
@@ -185,7 +161,7 @@ public class InicioView extends JPanel {
         btnImprimirComprovanteTabela.setFont(new Font("Arial", Font.BOLD, 16));
         btnImprimirComprovanteTabela.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnImprimirComprovanteTabela.setToolTipText("Imprime comprovante de Clientes ou Tickets na Tabela");
-        add(btnImprimirComprovanteTabela, "cell 8 18 3 2,grow");
+        add(btnImprimirComprovanteTabela, "cell 8 18 4 2,grow");
 
         btnAbrirEntrada = new JButton("Abrir Entrada");
         btnAbrirEntrada.setBackground(Color.WHITE);
@@ -200,6 +176,13 @@ public class InicioView extends JPanel {
         btnAbrirSaida.setFont(new Font("Arial", Font.BOLD, 16));
         btnAbrirSaida.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnAbrirSaida, "cell 1 15 2 1,grow");
+
+        btnProcurar = new JButton("Procurar");
+        btnProcurar.setBackground(new Color(100, 149, 237));
+        btnProcurar.setFont(new Font("Arial", Font.BOLD, 16));
+        btnProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        add(btnProcurar, "cell 13 2 2 1,grow");
+
     }
 
     private void setJTable() {
@@ -220,22 +203,31 @@ public class InicioView extends JPanel {
         add(scrollPane, "cell 4 3 11 14,grow");
     }
 
-    private void addListeners() {
-        txtTicket.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtTicket.setText("");
-                txtProcurar.setForeground(Color.BLACK);
-            }
-        });
+    private void setComboBox() {
+        ArrayList<String> formaPgto = new ArrayList<>();
+        formaPgto.add(Constantes.PGTO_DINHEIRO);
+        formaPgto.add(Constantes.PGTO_CARTAO);
 
-        txtProcurar.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtProcurar.setText("");
-                txtProcurar.setForeground(Color.BLACK);
-            }
-        });
+        cbFormaPgto = new JComboBox<>(formaPgto.toArray());
+        cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
+        cbFormaPgto.setBackground(Color.WHITE);
+        add(cbFormaPgto, "cell 1 8 2 1,grow");
+
+        ArrayList<String> tipoProcura = new ArrayList<>();
+        tipoProcura.add(Constantes.PROCURA);
+        tipoProcura.add(Constantes.PROCURA_CLIENTE);
+        tipoProcura.add(Constantes.PROCURA_CARRO);
+        tipoProcura.add(Constantes.PROCURA_TICKET_CARTAO);
+
+        cbxProcurar = new JComboBox<>(tipoProcura.toArray());
+        cbxProcurar.setFont(new Font("Arial", Font.BOLD, 18));
+        cbxProcurar.setBackground(Color.WHITE);
+        add(cbxProcurar, "cell 4 2 2 1,grow");
+    }
+
+    private void addListeners() {
+        txtTicket.addFocusListener(control.addFocusTxtTicket());
+        txtProcurar.addFocusListener(control.addFocusTxtProcurar());
 
         btnCancelar.addActionListener(e -> txtTicket.setText("Nº Ticket"));
 
@@ -244,13 +236,15 @@ public class InicioView extends JPanel {
             String tipoPgto = cbFormaPgto.getSelectedItem().toString();
             control.validate(tipoPgto, ticket);
             control.atualizarTabela();
+            Constantes.FLAG = 0;
         });
 
         btnProcurar.addActionListener(e -> {
-            SeletorInicio seletor = new SeletorInicio();
-            seletor.setTxtProcurar(this.getTxtProcurar().getText());
-
+            String tipo = (String) cbxProcurar.getSelectedItem();
+            String valor = txtProcurar.getText();
+            control.consultar(tipo, valor);
             control.atualizarTabela();
+            Constantes.FLAG = 0;
         });
 
         btnRemover.addActionListener(e -> control.removeSelectedRow());

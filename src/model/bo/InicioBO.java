@@ -4,7 +4,7 @@ import util.Constantes;
 
 public class InicioBO {
 
-    public static boolean validarNumberoTicket(String... values) {
+    public static boolean validarNumeroTicket(String... values) {
         boolean a = false;
         for (String value : values) {
             a = value != null

@@ -128,16 +128,21 @@ INSERT INTO `dbestacionamento`.`cliente` (`idcliente`, `idEndereco`, `idCarro`, 
 VALUES ('5', '5', '5', 'ANA', '00000000050', '1213141', 'teste5@email.com', '48000000005');
 
 -- TICKET
-INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `hr_validacao`)
-VALUES ('1', '1', '0101010101', '0', '2020-01-01 13:00:00');
-INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `hr_validacao`)
-VALUES ('2', '2', '0202020202', '0', '2020-02-02 14:00:00');
-INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `hr_validacao`)
-VALUES ('3', '3', '0303030303', '0', '2020-03-03 15:00:00');
-INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `hr_validacao`)
-VALUES ('4', '4', '0404040404', '0', '2020-04-04 16:00:00');
-INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `hr_validacao`)
-VALUES ('5', '5', '0505050505', '0', '2020-05-05 17:00:00');
+INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `tipo`, `hr_validacao`,
+                                         `statusTicket`)
+VALUES ('1', '1', '0101010101', '0', 'DINHEIRO', '2020-01-01 13:00:00', '0');
+INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `tipo`, `hr_validacao`,
+                                         `statusTicket`)
+VALUES ('2', '2', '0202020202', '0', 'CARTÃO', '2020-02-02 14:00:00', '0');
+INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `tipo`, `hr_validacao`,
+                                         `statusTicket`)
+VALUES ('3', '3', '0303030303', '0', 'DINHEIRO', '2020-03-03 15:00:00', '0');
+INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `tipo`, `hr_validacao`,
+                                         `statusTicket`)
+VALUES ('4', '4', '0404040404', '0', 'CARTÃO', '2020-04-04 16:00:00', '1');
+INSERT INTO `dbestacionamento`.`ticket` (`idticket`, `idCliente`, `n_ticket`, `valor`, `tipo`, `hr_validacao`,
+                                         `statusTicket`)
+VALUES ('5', '5', '0505050505', '0', 'DINHEIRO', '2020-05-05 17:00:00', '1');
 
 -- CONTRATO
 INSERT INTO `dbestacionamento`.`contrato` (`idcontrato`, `n_cartao`, `dt_entrada`, `dt_saida`, `ativo`, `valor`)
@@ -176,14 +181,9 @@ INSERT INTO `dbestacionamento`.`movimento` (`idmovimento`, `idTicket`, `idPlano`
 VALUES ('5', '5', '4', '2020-01-01 12:00:00', '2020-01-01 17:00:00');
 
 -- FLUXO
-INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`)
-VALUES ('1', '1');
-INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`)
-VALUES ('2', '2');
-INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`)
-VALUES ('3', '3');
-INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`)
-VALUES ('4', '4');
-INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`)
-VALUES ('5', '5');
+#INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`) VALUES ('1', '1');
+#INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`) VALUES ('2', '2');
+#INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`) VALUES ('3', '3');
+#INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`) VALUES ('4', '4');
+#INSERT INTO `dbestacionamento`.`fluxo` (`idfluxo`, `idMovimento`) VALUES ('5', '5');
 

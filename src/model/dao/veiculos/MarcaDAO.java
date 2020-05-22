@@ -68,7 +68,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public <T> T consultar(String values) {
         return null;
     }
 

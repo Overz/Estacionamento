@@ -71,7 +71,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public <T> T consultar(String values) {
         return null;
     }
 

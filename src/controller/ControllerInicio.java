@@ -1,12 +1,17 @@
 package controller;
 
 import model.banco.BaseDAO;
+import model.bo.CarroBO;
+import model.bo.ClienteBO;
 import model.bo.InicioBO;
+import model.dao.cliente.ClienteDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.dao.movientos.TicketDAO;
-import model.seletor.SeletorInicio;
+import model.dao.veiculos.CarroDAO;
+import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
+import model.vo.veiculo.CarroVO;
 import util.Constantes;
 import view.panels.InicioView;
 
@@ -26,6 +31,8 @@ public class ControllerInicio {
     private final InicioView inicioView;
     private final BaseDAO<MovimentoVO> daoM;
     private final BaseDAO<TicketVO> daoT;
+    private final BaseDAO<CarroVO> daoCarro;
+    private final BaseDAO<ClienteVO> daoCliente;
     private ArrayList<MovimentoVO> lista;
     private MovimentoVO m;
     private TicketVO t;
@@ -37,6 +44,8 @@ public class ControllerInicio {
         this.inicioView = inicioView;
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
+        daoCarro = new CarroDAO();
+        daoCliente = new ClienteDAO();
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
@@ -50,10 +59,14 @@ public class ControllerInicio {
         // Limpa a tabela
         this.limparTabela();
 
-        lista = daoM.consultarTodos();
         DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
-        // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         Object[] novaLinha = new Object[5];
+
+        if (Constantes.FLAG == 0) {
+            lista = daoM.consultarTodos();
+        }
+
+        // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
             novaLinha[0] = String.valueOf(movimento.getTicket().getNumero());
             novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
@@ -105,7 +118,7 @@ public class ControllerInicio {
      * Timer que mantém a tabela atualizada a cada 1 minuto
      */
     private void timerRefreshData() {
-        ActionListener event = actionEvent -> atualizarTabela();
+        ActionListener event = e -> atualizarTabela();
         Timer timer = new Timer(60000, event);
         timer.start();
     }
@@ -117,7 +130,7 @@ public class ControllerInicio {
      * @param ticket   String
      */
     public void validate(String tipoPgto, String ticket) {
-        if (InicioBO.validarNumberoTicket(ticket)) {
+        if (InicioBO.validarNumeroTicket(ticket)) {
             if (calcular(tipoPgto, ticket)) {
                 if (validarTicket(ticket)) {
                     msg = "Ticket Valido Por: " + minutes + " minuto's!";
@@ -136,7 +149,7 @@ public class ControllerInicio {
             msg = "Por Favor, Digite o Ticket Corretamente!";
             JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title, JOptionPane.WARNING_MESSAGE);
         }
-        this.gambiarra();
+        this.ajustarFocusTxtTicket();
     }
 
     /**
@@ -181,13 +194,13 @@ public class ControllerInicio {
 
             // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
             // Ambos estão iguais
-            long days =                                                 TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
-            long remainingHoursInMillis = diff -                        TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
-            long hours =                                                TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
-            long remainingMinutesInMillis = remainingHoursInMillis -    TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
-            long minutes =                                              TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
-            long remainingSecondsInMillis = remainingMinutesInMillis -  TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
-            long seconds =                                              TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
+            long days = TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
+            long remainingHoursInMillis = diff - TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
+            long hours = TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
+            long remainingMinutesInMillis = remainingHoursInMillis - TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
+            long remainingSecondsInMillis = remainingMinutesInMillis - TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
 
             // Diferença entre Segundos Totais e Atuais (Atual - Total)
             // Calculos feitos a mão
@@ -209,9 +222,9 @@ public class ControllerInicio {
             double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
             double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
 
-            if (tipoPgto.equals(Constantes.JOP_CARTAO)) {
+            if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
                 Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
-            } else if (tipoPgto.equals(Constantes.JOP_DINHEIRO)) {
+            } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
                 Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
             }
 
@@ -319,16 +332,57 @@ public class ControllerInicio {
     }
 
     /**
-     * Atualiza o foco do campo TxtTicket na tela após a validação
+     * Verifica o Tipo para consultar de acordo com a necessidade do usuário
+     *
+     * @param tipo  String
+     * @param valor String
      */
-    private void gambiarra() {
-        inicioView.getTxtTicket().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                inicioView.getTxtTicket().setText("Nº Ticket");
-                inicioView.setForeground(Color.BLACK);
-            }
-        });
+    public void consultar(String tipo, String valor) {
+        title = "Procurar";
+        Constantes.FLAG = 1;
+        switch (tipo) {
+            case Constantes.PROCURA:
+                Constantes.FLAG = 0;
+                this.atualizarTabela();
+                msg = "<html><body>A Tabela foi Atualizada!<br>";
+                break;
+            case Constantes.PROCURA_CARRO:
+                if (CarroBO.validarCarro(valor)) {
+                    Constantes.INTERNAL_MESSAGE = 1;
+                    lista = daoM.consultar(valor);
+                }
+                break;
+            case Constantes.PROCURA_CLIENTE:
+                ClienteVO c = new ClienteVO();
+                c.setNome(valor);
+                if (ClienteBO.validarNomeCliente(c)) {
+                    Constantes.INTERNAL_MESSAGE = 2;
+                    lista = daoM.consultar(valor);
+                }
+                break;
+            case Constantes.PROCURA_TICKET_CARTAO:
+                if (InicioBO.validarNumeroTicket(valor)) {
+                    Constantes.INTERNAL_MESSAGE = 3;
+                    lista = daoM.consultar(valor);
+                }
+                break;
+            default:
+                msg = "<html><body>Por favor, Digite os Dados Corretamente!" +
+                      "<br>- Sem Caracteres Especiais!" +
+                      "<br>- Cliente não deve Conter Números!</body></html>";
+                break;
+        }
+
+        if (lista != null) {
+            atualizarTabela();
+            msg += "Consulta Realizada!</body></html>";
+        } else {
+            msg = "<html><body>Ocorreu um Problema!<br>Consulta não pode ser Realizada!<br>Movito: Lista retornando Null/Vazio</body></html>";
+        }
+
+        this.ajustarFocusTxtProcurar();
+        JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void gerarTicket() {
@@ -342,7 +396,60 @@ public class ControllerInicio {
         //TODO Usar a Classe GerarRelatorio para gerar um comprovante
     }
 
-    public void consultar(SeletorInicio seletor) {
-        //TODO Consultar
+    /**
+     * Adiciona focus no campo TxtTicket na tela;
+     *
+     * @return new FocusAdapter
+     */
+    public FocusListener addFocusTxtTicket() {
+        return new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                inicioView.getTxtTicket().setText("");
+                inicioView.getTxtProcurar().setForeground(Color.BLACK);
+            }
+        };
     }
+
+    /**
+     * Adiciona focus no campo TxtProcurar na tela;
+     *
+     * @return new FocusAdapter
+     */
+    public FocusListener addFocusTxtProcurar() {
+        return new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                inicioView.getTxtProcurar().setText("");
+                inicioView.getTxtProcurar().setForeground(Color.BLACK);
+            }
+        };
+    }
+
+    /**
+     * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
+     */
+    private void ajustarFocusTxtTicket() {
+        inicioView.getTxtTicket().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                inicioView.getTxtTicket().setText("Nº Ticket");
+                inicioView.setForeground(Color.BLACK);
+            }
+        });
+    }
+
+    /**
+     * Atualiza o foco do campo TxtProcurar na tela após a consulta
+     */
+    private void ajustarFocusTxtProcurar() {
+        inicioView.getTxtProcurar().addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                inicioView.getTxtProcurar().setText("Procurar...");
+                inicioView.getTxtProcurar().setForeground(Color.BLACK);
+            }
+        });
+    }
+
 }

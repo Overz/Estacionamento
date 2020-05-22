@@ -37,10 +37,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
 
         }
@@ -64,10 +64,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "ConsultarTodos()";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -78,9 +78,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public ArrayList<CarroVO> consultar(String values) {
         return null;
     }
+
 
     @Override
     public CarroVO consultarPorId(int id) {
@@ -98,10 +99,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "ConsultarPorID(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -130,10 +131,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "Cadastrar(T newObject)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -159,10 +160,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "Alterar(T object)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -186,10 +187,10 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         } catch (SQLException e) {
             String method = "excluir(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);

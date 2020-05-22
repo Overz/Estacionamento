@@ -13,6 +13,9 @@ public class MainView extends JFrame {
     private static JLayeredPane layeredPane;
     private static final InicioView inicioView = new InicioView();
     private static final CaixaView caixaView = new CaixaView();
+    private static final ClienteView clienteView = new ClienteView();
+    private static final MovimentoView movimentoView = new MovimentoView();
+    private static final LostTicketView lostTicketView = new LostTicketView();
 
     public MainView() {
 
@@ -108,12 +111,7 @@ public class MainView extends JFrame {
         btnClientes.setBackground(Color.WHITE);
         btnClientes.setBorder(null);
         menuBar.add(btnClientes);
-        btnClientes.addActionListener(e -> {
-
-            ClienteView clienteView = new ClienteView();
-            swithPanel(clienteView);
-
-        });
+        btnClientes.addActionListener(e -> swithPanel(clienteView));
 
         Component strut3 = Box.createHorizontalStrut(20);
         menuBar.add(strut3);
@@ -124,12 +122,7 @@ public class MainView extends JFrame {
         btnMovimento.setBackground(Color.WHITE);
         btnMovimento.setBorder(null);
         menuBar.add(btnMovimento);
-        btnMovimento.addActionListener(e -> {
-
-            MovimentoView movimentoView = new MovimentoView();
-            swithPanel(movimentoView);
-
-        });
+        btnMovimento.addActionListener(e -> swithPanel(movimentoView));
 
         Component strut4 = Box.createHorizontalStrut(20);
         menuBar.add(strut4);
@@ -140,12 +133,7 @@ public class MainView extends JFrame {
         btnTicketPerdido.setBackground(Color.WHITE);
         btnTicketPerdido.setBorder(null);
         menuBar.add(btnTicketPerdido);
-        btnTicketPerdido.addActionListener(e -> {
-
-            LostTicketView ticketPerdidoView = new LostTicketView();
-            swithPanel(ticketPerdidoView);
-
-        });
+        btnTicketPerdido.addActionListener(e -> swithPanel(lostTicketView));
 
         menuBar.add(Box.createHorizontalGlue());
 

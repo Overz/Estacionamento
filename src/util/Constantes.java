@@ -7,10 +7,15 @@ public class Constantes {
     public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss");
     public static final String REGEX_PALAVRAS = "[a-z-A-Z]+";
     public static final String REGEX_NUMEROS = "[0-9]+";
+    public static final String REGEX_NUMEROS_PALAVRAS = "[A-Za-z0-9]+";
 
-    public static final String JOP_SELECIONE = "~ SELECIONE ~";
-    public static final String JOP_DINHEIRO = "1 - DINHEIRO";
-    public static final String JOP_CARTAO = "2 - CARTÃO";
+    public static final String VAZIO = "~ SELECIONE ~";
+    public static final String PROCURA = "PROCURAR POR TODOS";
+    public static final String PGTO_DINHEIRO = "1 - DINHEIRO";
+    public static final String PGTO_CARTAO = "2 - CARTÃO";
+    public static final String PROCURA_CARRO = "PROCURAR POR CARRO";
+    public static final String PROCURA_CLIENTE = "PROCURAR POR CLIENTE";
+    public static final String PROCURA_TICKET_CARTAO = "PROCURAR POR TICKET/CARTÃO";
 
     public static final String LBL_TEXT_CAIXA_TOTAL = "Total(R$):";
     public static final String LBL_TEXT_CAIXA_CARTAO = "Saldo em Cartão:";
@@ -28,8 +33,6 @@ public class Constantes {
 
     /**
      * Flag para Auxiliar a Sinalizar Respostas mais Internas
-     * <p>
-     * 0 : 1
      */
     public static int INTERNAL_MESSAGE = 0;
 

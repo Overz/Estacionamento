@@ -3,7 +3,6 @@ package model.dao.cliente;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.veiculos.CarroDAO;
-import model.seletor.SeletorCliente;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.veiculo.CarroVO;
@@ -86,43 +85,10 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public ArrayList<ClienteVO> consultar(String values) {
         return null;
     }
 
-    public ArrayList<ClienteVO> consultar(SeletorCliente seletor) {
-        String qry = "SELECT * FROM CLIENTE";
-        list = new ArrayList<>();
-
-        if (seletor.temFiltro(clienteVO)) {
-            qry += seletor.criarFiltro(qry, clienteVO);
-        }
-
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                clienteVO = criarResultSet(result);
-                list.add(clienteVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "Consultar(SuperSeletor<?> seletor)";
-            System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
 
     @Override
     public ClienteVO consultarPorId(int id) {
@@ -160,11 +126,11 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setString(1, newObject.getNome());
-            stmt.setString(2, newObject.getCpf());
-            stmt.setString(3, newObject.getRg());
-            stmt.setString(4, newObject.getEmail());
-            stmt.setString(5, newObject.getTelefone());
+            stmt.setString(1, newObject.getNome().toUpperCase());
+            stmt.setString(2, newObject.getCpf().toUpperCase());
+            stmt.setString(3, newObject.getRg().toUpperCase());
+            stmt.setString(4, newObject.getEmail().toUpperCase());
+            stmt.setString(5, newObject.getTelefone().toUpperCase());
 
             result = stmt.getGeneratedKeys();
             if (result.next()) {

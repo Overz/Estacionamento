@@ -4,7 +4,7 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
-import model.seletor.SeletorMovimento;
+import model.seletor.Seletor;
 import model.vo.movimentos.MovimentoVO;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
@@ -106,7 +106,7 @@ public class MovimentoView extends JPanel {
 
 //            Instanciar as Classes usadas
             BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
-            SeletorMovimento<MovimentoVO> seletorMovimento = new SeletorMovimento<>();
+            Seletor seletorMovimento = new Seletor();
 
 //            Setar os valores da Tela no Seletor para criar Filtro
             DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder()
@@ -115,9 +115,9 @@ public class MovimentoView extends JPanel {
                     .appendPattern("yyyy/MMM/dd")
                     .appendPattern("d-MM-yyyy")
                     .appendPattern("d-M-yy");
-            DateTimeFormatter dtf = builder.toFormatter(Locale.ENGLISH);
-            seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
-            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
+//            DateTimeFormatter dtf = builder.toFormatter(Locale.ENGLISH);
+//            seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
+//            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
 
             atualizarTabela(this.lista);
 

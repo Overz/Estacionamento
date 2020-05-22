@@ -63,7 +63,7 @@ public class ControllerCaixa {
         msg = "Escolha o Tipo de Entrada:";
 
         if (Constantes.FLAG == 1) {
-            Object[] opcoes = {Constantes.JOP_DINHEIRO, Constantes.JOP_CARTAO};
+            Object[] opcoes = {Constantes.PGTO_DINHEIRO, Constantes.PGTO_CARTAO};
             a = (String) JOptionPane.showInputDialog(caixaView, msg, title,
                     JOptionPane.QUESTION_MESSAGE, null, opcoes, "");
 
@@ -106,7 +106,7 @@ public class ControllerCaixa {
      */
     private boolean addValor(String tipo, Double... values) {
         boolean bool = false;
-        if (tipo.equals(Constantes.JOP_DINHEIRO)) {
+        if (tipo.equals(Constantes.PGTO_DINHEIRO)) {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
                     Constantes.LBL_VALOR_CAIXA_DINHEIRO += a;
@@ -117,7 +117,7 @@ public class ControllerCaixa {
             }
             caixaView.getLblSaldoEmDinheiror().setText(Constantes.LBL_TEXT_CAIXA_DINHEIRO + "" + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
         }
-        if (tipo.equals(Constantes.JOP_CARTAO)) {
+        if (tipo.equals(Constantes.PGTO_CARTAO)) {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
                     Constantes.LBL_VALOR_CAIXA_CARTAO += a;
@@ -191,20 +191,20 @@ public class ControllerCaixa {
         double c = 0.0, d = 0.0;
         try {
             if (Constantes.FLAG == 1) {
-                if (a.equals(Constantes.JOP_DINHEIRO)) {
+                if (a.equals(Constantes.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(b);
                 }
-                if (a.equals(Constantes.JOP_CARTAO)) {
+                if (a.equals(Constantes.PGTO_CARTAO)) {
                     d = Double.parseDouble(b);
                 }
                 Constantes.LBL_VALOR_CAIXA_TOTAL += c;
                 Constantes.LBL_VALOR_CAIXA_TOTAL += d;
             }
             if (Constantes.FLAG == 0) {
-                if (a.equals(Constantes.JOP_DINHEIRO)) {
+                if (a.equals(Constantes.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(b);
                 }
-                if (a.equals(Constantes.JOP_CARTAO)) {
+                if (a.equals(Constantes.PGTO_CARTAO)) {
                     d = Double.parseDouble(b);
                 }
                 if (Constantes.LBL_VALOR_CAIXA_TOTAL == 0.0) {

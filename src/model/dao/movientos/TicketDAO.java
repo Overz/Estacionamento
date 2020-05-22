@@ -3,6 +3,7 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.ClienteDAO;
+import model.seletor.Seletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
@@ -79,7 +80,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public <T> T consultar(String values) {
         return null;
     }
 

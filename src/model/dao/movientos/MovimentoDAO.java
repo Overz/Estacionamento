@@ -3,9 +3,11 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
+import model.seletor.Seletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
+import util.Constantes;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -81,7 +83,46 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String... values) {
+    public ArrayList<MovimentoVO> consultar(String values) {
+        String qry = "select * from movimento movi " +
+                     "inner join plano p on movi.idPlano = p.idplano " +
+                     "inner join ticket t on movi.idTicket = t.idticket " +
+                     "inner join contrato con on p.idContrato = con.idcontrato " +
+                     "inner join cliente cli on p.idCliente = cli.idcliente " +
+                     "inner join carro car on cli.idCarro = car.idcarro " +
+                     "inner join modelo modl on car.idModelo = modl.idmodelo ";
+
+        Seletor seletor = new Seletor();
+        seletor.setValor(values);
+        if (seletor.temFiltro()) {
+            qry = seletor.criarFiltro(qry);
+        }
+
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            result = stmt.executeQuery();
+            if (result.next()) {
+                movimentoVO = criarResultSet(result);
+                list.add(movimentoVO);
+            }
+            return list;
+        } catch (SQLException e) {
+            String method = "Consultar(String values)";
+            System.out.println("\n" +
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause() + "\n" +
+                               "Query:" + qry
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
     }
 

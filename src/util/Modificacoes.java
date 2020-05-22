@@ -136,7 +136,7 @@ public class Modificacoes {
      * Método para reenderizar a JTable e criar uma mascara com campo formatado em
      * uma coluna especifica
      *
-     * @param table
+     * @param table        JTable
      * @param sportColumn: TableColumn
      */
     public void maskFormJTable(JTable table, TableColumn sportColumn) {

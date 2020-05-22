@@ -107,9 +107,9 @@ public class LostTicketView extends JPanel {
 
     public void setButtons() {
         tiposPagamento = new ArrayList<String>();
-        tiposPagamento.add(Constantes.JOP_SELECIONE);
-        tiposPagamento.add(Constantes.JOP_DINHEIRO);
-        tiposPagamento.add(Constantes.JOP_CARTAO);
+        tiposPagamento.add(Constantes.VAZIO);
+        tiposPagamento.add(Constantes.PGTO_DINHEIRO);
+        tiposPagamento.add(Constantes.PGTO_CARTAO);
 
         JComboBox<Object> comboBox = new JComboBox<Object>(tiposPagamento.toArray());
         comboBox.setFont(new Font("Arial", Font.BOLD, 14));
