@@ -7,7 +7,6 @@ import model.seletor.Seletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
-import util.Constantes;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,10 +42,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         }
         return null;
@@ -69,10 +68,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "ConsultarTodos()";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -85,18 +84,19 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public ArrayList<MovimentoVO> consultar(String values) {
         String qry = "select * from movimento movi " +
-                     "inner join plano p on movi.idPlano = p.idplano " +
-                     "inner join ticket t on movi.idTicket = t.idticket " +
-                     "inner join contrato con on p.idContrato = con.idcontrato " +
-                     "inner join cliente cli on p.idCliente = cli.idcliente " +
-                     "inner join carro car on cli.idCarro = car.idcarro " +
-                     "inner join modelo modl on car.idModelo = modl.idmodelo ";
+                     "left join plano p on movi.idPlano = p.idplano " +
+                     "left join ticket t on movi.idTicket = t.idticket " +
+                     "left join contrato con on p.idContrato = con.idcontrato " +
+                     "left join cliente cli on p.idCliente = cli.idcliente " +
+                     "left join carro car on cli.idCarro = car.idcarro " +
+                     "left join modelo modl on car.idModelo = modl.idmodelo" +
+                     " where cli.nome like '%ana%'";
 
         Seletor seletor = new Seletor();
-        seletor.setValor(values);
-        if (seletor.temFiltro()) {
-            qry = seletor.criarFiltro(qry);
-        }
+        seletor.setValor(values.toUpperCase());
+//        if (seletor.temFiltro()) {
+//            qry = seletor.criarFiltro(qry);
+//        }
 
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -108,7 +108,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
                 movimentoVO = criarResultSet(result);
                 list.add(movimentoVO);
             }
-            return list;
+            return null;
         } catch (SQLException e) {
             String method = "Consultar(String values)";
             System.out.println("\n" +
@@ -123,7 +123,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return null;
+        return list;
     }
 
     @Override
@@ -142,10 +142,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "ConsultarPorID(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -174,10 +174,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "Cadastrar(T newObject)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -189,7 +189,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean alterar(MovimentoVO object) {
-        String qry = "UPDATE MOVIMENTO SET HR_ENTRADA=?, HR_SAIDA=?";
+        String qry = "UPDATE MOVIMENTO SET HR_ENTRADA = ?, HR_SAIDA = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -203,10 +203,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "Alterar(T object)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -231,10 +231,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } catch (SQLException e) {
             String method = "excluir(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);

@@ -13,6 +13,7 @@ import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import model.vo.veiculo.CarroVO;
 import util.Constantes;
+import util.Util;
 import view.panels.InicioView;
 
 import javax.swing.*;
@@ -68,11 +69,15 @@ public class ControllerInicio {
 
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
-            novaLinha[0] = String.valueOf(movimento.getTicket().getNumero());
-            novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
-            novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
-            novaLinha[3] = movimento.getTicket().getCliente().getNome();
-            novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
+
+            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
+                Util.tabelaUtil(movimento);
+            }
+                novaLinha[0] = String.valueOf(movimento.getTicket().getNumero());
+                novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
+                novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
+                novaLinha[3] = movimento.getTicket().getCliente().getNome();
+                novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
@@ -222,12 +227,6 @@ public class ControllerInicio {
             double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
             double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
 
-            if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
-                Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
-            } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
-                Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
-            }
-
             Locale locale = Locale.getDefault(Locale.Category.FORMAT);
             NumberFormat formatter = NumberFormat.getInstance(locale);
             formatter.setMinimumFractionDigits(2);
@@ -239,6 +238,13 @@ public class ControllerInicio {
             msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
             int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                     title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (i == JOptionPane.YES_OPTION) {
+                if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
+                    Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
+                } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
+                    Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
+                }
+            }
             return i == JOptionPane.YES_OPTION;
         } else {
             Constantes.INTERNAL_MESSAGE = 0;
@@ -344,7 +350,6 @@ public class ControllerInicio {
             case Constantes.PROCURA:
                 Constantes.FLAG = 0;
                 this.atualizarTabela();
-                msg = "<html><body>A Tabela foi Atualizada!<br>";
                 break;
             case Constantes.PROCURA_CARRO:
                 if (CarroBO.validarCarro(valor)) {
@@ -375,7 +380,7 @@ public class ControllerInicio {
 
         if (lista != null) {
             atualizarTabela();
-            msg += "Consulta Realizada!</body></html>";
+            msg = "<html><body>Consulta Realizada!</body></html>";
         } else {
             msg = "<html><body>Ocorreu um Problema!<br>Consulta não pode ser Realizada!<br>Movito: Lista retornando Null/Vazio</body></html>";
         }
@@ -451,5 +456,4 @@ public class ControllerInicio {
             }
         });
     }
-
 }

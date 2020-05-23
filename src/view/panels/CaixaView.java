@@ -18,6 +18,7 @@ public class CaixaView extends JPanel {
 
     private JTable table;
     private JLabel lblSaldoEmDinheiror, lblSaldoEmCarto, lblTotalCaixa, lblModificacao;
+    private JButton btnAdicionarValor, btnRetirarValor, btnFecharCaixa, btnImprimirComprovante;
 
     public CaixaView() {
 
@@ -42,6 +43,7 @@ public class CaixaView extends JPanel {
             control.atualizarTabela();
         }
 
+        this.addListeners();
     }
 
     private void setJLabels_JSeparator() {
@@ -55,19 +57,19 @@ public class CaixaView extends JPanel {
         lblDados.setBackground(Color.WHITE);
         add(lblDados, "cell 1 3,grow");
 
-        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO);
+        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
         lblSaldoEmDinheiror.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmDinheiror.setForeground(Color.BLACK);
         lblSaldoEmDinheiror.setBackground(Color.WHITE);
         add(lblSaldoEmDinheiror, "cell 10 3 2 1,grow");
 
-        lblSaldoEmCarto = new JLabel(Constantes.LBL_TEXT_CAIXA_CARTAO);
+        lblSaldoEmCarto = new JLabel(Constantes.LBL_TEXT_CAIXA_CARTAO + " " + Constantes.LBL_VALOR_CAIXA_CARTAO);
         lblSaldoEmCarto.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmCarto.setForeground(Color.BLACK);
         lblSaldoEmCarto.setBackground(Color.WHITE);
         add(lblSaldoEmCarto, "cell 13 3 2 1,grow");
 
-        lblTotalCaixa = new JLabel(Constantes.LBL_TEXT_CAIXA_TOTAL);
+        lblTotalCaixa = new JLabel(Constantes.LBL_TEXT_CAIXA_TOTAL + " " + Constantes.LBL_VALOR_CAIXA_TOTAL);
         lblTotalCaixa.setForeground(Color.BLACK);
         lblTotalCaixa.setFont(new Font("Arial", Font.BOLD, 14));
         lblTotalCaixa.setBackground(Color.WHITE);
@@ -86,44 +88,34 @@ public class CaixaView extends JPanel {
 //        add(btnRelatorio, "cell 7 1 2 1,grow");
 //        btnRelatorio.addActionListener(e -> control.imprimirRelatorio());
 
-        JButton btnAdicionarValor = new JButton("Adicionar Valor");
+        btnAdicionarValor = new JButton("Adicionar Valor");
         btnAdicionarValor.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-mais-50.png")));
         btnAdicionarValor.setBackground(Color.decode("#35D073"));
         btnAdicionarValor.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnAdicionarValor.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnAdicionarValor, "cell 10 1 2 1,grow");
-        btnAdicionarValor.addActionListener(e -> {
-            Constantes.FLAG = 1;
-            control.showInputDialog();
-        });
 
-        JButton btnRetirarValor = new JButton("Retirar Valor");
+        btnRetirarValor = new JButton("Retirar Valor");
         btnRetirarValor.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-menos-50.png")));
         btnRetirarValor.setBackground(Color.decode("#F85C50"));
         btnRetirarValor.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnRetirarValor.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnRetirarValor, "cell 13 1 2 1,grow");
-        btnRetirarValor.addActionListener(e -> {
-            Constantes.FLAG = 0;
-            control.showInputDialog();
-        });
 
-        JButton btnFecharCaixa = new JButton("Fechar Caixa");
+        btnFecharCaixa = new JButton("Fechar Caixa");
         btnFecharCaixa.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-cadeado-2-50.png")));
         btnFecharCaixa.setBackground(new Color(100, 149, 237));
         btnFecharCaixa.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnFecharCaixa.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnFecharCaixa, "cell 16 1 2 1,grow");
-        btnFecharCaixa.addActionListener(e -> control.fecharCaixa());
 
         String text = "<html><body align=Center>Imprimir Comprovante<br>(Linha Selecionada)</body></html>";
-        JButton btnImprimirComprovante = new JButton(text);
+        btnImprimirComprovante = new JButton(text);
         btnImprimirComprovante.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-impressora-de-porta-aberta-50.png")));
         btnImprimirComprovante.setBackground(Color.WHITE);
         btnImprimirComprovante.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnImprimirComprovante.setFont(new Font("Arial", Font.BOLD, 20));
         add(btnImprimirComprovante, "cell 7 13 7 1,grow");
-        btnImprimirComprovante.addActionListener(e -> control.imprimirComprovante());
 
     }
 
@@ -143,6 +135,23 @@ public class CaixaView extends JPanel {
         };
         table = modificacao.tableLookAndFiel(table);
         scrollPane.setViewportView(table);
+
+    }
+
+    private void addListeners(){
+        btnAdicionarValor.addActionListener(e -> {
+            Constantes.FLAG = 1;
+            control.showInputDialog();
+        });
+
+        btnRetirarValor.addActionListener(e -> {
+            Constantes.FLAG = 0;
+            control.showInputDialog();
+        });
+
+        btnFecharCaixa.addActionListener(e -> control.fecharCaixa());
+
+        btnImprimirComprovante.addActionListener(e -> control.imprimirComprovante());
 
     }
 

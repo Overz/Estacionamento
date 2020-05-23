@@ -2,19 +2,18 @@
 $$ TO-DO:
     # View Inicio:
         ~ Validações:
-            - Numero do Ticket/Cartão digitado:
-            - Dinheiro ou Cartão:
+            - Numero do Ticket/Cartão digitado: OK
+            - Dinheiro ou Cartão: OK
             - Meio de Pesquisa dos dados, com seletor:
 
         ~ Botões:
             - Gerar um ticket aleatório:
-            - Imprimir esse ticket:
-            - Imprimir ultimo recebido:
+            - Imprimir um Comprovante da Linha Selecionada
 
         ~ Tabela:
             - Imprimir linha selecionada:
-            - remover linha selecionada:
-            - Mostrar total de Veículos na Label acima:
+            - remover linha selecionada: OK
+            - Mostrar total de Veículos na Label acima: OK
 
         ~ Implementar OCR:
             - Add Leitura de imagem, arquivo .img, .jpg, e etc:
@@ -22,25 +21,24 @@ $$ TO-DO:
 
     # View Caixa:
         ~ Botões:
-            - Add ações aos botões:
-                - Imprimir relatório do dia:
-                - Add valor ao caixa(Criar nova tela pop-up com campos):
-                - Retirar valor do caixa(Valor simples? ou Algo específico?):
+            - Add ações aos botões: OK
+                - Add valor ao caixa(Criar nova tela pop-up com campos): OK
+                - Retirar valor do caixa(Valor simples? ou Algo específico?): OK
             - Fechar o caixa do dia(Zerar os campos das telas: Inicio e Caixa):
             - Imprimir Comprovante na Linha selecionada:
 
         ~ Tabela:
-            - Preencher a Tabela ao abrir a tela:
-            - Mostrar os dados nas Labels explicitas na tela:
+            - Preencher a Tabela ao abrir a tela: OK
+            - Mostrar os dados nas Labels explicitas na tela: OK
 
     # View Cliente:
         ~ Validações:
             - Validar o campo de Pesquisa que interfere diretamente a tabela:
-            - Validar os campos do Botão Cadastrar:
-            - Validar os Campos do Botão Atualizar:
+            - Validar os campos do Botão Cadastrar: OK
+            - Validar os Campos do Botão Atualizar: OK
 
         ~ Botões:
-            - Add opção de Excluir o Cliente, 1:1:
+            - Add opção de Excluir o Cliente, 1:1 : OK
             - Add ação ao botão Atualizar (Preencher os campos com um Cliente Selecionado):
 
         ~ Cadastrar:
@@ -55,8 +53,8 @@ $$ TO-DO:
             - Invalidar o botão para click:
 
         ~ Tabela:
-            - Preencher tabela com TODOS os Clientes:
-            - Add evento ao clicar nos ComboBox
+            - Preencher tabela com TODOS os Clientes: OK
+            - Add evento ao clicar nos ComboBox: OK
 
     # View Movimento:
         ~ Validações:
@@ -89,7 +87,7 @@ $$ TO-FIX:
         ~
             -
 
-- Arrumar as consultas por ID, baseado em ClienteDAO: ConsultarPorID
+- Arrumar as consultas por ID, baseado em ClienteDAO: ConsultarPorID: OK
 
 
 $$ TO-FIX;

@@ -5,6 +5,7 @@ import model.bo.CaixaBO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.Constantes;
+import util.Util;
 import util.relatorio.GeradorRelatorioCaixa;
 import view.panels.CaixaView;
 
@@ -20,7 +21,7 @@ public class ControllerCaixa {
     private final CaixaView caixaView;
     private BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
-    private String msg, title, a, b;
+    private String msg, title, jopValue, b;
 
     public ControllerCaixa(CaixaView caixaView) {
         this.caixaView = caixaView;
@@ -38,6 +39,11 @@ public class ControllerCaixa {
 
         Object[] novaLinha = new Object[6];
         for (MovimentoVO movimento : lista) {
+
+            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
+                Util.tabelaUtil(movimento);
+            }
+
             novaLinha[0] = movimento.getTicket().getNumero();
             novaLinha[1] = movimento.getTicket().getCliente().getNome();
             novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
@@ -64,23 +70,18 @@ public class ControllerCaixa {
 
         if (Constantes.FLAG == 1) {
             Object[] opcoes = {Constantes.PGTO_DINHEIRO, Constantes.PGTO_CARTAO};
-            a = (String) JOptionPane.showInputDialog(caixaView, msg, title,
+            jopValue = (String) JOptionPane.showInputDialog(caixaView, msg, title,
                     JOptionPane.QUESTION_MESSAGE, null, opcoes, "");
-
-            msg = "Digite o Valor:";
-            b = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
-        } else {
-            msg = "Digite o Valor:";
-            b = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
         }
-
+        msg = "Digite o Valor:";
+        b = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
 
         try {
             Double c = Double.valueOf(b);
 
             // Se add com sucesso, mostra uma Mensagem que adc com sucesso, se não, msg com erro
             if (Constantes.FLAG == 1) {
-                r = this.addValor(a, c);
+                r = this.addValor(jopValue, c);
                 this.msgAdicionar(r);
             }
 
@@ -115,7 +116,7 @@ public class ControllerCaixa {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmDinheiror().setText(Constantes.LBL_TEXT_CAIXA_DINHEIRO + "" + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
+            caixaView.getLblSaldoEmDinheiror().setText(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
         }
         if (tipo.equals(Constantes.PGTO_CARTAO)) {
             for (Double a : values) {
@@ -126,7 +127,7 @@ public class ControllerCaixa {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmCarto().setText(Constantes.LBL_TEXT_CAIXA_CARTAO + "" + Constantes.LBL_VALOR_CAIXA_CARTAO);
+            caixaView.getLblSaldoEmCarto().setText(Constantes.LBL_TEXT_CAIXA_CARTAO + " " + Constantes.LBL_VALOR_CAIXA_CARTAO);
         }
         return bool;
     }
@@ -138,7 +139,6 @@ public class ControllerCaixa {
      * @return true/false
      */
     private boolean removerValor(Double... values) {
-        //TODO Realizar ação para abrir jopotin pane, digitar valor, salvar, e usar o Label para atualizar esse valor
         boolean bool = false;
         for (Double a : values) {
             if (CaixaBO.validarValorDigitado(a)) {
@@ -191,20 +191,20 @@ public class ControllerCaixa {
         double c = 0.0, d = 0.0;
         try {
             if (Constantes.FLAG == 1) {
-                if (a.equals(Constantes.PGTO_DINHEIRO)) {
+                if (jopValue.equals(Constantes.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(b);
                 }
-                if (a.equals(Constantes.PGTO_CARTAO)) {
+                if (jopValue.equals(Constantes.PGTO_CARTAO)) {
                     d = Double.parseDouble(b);
                 }
                 Constantes.LBL_VALOR_CAIXA_TOTAL += c;
                 Constantes.LBL_VALOR_CAIXA_TOTAL += d;
             }
             if (Constantes.FLAG == 0) {
-                if (a.equals(Constantes.PGTO_DINHEIRO)) {
+                if (jopValue.equals(Constantes.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(b);
                 }
-                if (a.equals(Constantes.PGTO_CARTAO)) {
+                if (jopValue.equals(Constantes.PGTO_CARTAO)) {
                     d = Double.parseDouble(b);
                 }
                 if (Constantes.LBL_VALOR_CAIXA_TOTAL == 0.0) {

@@ -56,7 +56,7 @@ CREATE TABLE `dbestacionamento`.`cliente`
 CREATE TABLE `dbestacionamento`.`ticket`
 (
     `idticket`     INT                        NOT NULL AUTO_INCREMENT,
-    `idCliente`    INT                        NOT NULL,
+    `idCliente`    INT                        NULL,
     `n_ticket`     LONG                       NOT NULL,
     `valor`        DECIMAL                    NOT NULL,
     `tipo`         ENUM ("DINHEIRO","CARTÃO") NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE `dbestacionamento`.`movimento`
 (
     `idmovimento` INT      NOT NULL AUTO_INCREMENT,
     `idTicket`    INT      NOT NULL,
-    `idPlano`     INT      NOT NULL,
+    `idPlano`     INT      NULL,
     `hr_entrada`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     `hr_saida`    DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `pk_movimento` PRIMARY KEY (`idmovimento`),

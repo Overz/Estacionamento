@@ -67,7 +67,6 @@ public class Seletor {
                 primeiro = false;
             }
         }
-
         return qry;
     }
 

@@ -2,12 +2,23 @@ package controller;
 
 import model.banco.BaseDAO;
 import model.dao.movientos.MovimentoDAO;
+import model.vo.cliente.ClienteVO;
+import model.vo.cliente.ContratoVO;
+import model.vo.cliente.EnderecoVO;
+import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
+import model.vo.movimentos.TicketVO;
+import model.vo.veiculo.CarroVO;
+import model.vo.veiculo.MarcaVO;
+import model.vo.veiculo.ModeloVO;
 import util.Constantes;
+import util.Ticket;
+import util.Util;
 import view.panels.ClienteView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ControllerCliente {
@@ -33,6 +44,10 @@ public class ControllerCliente {
 
         Object[] novaLinha = new Object[4];
         for (MovimentoVO movimento : lista) {
+
+            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
+                Util.tabelaUtil(movimento);
+            }
             novaLinha[0] = movimento.getPlano().getCliente().getId();
             novaLinha[1] = movimento.getPlano().getCliente().getNome();
             novaLinha[2] = movimento.getPlano().getTipo();
