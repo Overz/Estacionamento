@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Constantes {
 
-    public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss");
+    public static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss:a");
     public static final String REGEX_PALAVRAS = "[a-z-A-Z]+";
     public static final String REGEX_NUMEROS = "[0-9]+";
     public static final String REGEX_NUMEROS_PALAVRAS = "[A-Za-z0-9]+";
@@ -24,16 +24,7 @@ public class Constantes {
     public static double LBL_VALOR_CAIXA_DINHEIRO;
     public static double LBL_VALOR_CAIXA_CARTAO;
 
-    /**
-     * Flag para Sinalizar algumas Ações
-     * <p>
-     * 0 : 1
-     */
     public static int FLAG = 0;
-
-    /**
-     * Flag para Auxiliar a Sinalizar Respostas mais Internas
-     */
     public static int INTERNAL_MESSAGE = 0;
 
     public static final String[] COLUNAS_INICIO = {"Ticket/Cartão", "CARRO", "PLACA", "CLIENTE", "ENTRADA"};

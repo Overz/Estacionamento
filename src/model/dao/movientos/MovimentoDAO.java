@@ -7,9 +7,16 @@ import model.seletor.Seletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
+import util.Constantes;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
@@ -37,6 +44,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
             movimentoVO.setHr_entrada(result.getTimestamp("hr_entrada").toLocalDateTime());
             movimentoVO.setHr_saida(result.getTimestamp("hr_saida").toLocalDateTime());
+            movimentoVO.setAtual(result.getBoolean("atual"));
 
             return movimentoVO;
         } catch (SQLException e) {
@@ -53,7 +61,8 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public ArrayList<MovimentoVO> consultarTodos() {
-        String qry = "SELECT * FROM MOVIMENTO";
+        String qry = "SELECT * FROM MOVIMENTO WHERE ATUAL = 1";
+
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -82,21 +91,37 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public ArrayList<MovimentoVO> consultar(String values) {
-        String qry = "select * from movimento movi " +
-                     "left join plano p on movi.idPlano = p.idplano " +
-                     "left join ticket t on movi.idTicket = t.idticket " +
-                     "left join contrato con on p.idContrato = con.idcontrato " +
-                     "left join cliente cli on p.idCliente = cli.idcliente " +
-                     "left join carro car on cli.idCarro = car.idcarro " +
-                     "left join modelo modl on car.idModelo = modl.idmodelo" +
-                     " where cli.nome like '%ana%'";
-
+    public ArrayList<MovimentoVO> consultar(String... values) {
+        String qry = "";
         Seletor seletor = new Seletor();
-        seletor.setValor(values.toUpperCase());
-//        if (seletor.temFiltro()) {
-//            qry = seletor.criarFiltro(qry);
-//        }
+        if (Constantes.FLAG == 0) {
+            qry = "select * from movimento movi " +
+                  "left join plano p on movi.idPlano = p.idplano " +
+                  "left join ticket t on movi.idTicket = t.idticket " +
+                  "left join contrato con on p.idContrato = con.idcontrato " +
+                  "left join cliente cli on p.idCliente = cli.idcliente " +
+                  "left join carro car on cli.idCarro = car.idcarro " +
+                  "left join modelo modl on car.idModelo = modl.idmodelo";
+
+            seletor.setValor(values[0].toUpperCase());
+            if (seletor.temFiltro()) {
+                qry = seletor.criarFiltro(qry);
+            }
+        } else if (Constantes.FLAG == 1) {
+            qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.idticket " +
+                  "where t.n_ticket like '" + values + "' ";
+        } else if (Constantes.FLAG == 2) {
+            qry = "select * from movimento ";
+
+            LocalDate ld1 = LocalDate.parse(values[0]);
+            LocalDate ld2 = LocalDate.parse(values[1]);
+            seletor.setDt1(ld1);
+            seletor.setDt2(ld2);
+
+            if (seletor.temData()) {
+                qry = seletor.criarFiltro(qry);
+            }
+        }
 
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -104,11 +129,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
         try {
             result = stmt.executeQuery();
-            if (result.next()) {
+            while (result.next()) {
                 movimentoVO = criarResultSet(result);
                 list.add(movimentoVO);
             }
-            return null;
+            return list;
         } catch (SQLException e) {
             String method = "Consultar(String values)";
             System.out.println("\n" +
@@ -123,7 +148,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
         }
-        return list;
+        return null;
     }
 
     @Override
@@ -156,15 +181,28 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     } // OK
 
     @Override
-    public MovimentoVO cadastrar(MovimentoVO newObject) {
-        String qry = "INSERT INTO MOVIMENTO (hr_entrada, hr_saida) VALUES (?,?)";
+    public MovimentoVO cadastrar(MovimentoVO newObject, String... values) {
+        String qry;
+        if (Constantes.FLAG == 0) {
+            qry = "INSERT INTO MOVIMENTO (hr_entrada, hr_saida, atual) VALUES (?,?,?)";
+        } else {
+            qry = "INSERT INTO MOVIMENTO (idticket, hr_entrada, atual) VALUES (?,?,?)";
+        }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
-            stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_saida()));
+            if (Constantes.FLAG == 0) {
+                stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
+                stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_saida()));
+                stmt.setBoolean(3, newObject.isAtual());
+            } else {
+                stmt.setInt(1, newObject.getId());
+                stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_entrada()));
+                stmt.setBoolean(3, newObject.isAtual());
+            }
 
+            stmt.execute();
             result = stmt.getGeneratedKeys();
             if (result.next()) {
                 int id = result.getInt(1);

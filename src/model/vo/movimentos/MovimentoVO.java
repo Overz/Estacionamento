@@ -9,15 +9,24 @@ public class MovimentoVO {
     private int id;
     private LocalDateTime hr_entrada;
     private LocalDateTime hr_saida;
+    private boolean atual;
     private PlanoVO plano;
     private TicketVO ticket;
 
-    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, PlanoVO plano, TicketVO ticket) {
+    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, boolean atual, PlanoVO plano, TicketVO ticket) {
         super();
         this.id = id;
         this.hr_entrada = hr_entrada;
         this.hr_saida = hr_saida;
+        this.atual = atual;
         this.plano = plano;
+        this.ticket = ticket;
+    }
+
+    public MovimentoVO(int id, LocalDateTime hr_entrada, boolean atual, TicketVO ticket) {
+        this.id = id;
+        this.hr_entrada = hr_entrada;
+        this.atual = atual;
         this.ticket = ticket;
     }
 
@@ -65,13 +74,20 @@ public class MovimentoVO {
         this.ticket = ticket;
     }
 
+    public boolean isAtual() {
+        return atual;
+    }
+
+    public void setAtual(boolean atual) {
+        this.atual = atual;
+    }
+
     @Override
     public String toString() {
         return "ID: " + this.id +
-                " -  hr_entrada: " + this.hr_entrada +
-                " -  hr_saida: " + this.hr_saida +
-                " -  plano: " + this.plano +
-                " -  ticket: " + this.ticket;
+               " -  hr_entrada: " + this.hr_entrada +
+               " -  hr_saida: " + this.hr_saida +
+               " -  plano: " + this.plano +
+               " -  ticket: " + this.ticket;
     }
-
 }

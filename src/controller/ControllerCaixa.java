@@ -30,29 +30,30 @@ public class ControllerCaixa {
     }
 
     public void atualizarTabela() {
-        daoM = new MovimentoDAO();
-        lista = daoM.consultarTodos();
-
         this.limparTabela();
 
-        DefaultTableModel model = (DefaultTableModel) caixaView.getTable().getModel();
+        lista = daoM.consultarTodos();
 
+        DefaultTableModel model = (DefaultTableModel) caixaView.getTable().getModel();
         Object[] novaLinha = new Object[6];
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
-                Util.tabelaUtil(movimento);
+            if (movimento.isAtual()) {
+
+                if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
+                    Util.tabelaUtil(movimento);
+                }
+                novaLinha[0] = movimento.getTicket().getNumero();
+                novaLinha[1] = movimento.getTicket().getCliente().getNome();
+                novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
+                novaLinha[3] = movimento.getHr_saida().format(Constantes.dtf);
+                novaLinha[4] = movimento.getTicket().getTipo();
+                novaLinha[5] = movimento.getTicket().getValor();
+
+                model.addRow(novaLinha);
             }
-
-            novaLinha[0] = movimento.getTicket().getNumero();
-            novaLinha[1] = movimento.getTicket().getCliente().getNome();
-            novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
-            novaLinha[3] = movimento.getHr_saida().format(Constantes.dtf);
-            novaLinha[4] = movimento.getTicket().getTipo();
-            novaLinha[5] = movimento.getTicket().getValor();
-
-            model.addRow(novaLinha);
         }
+
     }
 
     public void limparTabela() {

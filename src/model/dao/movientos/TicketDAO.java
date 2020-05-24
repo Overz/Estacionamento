@@ -3,7 +3,6 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.dao.cliente.ClienteDAO;
-import model.seletor.Seletor;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
@@ -33,17 +32,19 @@ public class TicketDAO implements BaseDAO<TicketVO> {
             ticketVO.setNumero(result.getLong("n_ticket"));
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));
+            ticketVO.setDataEntrada(result.getTimestamp("hr_entrada").toLocalDateTime());
             ticketVO.setDataValidacao(result.getTimestamp("hr_validacao").toLocalDateTime());
             ticketVO.setStatus(result.getBoolean("statusTicket"));
+            ticketVO.setValidado(result.getBoolean("validado"));
 
             return ticketVO;
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         }
         return null;
@@ -66,10 +67,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         } catch (SQLException e) {
             String method = "ConsultarTodos()";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -80,7 +81,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -100,10 +101,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         } catch (SQLException e) {
             String method = "ConsultarPorID(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -113,18 +114,40 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         return null;
     } // OK
 
+
     @Override
-    public TicketVO cadastrar(TicketVO newObject) {
-        String qry = "INSERT INTO TICKET (N_TICKET, VALOR, HR_VALIDACAO) VALUES (?,?,?)";
+    public TicketVO cadastrar(TicketVO newObject, String... values) {
+        String qry;
+        if (Constantes.FLAG == 1) {
+            qry = "INSERT INTO TICKET (N_TICKET, HR_ENTRADA, STATUSTICKET, VALIDADO) " +
+                  "VALUES (?, ?, ?, ?)";
+        } else {
+            qry = "INSERT INTO TICKET (N_TICKET, VALOR, TIPO, HR_ENTRADA, HR_VALIDACAO, STATUSTICKET, VALIDADO" +
+                  "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setLong(1, newObject.getNumero());
-            stmt.setDouble(1, newObject.getValor());
-            stmt.setTimestamp(1, Timestamp.valueOf(newObject.getDataValidacao()));
+            if (Constantes.FLAG == 1) {
+                stmt.setLong(1, newObject.getNumero());
+                stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDataEntrada()));
+                stmt.setBoolean(3, newObject.getStatus());
+                stmt.setBoolean(4, newObject.getValidado());
 
-            result = stmt.executeQuery();
+                stmt.execute();
+
+            } else {
+                stmt.setLong(1, newObject.getNumero());
+                stmt.setDouble(2, newObject.getValor());
+                stmt.setString(3, newObject.getTipo());
+                stmt.setTimestamp(4, Timestamp.valueOf(newObject.getDataEntrada()));
+                stmt.setTimestamp(5, Timestamp.valueOf(newObject.getDataValidacao()));
+                stmt.setBoolean(6, newObject.getStatus());
+                stmt.setBoolean(7, newObject.getValidado());
+            }
+
+            result = stmt.getGeneratedKeys();
             if (result.next()) {
                 int id = result.getInt(1);
                 newObject.setId(id);
@@ -133,10 +156,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         } catch (SQLException e) {
             String method = "Cadastrar(T newObject)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -152,7 +175,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 //        String qry = Constantes.FLAG == 1 ? "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?" : null;
 //        String qry = Constantes.FLAG == 2 ? "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?" : null;
         if (Constantes.FLAG == 1) {
-            qry = "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?";
+            qry = "UPDATE TICKET SET STATUSTICKET = ?, VALIDADO = ? WHERE IDTICKET = ?";
         } else {
             qry = "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?";
         }
@@ -162,7 +185,8 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         try {
             if (Constantes.FLAG == 1) {
                 stmt.setBoolean(1, object.getStatus());
-                stmt.setInt(2, object.getId());
+                stmt.setBoolean(2, object.getValidado());
+                stmt.setInt(3, object.getId());
             } else {
                 stmt.setLong(1, object.getNumero());
                 stmt.setDouble(2, object.getValor());
@@ -178,10 +202,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         } catch (SQLException e) {
             String method = "Alterar(T object)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -206,10 +230,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         } catch (SQLException e) {
             String method = "excluir(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);

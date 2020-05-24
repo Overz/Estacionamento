@@ -10,6 +10,9 @@ import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Locale;
 
 public class Util {
 
@@ -19,9 +22,14 @@ public class Util {
         EnderecoVO enderecoVO = new EnderecoVO(0, 0, "", "", "");
         CarroVO carroVO = new CarroVO(0, "", "", modeloVO);
         ClienteVO clienteVO = new ClienteVO(0, "", "", "", "", "", enderecoVO, carroVO);
-        ContratoVO contratoVO = new ContratoVO(0, 999999999, LocalDateTime.now(), LocalDateTime.now(), false, 0.0);
+        ContratoVO contratoVO = new ContratoVO(0, 0, LocalDateTime.now(), LocalDateTime.now(), false, 0.0);
         PlanoVO planoVO = new PlanoVO(0, "", "", clienteVO, contratoVO);
         movimento.setPlano(planoVO);
         movimento.getTicket().setCliente(clienteVO);
+        if (movimento.getHr_entrada() == null) {
+            if (movimento.getTicket().getDataEntrada() != null) {
+                movimento.setHr_entrada(movimento.getTicket().getDataValidacao());
+            }
+        }
     }
 }

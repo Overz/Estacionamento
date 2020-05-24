@@ -68,7 +68,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -102,7 +102,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
     } // OK
 
     @Override
-    public MarcaVO cadastrar(MarcaVO newObject) {
+    public MarcaVO cadastrar(MarcaVO newObject, String... values) {
         String qry = "INSERT INTO MARCA (nome) VALUES (?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

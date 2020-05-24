@@ -2,13 +2,22 @@ package model.seletor;
 
 import util.Constantes;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Seletor {
 
     private String valor;
+    private LocalDate dt1;
+    private LocalDate dt2;
     private boolean temFiltro;
 
     public boolean temFiltro() {
         return temFiltro = valor != null && !valor.trim().isEmpty() && valor.trim().length() > 0;
+    }
+
+    public boolean temData() {
+        return temFiltro = dt1 != null && dt2 != null;
     }
 
     /**
@@ -22,7 +31,7 @@ public class Seletor {
         boolean primeiro = true;
         qry += " where ";
 
-        if (Constantes.INTERNAL_MESSAGE == 3){
+        if (Constantes.INTERNAL_MESSAGE == 3) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -67,6 +76,15 @@ public class Seletor {
                 primeiro = false;
             }
         }
+        if (Constantes.INTERNAL_MESSAGE == 4) {
+            if (temFiltro) {
+                if (!primeiro) {
+                    qry += " AND ";
+                }
+                qry += " hr_entrada >= '" + dt1 + "' and  hr_saida <= '" + dt2 + "' ";
+                primeiro = false;
+            }
+        }
         return qry;
     }
 
@@ -76,5 +94,21 @@ public class Seletor {
 
     public void setValor(String valor) {
         this.valor = valor;
+    }
+
+    public LocalDate getDt1() {
+        return dt1;
+    }
+
+    public void setDt1(LocalDate dt1) {
+        this.dt1 = dt1;
+    }
+
+    public LocalDate getDt2() {
+        return dt2;
+    }
+
+    public void setDt2(LocalDate dt2) {
+        this.dt2 = dt2;
     }
 }

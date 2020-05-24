@@ -3,7 +3,6 @@ package view.panels;
 import controller.ControllerCliente;
 import net.miginfocom.swing.MigLayout;
 import util.Modificacoes;
-import view.mainFrame.MainView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

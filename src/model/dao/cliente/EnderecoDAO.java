@@ -71,7 +71,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -105,7 +105,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     } // OK
 
     @Override
-    public EnderecoVO cadastrar(EnderecoVO newObject) {
+    public EnderecoVO cadastrar(EnderecoVO newObject, String... values) {
         String qry = "INSERT INTO ENDERECO (numero, rua, bairro, cidade) VALUES (?,?,?,?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

@@ -58,22 +58,24 @@ CREATE TABLE `dbestacionamento`.`ticket`
     `idticket`     INT                        NOT NULL AUTO_INCREMENT,
     `idCliente`    INT                        NULL,
     `n_ticket`     LONG                       NOT NULL,
-    `valor`        DECIMAL                    NOT NULL,
-    `tipo`         ENUM ("DINHEIRO","CARTÃO") NOT NULL,
-    `hr_validacao` TIMESTAMP                  NOT NULL,
-    `statusTicket` TINYINT(1)                 NOT NULL DEFAULT 1,
+    `valor`        DECIMAL                    NOT NULL DEFAULT 0.0,
+    `tipo`         ENUM ("DINHEIRO","CARTÃO") NOT NULL DEFAULT "DINHEIRO",
+    `hr_entrada`   TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `hr_validacao` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `statusTicket` TINYINT(1)                 NOT NULL DEFAULT 1, #Ativo
+    `validado`     TINYINT(1)                 NOT NULL DEFAULT 0, #Não Validado
     CONSTRAINT `pk_ticket` PRIMARY KEY (`idticket`),
     CONSTRAINT `fk_ticket_cliente` FOREIGN KEY (`idCliente`) REFERENCES `dbestacionamento`.`cliente` (`idcliente`)
 ) ENGINE = InnoDB;
 
 CREATE TABLE `dbestacionamento`.`contrato`
 (
-    `idcontrato` INT        NOT NULL AUTO_INCREMENT,
-    `n_cartao`   LONG       NOT NULL,
-    `dt_entrada` DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `dt_saida`   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `ativo`      TINYINT(1) NOT NULL DEFAULT 1,
-    `valor`      DECIMAL    NOT NULL,
+    `idcontrato`  INT        NOT NULL AUTO_INCREMENT,
+    `n_cartao`    LONG       NOT NULL,
+    `dt_entrada`  DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `dt_validade` DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `ativo`       TINYINT(1) NOT NULL DEFAULT 1,
+    `valor`       DECIMAL    NOT NULL,
     CONSTRAINT `pk_contrato` PRIMARY KEY (`idcontrato`)
 ) ENGINE = InnoDB;
 
@@ -91,20 +93,13 @@ CREATE TABLE `dbestacionamento`.`plano`
 
 CREATE TABLE `dbestacionamento`.`movimento`
 (
-    `idmovimento` INT      NOT NULL AUTO_INCREMENT,
-    `idTicket`    INT      NOT NULL,
-    `idPlano`     INT      NULL,
-    `hr_entrada`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
-    `hr_saida`    DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+    `idmovimento` INT        NOT NULL AUTO_INCREMENT,
+    `idTicket`    INT        NOT NULL,
+    `idPlano`     INT        NULL,
+    `hr_entrada`  DATETIME   NULL     DEFAULT CURRENT_TIMESTAMP,
+    `hr_saida`    DATETIME   NULL     DEFAULT CURRENT_TIMESTAMP,
+    `atual`       TINYINT(1) NOT NULL DEFAULT 1,
     CONSTRAINT `pk_movimento` PRIMARY KEY (`idmovimento`),
     CONSTRAINT `fk_movimento_ticket` FOREIGN KEY (`idTicket`) REFERENCES `dbestacionamento`.`ticket` (`idticket`),
     CONSTRAINT `fk_movimento_plano` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`idplano`)
 ) ENGINE = InnoDB;
-
-#CREATE TABLE `dbestacionamento`.`fluxo` (
-#  `idfluxo` INT NOT NULL AUTO_INCREMENT,
-#  `idMovimento` INT NOT NULL,
-#  CONSTRAINT `pk_fluxo` PRIMARY KEY (`idfluxo`),
-#  CONSTRAINT `fk_fluxo_movimento` FOREIGN KEY (`idMovimento`) REFERENCES `dbestacionamento`.`movimento` (`idmovimento`)
-#) ENGINE = InnoDB;
-

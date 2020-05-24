@@ -1,9 +1,6 @@
 package view.panels;
 
 import net.miginfocom.swing.MigLayout;
-import view.panels.cadastro.DadosCadastroView;
-import view.panels.cadastro.EnderecoCadastroView;
-import view.panels.cadastro.PlanoCadastroView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -11,15 +8,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static view.panels.MainView.*;
+
 public class CadastroView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
-    private DadosCadastroView dadosCadastroView;
-    private EnderecoCadastroView enderecoCadastroView;
-    private PlanoCadastroView planoCadastroView;
 
     private JLayeredPane layeredPane;
-
     private JButton btnPlano, btnDados, btnEndereco;
 
     public CadastroView() {
@@ -39,9 +34,8 @@ public class CadastroView extends JPanel {
         layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
         add(layeredPane, "cell 1 1 14 11,grow");
 
-        dadosCadastroView = new DadosCadastroView();
-        dadosCadastroView.setBorder(null);
-        layeredPane.add(dadosCadastroView, "cell 0 0,grow");
+        DADOS_CADASTRO_VIEW.setBorder(null);
+        layeredPane.add(DADOS_CADASTRO_VIEW, "cell 0 0,grow");
 
     }
 
@@ -53,8 +47,7 @@ public class CadastroView extends JPanel {
         add(btnDados, "cell 1 0 2 1,grow");
         btnDados.addActionListener(e -> {
 
-            dadosCadastroView = new DadosCadastroView();
-            boolean bool = swithchPanel(dadosCadastroView);
+            boolean bool = swithchPanel(DADOS_CADASTRO_VIEW);
             btnDados.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -76,8 +69,7 @@ public class CadastroView extends JPanel {
         add(btnEndereco, "cell 3 0 2 1,grow");
         btnEndereco.addActionListener(e -> {
 
-            enderecoCadastroView = new EnderecoCadastroView();
-            boolean bool = swithchPanel(enderecoCadastroView);
+            boolean bool = swithchPanel(ENDERECO_CADASTRO_VIEW);
 
             btnEndereco.addMouseListener(new MouseAdapter() {
                 @Override
@@ -100,8 +92,7 @@ public class CadastroView extends JPanel {
         add(btnPlano, "cell 5 0 2 1,grow");
         btnPlano.addActionListener(e -> {
 
-            planoCadastroView = new PlanoCadastroView();
-            boolean bool = swithchPanel(planoCadastroView);
+            boolean bool = swithchPanel(PLANO_CADASTRO_VIEW);
 
             btnPlano.addMouseListener(new MouseAdapter() {
                 @Override

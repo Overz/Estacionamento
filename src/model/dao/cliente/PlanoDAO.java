@@ -82,7 +82,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -116,7 +116,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
     } // OK
 
     @Override
-    public PlanoVO cadastrar(PlanoVO newObject) {
+    public PlanoVO cadastrar(PlanoVO newObject, String... values) {
         String qry = "INSERT INTO PLANO (tipo, descricao) VALUES (?,?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

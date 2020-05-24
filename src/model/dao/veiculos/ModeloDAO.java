@@ -76,7 +76,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -111,7 +111,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
     } // OK
 
     @Override
-    public ModeloVO cadastrar(ModeloVO newObject) {
+    public ModeloVO cadastrar(ModeloVO newObject, String... values) {
         String qry = "INSERT INTO MODELO (descricao) VALUES (?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

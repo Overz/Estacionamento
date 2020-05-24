@@ -21,7 +21,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             contratoVO.setId(result.getInt("idcontrato"));
             contratoVO.setNumeroCartao(result.getLong("n_cartao"));
             contratoVO.setDtEntrada(result.getTimestamp("dt_entrada").toLocalDateTime());
-            contratoVO.setDtSaida(result.getTimestamp("dt_saida").toLocalDateTime());
+            contratoVO.setDtSaida(result.getTimestamp("dt_validade").toLocalDateTime());
             contratoVO.setValor(result.getDouble("valor"));
             contratoVO.setAtivo(result.getBoolean("ativo"));
 
@@ -70,7 +70,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public <T> T consultar(String values) {
+    public <T> T consultar(String... values) {
         return null;
     }
 
@@ -104,7 +104,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     } // OK
 
     @Override
-    public ContratoVO cadastrar(ContratoVO newObject) {
+    public ContratoVO cadastrar(ContratoVO newObject, String... values) {
         String qry = "INSERT INTO CONTRATO (N_CARTAO, DT_ENTRADA, DT_SAIDA, ATIVO, VALOR) VALUES (?,?,?,?,?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

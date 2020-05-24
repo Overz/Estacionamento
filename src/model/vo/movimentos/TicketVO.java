@@ -10,19 +10,30 @@ public class TicketVO {
     private long numero;
     private double valor;
     private String tipo;
+    private LocalDateTime dataEntrada;
     private LocalDateTime dataValidacao;
     private Boolean status;
+    private Boolean validado;
     private ClienteVO cliente;
 
-    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataValidacao, Boolean status, ClienteVO cliente) {
+    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataEntrada, LocalDateTime dataValidacao, Boolean status, Boolean validado, ClienteVO cliente) {
         super();
         this.id = id;
         this.numero = numero;
         this.valor = valor;
         this.tipo = tipo;
+        this.dataEntrada = dataEntrada;
         this.dataValidacao = dataValidacao;
         this.status = status;
+        this.validado = validado;
         this.cliente = cliente;
+    }
+
+    public TicketVO(long numero, LocalDateTime dataEntrada, Boolean status, Boolean validado) {
+        this.numero = numero;
+        this.dataEntrada = dataEntrada;
+        this.status = status;
+        this.validado = validado;
     }
 
     public TicketVO() {
@@ -85,13 +96,28 @@ public class TicketVO {
         this.status = status;
     }
 
+    public LocalDateTime getDataEntrada() {
+        return dataEntrada;
+    }
+
+    public void setDataEntrada(LocalDateTime dataEntrada) {
+        this.dataEntrada = dataEntrada;
+    }
+
+    public Boolean getValidado() {
+        return validado;
+    }
+
+    public void setValidado(Boolean validado) {
+        this.validado = validado;
+    }
+
     @Override
     public String toString() {
         return "ID: " + this.id +
-                " Número: " + this.numero +
-                " -  valor: " + this.valor +
-                " -  dataValidacao: " + this.dataValidacao +
-                " -  cliente: " + this.cliente;
+               " Número: " + this.numero +
+               " -  valor: " + this.valor +
+               " -  dataValidacao: " + this.dataValidacao +
+               " -  cliente: " + this.cliente;
     }
-
 }

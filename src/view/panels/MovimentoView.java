@@ -2,10 +2,7 @@ package view.panels;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-import model.banco.BaseDAO;
-import model.dao.movientos.MovimentoDAO;
-import model.seletor.Seletor;
-import model.vo.movimentos.MovimentoVO;
+import controller.ControllerMovimento;
 import net.miginfocom.swing.MigLayout;
 import util.Constantes;
 import util.Modificacoes;
@@ -14,21 +11,16 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.ArrayList;
-import java.util.Locale;
 
 public class MovimentoView extends JPanel {
 
     private static final long serialVersionUID = -194366357031753318L;
-    private final Modificacoes modificacao = new Modificacoes();
+    private Modificacoes modificacao;
+    private ControllerMovimento control;
 
     private DatePicker dtInicio, dtFinal;
     private JTable table;
-
-    private ArrayList<MovimentoVO> lista;
-    private DefaultTableModel model;
+    private JButton btnPesquisar;
 
     public MovimentoView() {
 
@@ -43,6 +35,12 @@ public class MovimentoView extends JPanel {
 
     public void initialize() {
 
+        Constantes.FLAG = 2;
+        Constantes.INTERNAL_MESSAGE = 4;
+
+        modificacao = new Modificacoes();
+        control = new ControllerMovimento(this);
+
         setJLabels_JSeparator();
 
         setInputFields();
@@ -51,7 +49,11 @@ public class MovimentoView extends JPanel {
 
         setJTable();
 
-        //TODO Trazer os Valores do Dia atual;
+        addListeners();
+
+        control.limparTabela();
+
+        control.consultarDiaAtual();
 
     }
 
@@ -97,40 +99,20 @@ public class MovimentoView extends JPanel {
     }
 
     public void setButtons() {
-        JButton btnPesquisar = new JButton("Pesquisar");
+        btnPesquisar = new JButton("Pesquisar");
         btnPesquisar.setPreferredSize(new Dimension(80, 25));
         btnPesquisar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnPesquisar.setFont(new Font("Arial", Font.BOLD, 16));
         this.add(btnPesquisar, "cell 12 1 2 1,grow");
-        btnPesquisar.addActionListener(e -> {
-
-//            Instanciar as Classes usadas
-            BaseDAO<MovimentoVO> bDAO = new MovimentoDAO();
-            Seletor seletorMovimento = new Seletor();
-
-//            Setar os valores da Tela no Seletor para criar Filtro
-            DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder()
-                    .parseCaseInsensitive().parseLenient()
-                    .appendPattern("yyyy-MMM-dd")
-                    .appendPattern("yyyy/MMM/dd")
-                    .appendPattern("d-MM-yyyy")
-                    .appendPattern("d-M-yy");
-//            DateTimeFormatter dtf = builder.toFormatter(Locale.ENGLISH);
-//            seletorMovimento.setDtInicio(String.format(dtInicio.getText(), dtf));
-//            seletorMovimento.setDtFim(String.format(dtFinal.getText(), dtf));
-
-            atualizarTabela(this.lista);
-
-        });
     }
 
-    public void setJTable() {
+    private void setJTable() {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBackground(Color.WHITE);
         scrollPane.getViewport().setBackground(Color.WHITE);
         this.add(scrollPane, "cell 1 3 13 11,grow");
 
-        table = new JTable(model) {
+        table = new JTable(new DefaultTableModel()) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -141,33 +123,29 @@ public class MovimentoView extends JPanel {
 
     }
 
-    private void atualizarTabela(ArrayList<MovimentoVO> lista) {
+    private void addListeners(){
+        btnPesquisar.addActionListener(e -> {
+            String dt1 = dtInicio.getDateStringOrEmptyString();
+            String dt2 = dtFinal.getDateStringOrEmptyString();
 
-//		 Limpa a tabela
-        limparTabela();
-
-//		 Obtém o model da tabela
-        model = (DefaultTableModel) table.getModel();
-
-//		 Percorre os empregados para adicionar linha a linha na tabela (JTable)
-        Object[] novaLinha = new Object[7];
-//		"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"
-        for (MovimentoVO movimento : lista) {
-            novaLinha[0] = movimento.getTicket().getNumero();
-            novaLinha[1] = movimento.getTicket().getCliente().getNome();
-            novaLinha[2] = movimento.getPlano().getTipo();
-            novaLinha[3] = movimento.getTicket().getCliente().getCarro().getPlaca();
-            novaLinha[4] = movimento.getTicket().getValor();
-            novaLinha[5] = movimento.getHr_entrada().format(Constantes.dtf);
-            novaLinha[6] = movimento.getHr_saida().format(Constantes.dtf);
-
-//			 Adiciona a nova linha na tabela
-            model.addRow(novaLinha);
-        }
+            control.consultar(dt1, dt2);
+            control.atualizarTabela();
+        });
     }
 
-    private void limparTabela() {
-        table.setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_MOVIMENTO));
+    public Modificacoes getModificacao() {
+        return modificacao;
     }
 
+    public DatePicker getDtInicio() {
+        return dtInicio;
+    }
+
+    public DatePicker getDtFinal() {
+        return dtFinal;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
 }

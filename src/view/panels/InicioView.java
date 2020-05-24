@@ -7,7 +7,6 @@ import util.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,12 +20,11 @@ public class InicioView extends JPanel {
 
     private JComboBox cbFormaPgto, cbxProcurar;
     private JTable table;
-    private JButton btnCancelar, btnValidar, btnGerarTicket,
+    private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
     private JTextField txtTicket;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
     private JTextField txtProcurar;
-    private JButton btnProcurar;
 
     public InicioView() {
 

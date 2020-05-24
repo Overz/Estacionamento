@@ -4,14 +4,12 @@ import model.banco.BaseDAO;
 import model.bo.CarroBO;
 import model.bo.ClienteBO;
 import model.bo.InicioBO;
-import model.dao.cliente.ClienteDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.dao.movientos.TicketDAO;
-import model.dao.veiculos.CarroDAO;
 import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
-import model.vo.veiculo.CarroVO;
+import org.apache.commons.math3.random.RandomDataGenerator;
 import util.Constantes;
 import util.Util;
 import view.panels.InicioView;
@@ -32,8 +30,6 @@ public class ControllerInicio {
     private final InicioView inicioView;
     private final BaseDAO<MovimentoVO> daoM;
     private final BaseDAO<TicketVO> daoT;
-    private final BaseDAO<CarroVO> daoCarro;
-    private final BaseDAO<ClienteVO> daoCliente;
     private ArrayList<MovimentoVO> lista;
     private MovimentoVO m;
     private TicketVO t;
@@ -45,8 +41,6 @@ public class ControllerInicio {
         this.inicioView = inicioView;
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
-        daoCarro = new CarroDAO();
-        daoCliente = new ClienteDAO();
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
@@ -57,12 +51,11 @@ public class ControllerInicio {
      * Atualiza a JTable com Todos os Valores
      */
     public void atualizarTabela() {
-        // Limpa a tabela
+
         this.limparTabela();
 
         DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
         Object[] novaLinha = new Object[5];
-
         if (Constantes.FLAG == 0) {
             lista = daoM.consultarTodos();
         }
@@ -73,11 +66,15 @@ public class ControllerInicio {
             if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
                 Util.tabelaUtil(movimento);
             }
-                novaLinha[0] = String.valueOf(movimento.getTicket().getNumero());
-                novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
-                novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
-                novaLinha[3] = movimento.getTicket().getCliente().getNome();
-                novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
+            if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
+                novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
+            } else {
+                novaLinha[0] = movimento.getTicket().getNumero();
+            }
+            novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
+            novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
+            novaLinha[3] = movimento.getTicket().getCliente().getNome();
+            novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
 
 //			 Adiciona a nova linha na tabela
             model.addRow(novaLinha);
@@ -179,7 +176,7 @@ public class ControllerInicio {
                 break;
             }
         }
-        if (t != null && t.getStatus().equals(false)) {
+        if (t != null && t.getStatus().equals(true)) {
             m = daoM.consultarPorId(t.getId());
 
             Date date1 = new Date();
@@ -232,7 +229,7 @@ public class ControllerInicio {
             formatter.setMinimumFractionDigits(2);
             formatter.setMaximumFractionDigits(2);
             String format = formatter.format(valor);
-            System.out.println(format);
+            System.out.println("R$: " + format);
 
             title = "Validação";
             msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
@@ -271,13 +268,14 @@ public class ControllerInicio {
 
         try {
             t = daoT.consultarPorId(id);
-            if (t != null && t.getStatus().equals(false)) {
+            if (t != null && t.getStatus().equals(true)) {
                 m = daoM.consultarPorId(t.getId());
 
                 for (MovimentoVO movimentoVO : lista) {
                     if (m.getId() == movimentoVO.getId()) {
                         Constantes.FLAG = 1;
-                        t.setStatus(true);
+                        t.setStatus(false);
+                        t.setValidado(true);
                         boolean a = daoT.alterar(t);
                         if (a) {
                             this.timerTicket();
@@ -302,7 +300,7 @@ public class ControllerInicio {
         ActionListener event = e -> {
             // validar o tipoPgto por X minutos
             Constantes.FLAG = 1;
-            t.setStatus(false);
+            t.setStatus(true);
             daoT.alterar(t);
         };
         Timer timer = new Timer(60000, event);
@@ -390,11 +388,50 @@ public class ControllerInicio {
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private long randomGenerator(long leftLimit, long rightLimit) {
+        return new RandomDataGenerator().nextLong(leftLimit, rightLimit);
+    }
+
     public void gerarTicket() {
         //TODO Gerar um numero aleatorio, salvar no banco, e consultar na tela
         //TODO ticket gerado com valor agregado
         // verificar se ele já existe, e se tem necessidade de existir somente uma vez
+        title = "Cadastro";
 
+        long leftLimit = 9999L;
+        long rightLimit = 999999999L;
+        long generatedLong = randomGenerator(leftLimit, rightLimit);
+
+        Constantes.FLAG = 1;
+        String num = String.valueOf(generatedLong);
+        lista = daoM.consultar(num);
+
+        if (lista != null && lista.size() > 0) {
+            for (MovimentoVO movimento : lista) {
+                long comparator = movimento.getTicket().getNumero();
+                if (comparator == generatedLong) {
+                    generatedLong = randomGenerator(leftLimit, rightLimit);
+                }
+            }
+        } else {
+            t = new TicketVO(generatedLong, LocalDateTime.now(), true, false);
+            t = daoT.cadastrar(t);
+            if (t != null) {
+                m = new MovimentoVO(t.getId(), t.getDataEntrada(), true, t);
+                m = daoM.cadastrar(m);
+
+                Constantes.FLAG = 0;
+                this.atualizarTabela();
+
+                msg = "Ticket Gerado!";
+            } else {
+                msg = "<html><body>Ticket Não Cadastrado!" +
+                      "<br>Tente Novamente</body></html>";
+            }
+        }
+        JOptionPane.showMessageDialog(inicioView,
+                inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void gerarComprovantePorLinha() {

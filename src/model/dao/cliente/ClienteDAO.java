@@ -85,7 +85,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
-    public ArrayList<ClienteVO> consultar(String values) {
+    public ArrayList<ClienteVO> consultar(String... values) {
         return null;
     }
 
@@ -120,7 +120,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
     } // OK
 
     @Override
-    public ClienteVO cadastrar(ClienteVO newObject) {
+    public ClienteVO cadastrar(ClienteVO newObject, String... values) {
         String qry = "INSERT INTO CLIENTE (nome, cpf, rg, email, telefone) VALUES (?,?,?,?,?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

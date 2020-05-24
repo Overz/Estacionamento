@@ -78,7 +78,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public ArrayList<CarroVO> consultar(String values) {
+    public ArrayList<CarroVO> consultar(String... values) {
         return null;
     }
 
@@ -113,7 +113,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
     } // OK
 
     @Override
-    public CarroVO cadastrar(CarroVO newObject) {
+    public CarroVO cadastrar(CarroVO newObject, String... values) {
         String qry = "INSERT INTO CARRO (placa, cor) VALUES (?,?)";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

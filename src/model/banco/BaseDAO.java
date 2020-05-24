@@ -17,7 +17,7 @@ public interface BaseDAO<T> {
      * @param <T> Valor Indefinido
      * @return Retorno Indefinido
      */
-    <T>T consultar(String values);
+    <T>T consultar(String... values);
 
     /**
      * Consulta algo especifico através de um id;
@@ -33,7 +33,7 @@ public interface BaseDAO<T> {
      * @param newObject: Object
      * @return newObject
      */
-    T cadastrar(T newObject);
+    T cadastrar(T newObject, String... values);
 
     /**
      * Método para altera/atualizar;
