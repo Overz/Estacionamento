@@ -18,12 +18,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class ControllerInicio {
@@ -36,6 +34,7 @@ public class ControllerInicio {
     private String msg = "";
     private String title = "";
     private long minutes;
+    private double valor;
 
     public ControllerInicio(InicioView inicioView) {
         this.inicioView = inicioView;
@@ -63,17 +62,18 @@ public class ControllerInicio {
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
-                Util.tabelaUtil(movimento);
+            if (movimento.getPlano() == null) {
+                Util.ajustarTabelaNull(movimento);
             }
+
             if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
                 novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
             } else {
                 novaLinha[0] = movimento.getTicket().getNumero();
             }
-            novaLinha[1] = movimento.getTicket().getCliente().getCarro().getModelo().getDescricao();
-            novaLinha[2] = movimento.getTicket().getCliente().getCarro().getPlaca();
-            novaLinha[3] = movimento.getTicket().getCliente().getNome();
+            novaLinha[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
+            novaLinha[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
+            novaLinha[3] = movimento.getPlano().getCliente().getNome();
             novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
 
 //			 Adiciona a nova linha na tabela
@@ -101,7 +101,8 @@ public class ControllerInicio {
 
         int row = inicioView.getTable().getSelectedRow();
         MovimentoVO m = lista.get(row);
-        inicioView.getTable().remove(row);
+        DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
+        model.removeRow(row);
 
         title = "Exclusão";
         if (daoM.excluirPorID(m.getId())) {
@@ -133,7 +134,7 @@ public class ControllerInicio {
      */
     public void validate(String tipoPgto, String ticket) {
         if (InicioBO.validarNumeroTicket(ticket)) {
-            if (calcular(tipoPgto, ticket)) {
+            if (validarCalculo(tipoPgto, ticket)) {
                 if (validarTicket(ticket)) {
                     msg = "Ticket Valido Por: " + minutes + " minuto's!";
                 } else {
@@ -143,7 +144,7 @@ public class ControllerInicio {
                         title, JOptionPane.INFORMATION_MESSAGE);
             } else if (Constantes.INTERNAL_MESSAGE == 0) {
                 title = "Erro";
-                msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!<br>Motivo: Já Validado!</body></html>";
+                msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!</body></html>";
                 JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                         title, JOptionPane.WARNING_MESSAGE);
             }
@@ -167,86 +168,63 @@ public class ControllerInicio {
      * @param ticket   String
      * @return true/false
      */
-    private boolean calcular(String tipoPgto, String ticket) {
-        for (MovimentoVO movimentoVO : lista) {
-            String numero = String.valueOf(movimentoVO.getTicket().getNumero());
-            if (ticket.equals(numero)) {
-                int id = movimentoVO.getTicket().getId();
-                t = daoT.consultarPorId(id);
-                break;
-            }
-        }
-        if (t != null && t.getStatus().equals(true)) {
-            m = daoM.consultarPorId(t.getId());
+    private boolean validarCalculo(String tipoPgto, String ticket) {
+        try {
+            if (verificarTicketExistente(ticket)) {
+                if (t != null && t.getStatus().equals(true)) {
 
-            Date date1 = new Date();
-            Date date2 = new Date();
+                    Constantes.FLAG = 1;
+                    m = daoM.consultarPorId(t.getId());
 
-            try {
-                LocalDateTime ldtEntrada = m.getHr_entrada();
-                LocalDateTime now = LocalDateTime.now();
-                date1 = Date.from(ldtEntrada.atZone(ZoneId.systemDefault()).toInstant());
-                date2 = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                    LocalDateTime ldtEntrada = m.getHr_entrada();
+                    LocalDateTime now = LocalDateTime.now();
+                    Date date1 = Date.from(ldtEntrada.atZone(ZoneId.of("America/Sao_Paulo")).toInstant());
+                    Date date2 = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
 
-            // Diferença entre Milisegundos de Agora com a Entrada
-            long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
+                    this.calcular(date1, date2);
 
-            // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
-            // Ambos estão iguais
-            long days = TimeUnit.MILLISECONDS.toDays(diff); // Diferença de Dias ate Agora
-            long remainingHoursInMillis = diff - TimeUnit.DAYS.toMillis(days); // Milisegundos Restantes da Diferença de Dias
-            long hours = TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis); // Horas Restantes da Diferença de Dias
-            long remainingMinutesInMillis = remainingHoursInMillis - TimeUnit.HOURS.toMillis(hours); // Milsegundos Restantes da Diferença de Horas
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis); // Minutos Restantes da Diferença de Horas
-            long remainingSecondsInMillis = remainingMinutesInMillis - TimeUnit.MINUTES.toMillis(minutes); // Milisegundos Restantes da Diferença de Minutos
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis); // Segundos Restantes da Diferença de Minutos
+                    String format = Util.formatarValor(valor);
+                    title = "Validação";
+                    msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
+                    int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                            title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
-            // Diferença entre Segundos Totais e Atuais (Atual - Total)
-            // Calculos feitos a mão
-            long diffSeconds = diff / 1000 % 60;
-            long diffMinutes = diff / (60 * 1000) % 60;
-            long diffHours = diff / (60 * 60 * 1000) % 24;
-            long diffDays = diff / (24 * 60 * 60 * 1000);
-
-            System.out.println("Dados Formatados:");
-            System.out.println("Days: " + days + ", hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds);
-            System.out.println("Dados de Feitos: ");
-            System.out.println("Days: " + diffDays + ", hours: " + diffHours + ", minutes: " + diffMinutes + ", seconds: " + diffSeconds);
-
-            // Calculo Final
-            double valorDia = 10.0; // Valor da Hora
-            double valorMinuto = valorDia / 60.0; // Valor do Minuto
-            double minPorDia = 24 * 60; // Minutos totais de 24h(1 Dia)
-            double minRestantes = (diffHours * 60.0) + diffMinutes; // Minutos Restantes do Dia atual (Hora + Minuto)
-            double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
-            double valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
-
-            Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-            NumberFormat formatter = NumberFormat.getInstance(locale);
-            formatter.setMinimumFractionDigits(2);
-            formatter.setMaximumFractionDigits(2);
-            String format = formatter.format(valor);
-            System.out.println("R$: " + format);
-
-            title = "Validação";
-            msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
-            int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
-                    title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            if (i == JOptionPane.YES_OPTION) {
-                if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
-                    Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
-                } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
-                    Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
+                    if (i == JOptionPane.YES_OPTION) {
+                        if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
+                            Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
+                            Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
+                        } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
+                            Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
+                            Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
+                        }
+                        return true;
+                    }
                 }
+
+                Constantes.INTERNAL_MESSAGE = 0;
+                return false;
             }
-            return i == JOptionPane.YES_OPTION;
-        } else {
-            Constantes.INTERNAL_MESSAGE = 0;
-            return false;
+        } catch (
+                Exception e) {
+            e.printStackTrace();
         }
+        return false;
+    }
+
+    private void calcular(Date date1, Date date2) {
+        // Diferença entre Milisegundos de Agora com a Entrada
+        long diff = date2.getTime() - date1.getTime(); // Variavel base para o calculo das demais abaixo
+        long diffMinutes = Util.diffMinutes(diff);
+        long diffHours = Util.diffHours(diff);
+        long diffDays = Util.diffDays(diff);
+
+        // Calculo Final
+        double valorDia = 10.0; // Valor da Hora
+        double valorMinuto = valorDia / 60.0; // Valor do Minuto
+        double minPorDia = 24 * 60; // Minutos totais de 24h(1 Dia)
+        double minRestantes = (diffHours * 60.0) + diffMinutes; // Minutos Restantes do Dia atual (Hora + Minuto)
+        double total = ((diffDays * minPorDia) + minRestantes); // Diferença de Dias entre o Inicio ate Agora * Minutos Totais de um Dia + Minutos Restantes do Dia Atual
+        valor = total * valorMinuto; // Total dos valores Iniciais ate Agora
     }
 
     /**
@@ -257,25 +235,12 @@ public class ControllerInicio {
      * @return true/false
      */
     private boolean validarTicket(String ticket) {
-        int id = 0;
-        for (MovimentoVO movimentoVO : lista) {
-            String numero = String.valueOf(movimentoVO.getTicket().getNumero());
-            if (ticket.equals(numero)) {
-                id = movimentoVO.getTicket().getId();
-                break;
-            }
-        }
-
         try {
-            t = daoT.consultarPorId(id);
-            if (t != null && t.getStatus().equals(true)) {
-                m = daoM.consultarPorId(t.getId());
-
+            if (verificarTicketExistente(ticket)) {
                 for (MovimentoVO movimentoVO : lista) {
                     if (m.getId() == movimentoVO.getId()) {
                         Constantes.FLAG = 1;
-                        t.setStatus(false);
-                        t.setValidado(true);
+                        this.atualizarDadosTicketValidado(t);
                         boolean a = daoT.alterar(t);
                         if (a) {
                             this.timerTicket();
@@ -284,13 +249,38 @@ public class ControllerInicio {
                         break;
                     }
                 }
-            } else {
-                msg += "<html><body>Erro no Calculo de Validação!</body></html>";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private boolean verificarTicketExistente(String ticket) {
+        for (MovimentoVO movimentoVO : lista) {
+            if (movimentoVO.getTicket() != null) {
+                String numero = String.valueOf(movimentoVO.getTicket().getNumero());
+                if (ticket.equals(numero)) {
+                    int id = movimentoVO.getTicket().getId();
+                    t = daoT.consultarPorId(id);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Preenche o ticket com dados atualizados após
+     * o usuario aceitar a validação do mesmo.
+     *
+     * @param t TicketVO
+     */
+    private void atualizarDadosTicketValidado(TicketVO t) {
+        t.setStatus(false);
+        t.setValidado(true);
+        t.setValor(valor);
+        t.setDataValidacao(LocalDateTime.now());
     }
 
     /**
@@ -300,8 +290,9 @@ public class ControllerInicio {
         ActionListener event = e -> {
             // validar o tipoPgto por X minutos
             Constantes.FLAG = 1;
-            t.setStatus(true);
-            daoT.alterar(t);
+            TicketVO oldTicket = t;
+            oldTicket.setStatus(true);
+            daoT.alterar(oldTicket);
         };
         Timer timer = new Timer(60000, event);
         timer.setRepeats(false);
@@ -360,6 +351,7 @@ public class ControllerInicio {
                 c.setNome(valor);
                 if (ClienteBO.validarNomeCliente(c)) {
                     Constantes.INTERNAL_MESSAGE = 2;
+                    Constantes.FLAG = 0;
                     lista = daoM.consultar(valor);
                 }
                 break;
@@ -377,6 +369,7 @@ public class ControllerInicio {
         }
 
         if (lista != null) {
+            Constantes.FLAG = 1;
             atualizarTabela();
             msg = "<html><body>Consulta Realizada!</body></html>";
         } else {
@@ -388,12 +381,23 @@ public class ControllerInicio {
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Cria um limite minimo e maximo de numeros para gerar um ticket
+     *
+     * @param leftLimit  long
+     * @param rightLimit long
+     * @return long
+     */
     private long randomGenerator(long leftLimit, long rightLimit) {
         return new RandomDataGenerator().nextLong(leftLimit, rightLimit);
     }
 
+    /**
+     * Gera um Ticket e compara se já existe,
+     * Caso exista, ele repete criando um outro diferente,
+     * e Cadastra no DB
+     */
     public void gerarTicket() {
-        //TODO Gerar um numero aleatorio, salvar no banco, e consultar na tela
         //TODO ticket gerado com valor agregado
         // verificar se ele já existe, e se tem necessidade de existir somente uma vez
         title = "Cadastro";
@@ -410,10 +414,13 @@ public class ControllerInicio {
             for (MovimentoVO movimento : lista) {
                 long comparator = movimento.getTicket().getNumero();
                 if (comparator == generatedLong) {
+                    Constantes.FLAG = 1;
                     generatedLong = randomGenerator(leftLimit, rightLimit);
                 }
             }
-        } else {
+        }
+
+        if (Constantes.FLAG == 1) {
             t = new TicketVO(generatedLong, LocalDateTime.now(), true, false);
             t = daoT.cadastrar(t);
             if (t != null) {
@@ -432,10 +439,6 @@ public class ControllerInicio {
         JOptionPane.showMessageDialog(inicioView,
                 inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public void gerarComprovantePorLinha() {
-        //TODO Usar a Classe GerarRelatorio para gerar um comprovante
     }
 
     /**
@@ -472,25 +475,20 @@ public class ControllerInicio {
      * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
      */
     private void ajustarFocusTxtTicket() {
-        inicioView.getTxtTicket().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                inicioView.getTxtTicket().setText("Nº Ticket");
-                inicioView.setForeground(Color.BLACK);
-            }
-        });
+        inicioView.getTxtTicket().setText("Nº Ticket");
+        inicioView.setForeground(Color.BLACK);
     }
 
     /**
      * Atualiza o foco do campo TxtProcurar na tela após a consulta
      */
     private void ajustarFocusTxtProcurar() {
-        inicioView.getTxtProcurar().addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                inicioView.getTxtProcurar().setText("Procurar...");
-                inicioView.getTxtProcurar().setForeground(Color.BLACK);
-            }
-        });
+        inicioView.getTxtProcurar().setText("Procurar...");
+        inicioView.getTxtProcurar().setForeground(Color.BLACK);
     }
+
+    public void gerarComprovantePorLinha() {
+        //TODO Usar a Classe GerarRelatorio para gerar um comprovante
+    }
+
 }

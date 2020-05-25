@@ -51,9 +51,11 @@ public class ControllerCliente {
     }
 
     public void removeSelectedRow() {
+
         int row = clienteView.getTable().getSelectedRow();
         PlanoVO p = list.get(row);
-        clienteView.getTable().remove(row);
+        DefaultTableModel model = (DefaultTableModel) clienteView.getTable().getModel();
+        model.removeRow(row);
 
         if (daoP.excluirPorID(p.getId())) {
             msg = "EXCLUSÃO REALIZADA COM SUCESSO!";

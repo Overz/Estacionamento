@@ -35,15 +35,13 @@ public class ControllerMovimento {
 //		"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
-                Util.tabelaUtil(movimento);
+            if (movimento.getPlano() == null) {
+                Util.ajustarTabelaNull(movimento);
             }
 
             novaLinha[0] = movimento.getTicket().getNumero();
 
-            if (movimento.getTicket().getCliente().getNome() != null) {
-                novaLinha[1] = movimento.getTicket().getCliente().getNome();
-            } else if (movimento.getPlano().getCliente().getNome() != null) {
+             if (movimento.getPlano().getCliente().getNome() != null) {
                 novaLinha[1] = movimento.getPlano().getCliente().getNome();
             } else {
                 novaLinha[1] = "";
@@ -55,9 +53,7 @@ public class ControllerMovimento {
                 novaLinha[2] = "";
             }
 
-            if (movimento.getTicket().getCliente().getCarro().getPlaca() != null) {
-                novaLinha[3] = movimento.getTicket().getCliente().getCarro().getPlaca();
-            } else if (movimento.getPlano().getCliente().getCarro().getPlaca() != null) {
+            if (movimento.getPlano().getCliente().getCarro().getPlaca() != null) {
                 novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
             } else {
                 novaLinha[3] = "";

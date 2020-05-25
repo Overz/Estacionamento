@@ -1,7 +1,5 @@
 package model.vo.movimentos;
 
-import model.vo.cliente.ClienteVO;
-
 import java.time.LocalDateTime;
 
 public class TicketVO {
@@ -14,9 +12,8 @@ public class TicketVO {
     private LocalDateTime dataValidacao;
     private Boolean status;
     private Boolean validado;
-    private ClienteVO cliente;
 
-    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataEntrada, LocalDateTime dataValidacao, Boolean status, Boolean validado, ClienteVO cliente) {
+    public TicketVO(int id, long numero, double valor, String tipo, LocalDateTime dataEntrada, LocalDateTime dataValidacao, Boolean status, Boolean validado) {
         super();
         this.id = id;
         this.numero = numero;
@@ -26,7 +23,6 @@ public class TicketVO {
         this.dataValidacao = dataValidacao;
         this.status = status;
         this.validado = validado;
-        this.cliente = cliente;
     }
 
     public TicketVO(long numero, LocalDateTime dataEntrada, Boolean status, Boolean validado) {
@@ -72,14 +68,6 @@ public class TicketVO {
         this.tipo = tipo;
     }
 
-    public ClienteVO getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(ClienteVO cliente) {
-        this.cliente = cliente;
-    }
-
     public LocalDateTime getDataValidacao() {
         return dataValidacao;
     }
@@ -117,7 +105,7 @@ public class TicketVO {
         return "ID: " + this.id +
                " Número: " + this.numero +
                " -  valor: " + this.valor +
-               " -  dataValidacao: " + this.dataValidacao +
-               " -  cliente: " + this.cliente;
+               " - dataEntrad: " + this.dataEntrada +
+               " -  dataValidacao: " + this.dataValidacao ;
     }
 }

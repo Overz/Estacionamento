@@ -23,12 +23,6 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
         try {
             ticketVO.setId(result.getInt("idticket"));
-
-            int idCliente = result.getInt("idCliente");
-            ClienteDAO clienteDAO = new ClienteDAO();
-            ClienteVO clienteVO = clienteDAO.consultarPorId(idCliente);
-            ticketVO.setCliente(clienteVO);
-
             ticketVO.setNumero(result.getLong("n_ticket"));
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));

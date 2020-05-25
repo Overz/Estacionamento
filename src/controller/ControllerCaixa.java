@@ -11,6 +11,7 @@ import view.panels.CaixaView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,9 +20,9 @@ import java.util.ArrayList;
 
 public class ControllerCaixa {
     private final CaixaView caixaView;
-    private BaseDAO<MovimentoVO> daoM;
+    private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
-    private String msg, title, jopValue, b;
+    private String msg, title, jopValueComboBox, jopValueSaldo;
 
     public ControllerCaixa(CaixaView caixaView) {
         this.caixaView = caixaView;
@@ -38,19 +39,28 @@ public class ControllerCaixa {
         Object[] novaLinha = new Object[6];
         for (MovimentoVO movimento : lista) {
 
+            if (movimento.getPlano() == null || movimento.getTicket() == null) {
+                Util.ajustarTabelaNull(movimento);
+            }
+
             if (movimento.isAtual()) {
+                if (movimento.getTicket().getValidado() || movimento.getPlano().getContrato().isAtivo()) {
 
-                if (movimento.getPlano() == null || movimento.getPlano().getCliente() == null) {
-                    Util.tabelaUtil(movimento);
+                    novaLinha[0] = movimento.getTicket().getNumero();
+
+                    if (movimento.getPlano().getCliente().getNome() != null) {
+                        novaLinha[1] = movimento.getPlano().getCliente().getNome();
+                    } else {
+                        novaLinha[1] = "";
+                    }
+
+                    novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
+                    novaLinha[3] = movimento.getHr_saida().format(Constantes.dtf);
+                    novaLinha[4] = movimento.getTicket().getTipo();
+                    novaLinha[5] = movimento.getTicket().getValor();
+
+                    model.addRow(novaLinha);
                 }
-                novaLinha[0] = movimento.getTicket().getNumero();
-                novaLinha[1] = movimento.getTicket().getCliente().getNome();
-                novaLinha[2] = movimento.getHr_entrada().format(Constantes.dtf);
-                novaLinha[3] = movimento.getHr_saida().format(Constantes.dtf);
-                novaLinha[4] = movimento.getTicket().getTipo();
-                novaLinha[5] = movimento.getTicket().getValor();
-
-                model.addRow(novaLinha);
             }
         }
 
@@ -71,18 +81,18 @@ public class ControllerCaixa {
 
         if (Constantes.FLAG == 1) {
             Object[] opcoes = {Constantes.PGTO_DINHEIRO, Constantes.PGTO_CARTAO};
-            jopValue = (String) JOptionPane.showInputDialog(caixaView, msg, title,
+            jopValueComboBox = (String) JOptionPane.showInputDialog(caixaView, msg, title,
                     JOptionPane.QUESTION_MESSAGE, null, opcoes, "");
         }
         msg = "Digite o Valor:";
-        b = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
+        jopValueSaldo = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
 
         try {
-            Double c = Double.valueOf(b);
+            Double c = Double.valueOf(jopValueSaldo);
 
             // Se add com sucesso, mostra uma Mensagem que adc com sucesso, se não, msg com erro
             if (Constantes.FLAG == 1) {
-                r = this.addValor(jopValue, c);
+                r = this.addValor(jopValueComboBox, c);
                 this.msgAdicionar(r);
             }
 
@@ -144,7 +154,7 @@ public class ControllerCaixa {
         for (Double a : values) {
             if (CaixaBO.validarValorDigitado(a)) {
                 Constantes.LBL_VALOR_CAIXA_TOTAL -= a;
-                caixaView.getLblTotalCaixa().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_TOTAL));
+                this.controlarValorLabel();
                 bool = true;
             }
         }
@@ -192,21 +202,21 @@ public class ControllerCaixa {
         double c = 0.0, d = 0.0;
         try {
             if (Constantes.FLAG == 1) {
-                if (jopValue.equals(Constantes.PGTO_DINHEIRO)) {
-                    c = Double.parseDouble(b);
+                if (jopValueComboBox.equals(Constantes.PGTO_DINHEIRO)) {
+                    c = Double.parseDouble(jopValueSaldo);
                 }
-                if (jopValue.equals(Constantes.PGTO_CARTAO)) {
-                    d = Double.parseDouble(b);
+                if (jopValueComboBox.equals(Constantes.PGTO_CARTAO)) {
+                    d = Double.parseDouble(jopValueSaldo);
                 }
                 Constantes.LBL_VALOR_CAIXA_TOTAL += c;
                 Constantes.LBL_VALOR_CAIXA_TOTAL += d;
             }
             if (Constantes.FLAG == 0) {
-                if (jopValue.equals(Constantes.PGTO_DINHEIRO)) {
-                    c = Double.parseDouble(b);
+                    if (jopValueComboBox.equals(Constantes.PGTO_DINHEIRO)) {
+                    c = Double.parseDouble(jopValueSaldo);
                 }
-                if (jopValue.equals(Constantes.PGTO_CARTAO)) {
-                    d = Double.parseDouble(b);
+                if (jopValueComboBox.equals(Constantes.PGTO_CARTAO)) {
+                    d = Double.parseDouble(jopValueSaldo);
                 }
                 if (Constantes.LBL_VALOR_CAIXA_TOTAL == 0.0) {
                     JOptionPane.showMessageDialog(caixaView, "Total do Caixa já consta em R$ 0.0 !\n Essa ação não ira ser realizada.", "Erro",
@@ -287,5 +297,24 @@ public class ControllerCaixa {
         //TODO Impedir que o sistema consulte os valores quando o caixa for fechado
 
 
+    }
+
+    public void controlarValorLabel() {
+        ActionListener event = e -> {
+            String concatD = Constantes.LBL_TEXT_CAIXA_DINHEIRO+ " " +
+                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_DINHEIRO);
+            String concatC = Constantes.LBL_TEXT_CAIXA_CARTAO + " " +
+                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_CARTAO);
+            String concatT = Constantes.LBL_TEXT_CAIXA_TOTAL + " " +
+                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_TOTAL);
+
+            caixaView.getLblSaldoEmDinheiror().setText(concatD);
+            caixaView.getLblSaldoEmCarto().setText(concatC);
+            caixaView.getLblTotalCaixa().setText(concatT);
+
+            this.atualizarTabela();
+        };
+        Timer timer = new Timer(1000, event);
+        timer.start();
     }
 }

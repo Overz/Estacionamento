@@ -10,13 +10,8 @@ import model.vo.movimentos.TicketVO;
 import util.Constantes;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
@@ -61,7 +56,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public ArrayList<MovimentoVO> consultarTodos() {
-        String qry = "SELECT * FROM MOVIMENTO WHERE ATUAL = 1";
+        String qry = "SELECT * FROM MOVIMENTO WHERE ATUAL = 1 ORDER BY HR_ENTRADA";
 
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -109,7 +104,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             }
         } else if (Constantes.FLAG == 1) {
             qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.idticket " +
-                  "where t.n_ticket like '" + values + "' ";
+                  "where t.n_ticket like '%" + values[0] + "%' ";
         } else if (Constantes.FLAG == 2) {
             qry = "select * from movimento ";
 
@@ -153,7 +148,15 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public MovimentoVO consultarPorId(int id) {
-        String qry = "SELECT * FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
+        String qry = "";
+        if (Constantes.FLAG == 0) {
+            qry = "SELECT * FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
+        } else if (Constantes.FLAG == 1) {
+            qry = "SELECT * FROM MOVIMENTO WHERE IDTICKET = ?";
+        } else if (Constantes.FLAG == 2) {
+            qry = "SELECT * FROM MOVIMENTO WHERE IDPLANO = ?";
+        }
+
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
