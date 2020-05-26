@@ -21,6 +21,7 @@ public class MovimentoView extends JPanel {
     private DatePicker dtInicio, dtFinal;
     private JTable table;
     private JButton btnPesquisar;
+    private JLabel lblModificacao;
 
     public MovimentoView() {
 
@@ -147,5 +148,9 @@ public class MovimentoView extends JPanel {
 
     public JTable getTable() {
         return table;
+    }
+
+    public JLabel getLblModificacao() {
+        return lblModificacao;
     }
 }

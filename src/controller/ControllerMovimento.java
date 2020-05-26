@@ -1,12 +1,14 @@
 package controller;
 
 import model.banco.BaseDAO;
+import model.bo.MovimentoBO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.Constantes;
 import util.Util;
 import view.panels.MovimentoView;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,24 +26,24 @@ public class ControllerMovimento {
 
     public void atualizarTabela() {
 
-//		 Limpa a tabela
         limparTabela();
 
-//		 Obtém o model da tabela
         DefaultTableModel model = (DefaultTableModel) movimentoView.getTable().getModel();
 
-//		 Percorre os empregados para adicionar linha a linha na tabela (JTable)
         Object[] novaLinha = new Object[7];
-//		"Número", "Nome", "Plano", "Placa", "Valor", "Entrada", "Saída"
         for (MovimentoVO movimento : lista) {
 
             if (movimento.getPlano() == null) {
                 Util.ajustarTabelaNull(movimento);
             }
 
-            novaLinha[0] = movimento.getTicket().getNumero();
+            if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
+                novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
+            } else {
+                novaLinha[0] = movimento.getTicket().getNumero();
+            }
 
-             if (movimento.getPlano().getCliente().getNome() != null) {
+            if (movimento.getPlano().getCliente().getNome() != null) {
                 novaLinha[1] = movimento.getPlano().getCliente().getNome();
             } else {
                 novaLinha[1] = "";
@@ -59,18 +61,22 @@ public class ControllerMovimento {
                 novaLinha[3] = "";
             }
 
-            if (movimento.getPlano().getContrato().getValor() > 0.0) {
+            if (movimento.getPlano().getContrato().getValor() > 0.0 && movimento.getPlano().getContrato().isAtivo()) {
                 novaLinha[4] = movimento.getPlano().getContrato().getValor();
-            } else if (movimento.getTicket().getValor() > 0.0){
+            } else if (movimento.getTicket().getValor() > 0.0) {
                 novaLinha[4] = movimento.getTicket().getValor();
             } else {
                 novaLinha[4] = "Aguardando/Já Validado";
             }
 
             novaLinha[5] = movimento.getHr_entrada().format(Constantes.dtf);
-            novaLinha[6] = movimento.getHr_saida().format(Constantes.dtf);
 
-//			 Adiciona a nova linha na tabela
+            if (movimento.getHr_saida().equals(movimento.getHr_entrada())) {
+                novaLinha[6] = "";
+            } else {
+                novaLinha[6] = movimento.getHr_saida().format(Constantes.dtf);
+            }
+
             model.addRow(novaLinha);
         }
     }
@@ -80,9 +86,18 @@ public class ControllerMovimento {
     }
 
     public void consultar(String dt1, String dt2) {
-        Constantes.FLAG = 2;
-        Constantes.INTERNAL_MESSAGE = 4;
-        lista = daoM.consultar(dt1, dt2);
+        if (validarForm(dt1, dt2)) {
+            Constantes.FLAG = 2;
+            Constantes.INTERNAL_MESSAGE = 4;
+            lista = daoM.consultar(dt1, dt2);
+        } else {
+            JOptionPane.showMessageDialog(movimentoView, movimentoView.getModificacao().labelConfig(movimentoView.getLblModificacao(),
+                    "Por favor, Digite todas as Datas"), "Erro", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private boolean validarForm(String a, String b) {
+        return MovimentoBO.validarData2(b) && MovimentoBO.validarData1(a);
     }
 
     public void consultarDiaAtual() {

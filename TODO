@@ -1,17 +1,17 @@
 --------------------------------------------------------------------------------------------------------------------
 $$ TO-DO:
     # View Inicio:
-        ~ Validações:
+        ~ Validações: OK
             - Numero do Ticket/Cartão digitado: OK
             - Dinheiro ou Cartão: OK
-            - Meio de Pesquisa dos dados, com seletor:
+            - Meio de Pesquisa dos dados, com seletor: OK
 
         ~ Botões:
-            - Gerar um ticket aleatório:
-            - Imprimir um Comprovante da Linha Selecionada
+            - Gerar um ticket aleatório: OK
+            - Imprimir linha selecionada:
+            - Controlar Cancela de Entrada e Saída: OK
 
         ~ Tabela:
-            - Imprimir linha selecionada:
             - remover linha selecionada: OK
             - Mostrar total de Veículos na Label acima: OK
 
@@ -58,12 +58,11 @@ $$ TO-DO:
 
     # View Movimento:
         ~ Validações:
-            - validar a Data selecionada para Trazer os resultados:
+            - validar a Data selecionada para Trazer os resultados: OK
             - Invalidar Data se existir somente uma data selecionada:
 
         ~ Tabela:
-            - Preencher a Tabela:
-            - Invalidar seleção de linhas:
+            - Preencher a Tabela: OK
 
     # View Ticket Perdido:
         ~ Validações:

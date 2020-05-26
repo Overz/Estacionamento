@@ -398,8 +398,6 @@ public class ControllerInicio {
      * e Cadastra no DB
      */
     public void gerarTicket() {
-        //TODO ticket gerado com valor agregado
-        // verificar se ele já existe, e se tem necessidade de existir somente uma vez
         title = "Cadastro";
 
         long leftLimit = 9999L;
