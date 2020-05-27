@@ -33,52 +33,58 @@ public class ControllerMovimento {
         Object[] novaLinha = new Object[7];
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() == null) {
-                Util.ajustarTabelaNull(movimento);
-            }
-
-            if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
-                novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
-            } else {
-                novaLinha[0] = movimento.getTicket().getNumero();
-            }
-
-            if (movimento.getPlano().getCliente().getNome() != null) {
-                novaLinha[1] = movimento.getPlano().getCliente().getNome();
-            } else {
-                novaLinha[1] = "";
-            }
-
             if (movimento.getPlano() != null) {
-                novaLinha[2] = movimento.getPlano().getTipo();
-            } else {
-                novaLinha[2] = "";
+
+                // Atualiza o Objeto Plano na tabela
+                this.atualizarTabelaPlano(movimento, novaLinha);
+
+                model.addRow(novaLinha);
             }
 
-            if (movimento.getPlano().getCliente().getCarro().getPlaca() != null) {
-                novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
-            } else {
-                novaLinha[3] = "";
+            if (movimento.getTicket() != null) {
+
+                // Atualiza o Objeto Ticket na tabela
+                this.atualizarTabelaTicket(movimento, novaLinha);
+
+                model.addRow(novaLinha);
             }
-
-            if (movimento.getPlano().getContrato().getValor() > 0.0 && movimento.getPlano().getContrato().isAtivo()) {
-                novaLinha[4] = movimento.getPlano().getContrato().getValor();
-            } else if (movimento.getTicket().getValor() > 0.0) {
-                novaLinha[4] = movimento.getTicket().getValor();
-            } else {
-                novaLinha[4] = "Aguardando/Já Validado";
-            }
-
-            novaLinha[5] = movimento.getHr_entrada().format(Constantes.dtf);
-
-            if (movimento.getHr_saida().equals(movimento.getHr_entrada())) {
-                novaLinha[6] = "";
-            } else {
-                novaLinha[6] = movimento.getHr_saida().format(Constantes.dtf);
-            }
-
-            model.addRow(novaLinha);
         }
+    }
+
+    /**
+     * Mantém a tabela atualizada com Ticket caso exista
+     *
+     * @param movimento MovimentoVO
+     * @param novaLinha Object[]
+     */
+    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaLinha) {
+        novaLinha[0] = movimento.getTicket().getNumero();
+        novaLinha[1] = "";
+        novaLinha[2] = "";
+        novaLinha[3] = "";
+        if (movimento.getTicket().getValor() > 0.0) {
+            novaLinha[4] = "R$: " + Util.formatarValor(movimento.getTicket().getValor());
+        } else {
+            novaLinha[4] = "Aguardando Validação";
+        }
+        novaLinha[5] = movimento.getHr_entrada().format(Constantes.DTF);
+        novaLinha[6] = movimento.getHr_saida().format(Constantes.DTF);
+    }
+
+    /**
+     * Mantém a tabela atualizada com Plano caso exista
+     *
+     * @param movimento MovimentoVO
+     * @param novaLinha Object[]
+     */
+    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaLinha) {
+        novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
+        novaLinha[1] = movimento.getPlano().getCliente().getNome();
+        novaLinha[2] = movimento.getPlano().getTipo();
+        novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
+        novaLinha[4] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
+        novaLinha[5] = movimento.getHr_entrada().format(Constantes.DTF);
+        novaLinha[6] = movimento.getHr_saida().format(Constantes.DTF);
     }
 
     public void limparTabela() {

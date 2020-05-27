@@ -12,15 +12,15 @@ import java.awt.*;
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
-    private static JLayeredPane layeredPane;
-    private static final InicioView INICIO_VIEW = new InicioView();
-    private static final CaixaView CAIXA_VIEW = new CaixaView();
-    private static final ClienteView CLIENTE_VIEW = new ClienteView();
     protected static final DadosCadastroView DADOS_CADASTRO_VIEW = new DadosCadastroView();
     protected static final EnderecoCadastroView ENDERECO_CADASTRO_VIEW = new EnderecoCadastroView();
     protected static final PlanoCadastroView PLANO_CADASTRO_VIEW = new PlanoCadastroView();
+    private static final InicioView INICIO_VIEW = new InicioView();
+    private static final CaixaView CAIXA_VIEW = new CaixaView();
+    private static final ClienteView CLIENTE_VIEW = new ClienteView();
     private static final MovimentoView MOVIMENTO_VIEW = new MovimentoView();
     private static final LostTicketView LOST_TICKET_VIEW = new LostTicketView();
+    private static JLayeredPane layeredPane;
 
     public MainView() {
 

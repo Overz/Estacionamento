@@ -21,7 +21,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
     private EnderecoVO criarResultSet(ResultSet result) {
         enderecoVO = new EnderecoVO();
         try {
-            enderecoVO.setId(result.getInt("idendereco"));
+            enderecoVO.setId(result.getInt("id"));
             enderecoVO.setNumero(result.getInt("numero"));
             enderecoVO.setRua(result.getString("rua"));
             enderecoVO.setBairro(result.getString("bairro"));
@@ -31,10 +31,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         }
         return null;
@@ -57,10 +57,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "ConsultarTodos()";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -77,7 +77,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public EnderecoVO consultarPorId(int id) {
-        String qry = "SELECT * FROM ENDERECO WHERE IDENDERECO = ?";
+        String qry = "SELECT * FROM ENDERECO WHERE id = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -91,10 +91,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "ConsultarPorID(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -125,10 +125,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "Cadastrar(T newObject)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -140,7 +140,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public boolean alterar(EnderecoVO object) {
-        String qry = "UPDATE ENDERECO SET NUMERO=?, RUA=?, BAIRRO=?, CIDADE=? WHERE IDENDERECO=?";
+        String qry = "UPDATE ENDERECO SET NUMERO=?, RUA=?, BAIRRO=?, CIDADE=? WHERE ID=?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -157,10 +157,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "Alterar(T object)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -172,7 +172,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM ENDERECO WHERE IDENDERECO = ?";
+        String qry = "DELETE FROM ENDERECO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -185,10 +185,10 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
         } catch (SQLException e) {
             String method = "excluir(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);

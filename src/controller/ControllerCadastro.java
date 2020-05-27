@@ -15,10 +15,10 @@ import java.util.ArrayList;
 public class ControllerCadastro {
 
     private final DadosCadastroView cadastroView;
-    private ArrayList<CarroVO> linhas;
     private final BaseDAO<ClienteVO> daoC;
     private final ClienteVO cliente;
     private final CarroVO carro;
+    private ArrayList<CarroVO> linhas;
 
     public ControllerCadastro(DadosCadastroView cadastroView) {
         this.cadastroView = cadastroView;

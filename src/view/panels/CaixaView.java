@@ -9,13 +9,11 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class CaixaView extends JPanel {
 
     private static final long serialVersionUID = -4789193934965387787L;
-    private final Modificacoes modificacao = new Modificacoes();
+    private Modificacoes modificacao;
     private ControllerCaixa control;
 
     private JTable table;
@@ -32,7 +30,7 @@ public class CaixaView extends JPanel {
     }
 
     private void initialize() {
-
+        modificacao  = new Modificacoes();
         control = new ControllerCaixa(this);
 
         this.setJLabels_JSeparator();
@@ -41,13 +39,9 @@ public class CaixaView extends JPanel {
 
         this.setJTable();
 
-        if (table.getColumnCount() == 0 || table.getRowCount() == 0) {
-            control.atualizarTabela();
-        }
-
         this.addListeners();
 
-        control.controlarValorLabel();
+        control.atualizarTabela();
     }
 
     private void setJLabels_JSeparator() {
@@ -61,7 +55,7 @@ public class CaixaView extends JPanel {
         lblDados.setBackground(Color.WHITE);
         add(lblDados, "cell 1 3,grow");
 
-        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO );
+        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
         lblSaldoEmDinheiror.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmDinheiror.setForeground(Color.BLACK);
         lblSaldoEmDinheiror.setBackground(Color.WHITE);
@@ -142,7 +136,7 @@ public class CaixaView extends JPanel {
 
     }
 
-    private void addListeners(){
+    private void addListeners() {
         btnAdicionarValor.addActionListener(e -> {
             Constantes.FLAG = 1;
             control.showInputDialog();

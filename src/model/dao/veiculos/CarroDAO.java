@@ -23,7 +23,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         carroVO = new CarroVO();
 
         try {
-            carroVO.setId(result.getInt("idcarro"));
+            carroVO.setId(result.getInt("id"));
 
             int idModelo = result.getInt("idmodelo");
             ModeloDAO modeloDAO = new ModeloDAO();
@@ -85,7 +85,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public CarroVO consultarPorId(int id) {
-        String qry = "SELECT * FROM CARRO WHERE IDCARRO = ?";
+        String qry = "SELECT * FROM CARRO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -175,7 +175,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM CARRO WHERE IDCARRO = ?";
+        String qry = "DELETE FROM CARRO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

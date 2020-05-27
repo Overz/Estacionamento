@@ -61,7 +61,11 @@ public class PlanoVO {
 
     @Override
     public String toString() {
-        return "Tipo: " + this.tipo +
-                " - descircao: " + this.descircao;
+        return " - PLANO: " +
+               " - ID: " + id +
+               " - TIPO_PLANO: " + tipo +
+               " - DESCRICAO: " + descircao + "\n" +
+               " - CLIENTE: " + cliente.toString() + "\n" +
+               " - CONTRATO: " + contrato.toString();
     }
 }

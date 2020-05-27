@@ -1,6 +1,7 @@
 package model.vo.movimentos;
 
 import model.vo.cliente.PlanoVO;
+import util.Constantes;
 
 import java.time.LocalDateTime;
 
@@ -84,10 +85,10 @@ public class MovimentoVO {
 
     @Override
     public String toString() {
-        return "ID: " + this.id +
-               " -  hr_entrada: " + this.hr_entrada +
-               " -  hr_saida: " + this.hr_saida +
-               " -  plano: " + this.plano +
-               " -  ticket: " + this.ticket;
+        return " - MOVIMENTO: " +
+               " - ID: " + id +
+               " - DT_ENTRADA: " + hr_entrada.format(Constantes.DTF) +
+               " - DT_SAIDA: " + hr_saida.format(Constantes.DTF) +
+               " - MOVI_ATUAL: " + atual;
     }
 }

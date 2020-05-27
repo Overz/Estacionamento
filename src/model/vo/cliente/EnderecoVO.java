@@ -64,9 +64,9 @@ public class EnderecoVO {
     @Override
     public String toString() {
         return "Número: " + this.numero +
-                " - Rua: " + this.rua +
-                " - Bairro: " + this.bairro +
-                " - Cidade: " + this.cidade;
+               " - Rua: " + this.rua +
+               " - Bairro: " + this.bairro +
+               " - Cidade: " + this.cidade;
     }
 
 

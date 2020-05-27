@@ -3,7 +3,6 @@ package model.seletor;
 import util.Constantes;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Seletor {
 

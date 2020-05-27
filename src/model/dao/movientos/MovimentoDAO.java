@@ -25,7 +25,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         movimentoVO = new MovimentoVO();
 
         try {
-            movimentoVO.setId(result.getInt("idmovimento"));
+            movimentoVO.setId(result.getInt("id"));
 
             int idT = result.getInt("idticket");
             TicketDAO ticketDAO = new TicketDAO();
@@ -150,7 +150,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     public MovimentoVO consultarPorId(int id) {
         String qry = "";
         if (Constantes.FLAG == 0) {
-            qry = "SELECT * FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
+            qry = "SELECT * FROM MOVIMENTO WHERE ID = ?";
         } else if (Constantes.FLAG == 1) {
             qry = "SELECT * FROM MOVIMENTO WHERE IDTICKET = ?";
         } else if (Constantes.FLAG == 2) {
@@ -259,7 +259,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM MOVIMENTO WHERE IDMOVIMENTO = ?";
+        String qry = "DELETE FROM MOVIMENTO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

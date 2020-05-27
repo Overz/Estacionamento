@@ -12,12 +12,11 @@ public interface BaseDAO<T> {
     ArrayList<T> consultarTodos();
 
     /**
-     *
      * @param values Array String
-     * @param <T> Valor Indefinido
+     * @param <T>    Valor Indefinido
      * @return Retorno Indefinido
      */
-    <T>T consultar(String... values);
+    <T> T consultar(String... values);
 
     /**
      * Consulta algo especifico através de um id;

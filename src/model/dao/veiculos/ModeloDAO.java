@@ -23,7 +23,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         modeloVO = new ModeloVO();
 
         try {
-            modeloVO.setId(result.getInt("idmodelo"));
+            modeloVO.setId(result.getInt("id"));
 
             int idMarca = result.getInt("idmarca");
             MarcaDAO marcaDAO = new MarcaDAO();
@@ -36,10 +36,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         }
         return null;
@@ -62,10 +62,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "ConsultarTodos()";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -82,7 +82,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public ModeloVO consultarPorId(int id) {
-        String qry = "SELECT * FROM MODELO WHERE IDMODELO = ?";
+        String qry = "SELECT * FROM MODELO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -96,10 +96,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "ConsultarPorID(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
 
         } finally {
@@ -128,10 +128,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "Cadastrar(T newObject)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -143,7 +143,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public boolean alterar(ModeloVO object) {
-        String qry = "UPDATE MODELO SET DESCRICAO=? WHERE IDMODELO=?";
+        String qry = "UPDATE MODELO SET DESCRICAO=? WHERE ID=?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -157,10 +157,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "Alterar(T object)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);
@@ -172,7 +172,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM MODELO WHERE IDMODELO = ?";
+        String qry = "DELETE FROM MODELO WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -185,10 +185,10 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
         } catch (SQLException e) {
             String method = "excluir(int id)";
             System.out.println("\n" +
-                    "Class: " + getClass().getSimpleName() + "\n" +
-                    "Method: " + method + "\n" +
-                    "Msg: " + e.getMessage() + "\n" +
-                    "Cause: " + e.getCause()
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
             );
         } finally {
             Banco.closeResultSet(result);

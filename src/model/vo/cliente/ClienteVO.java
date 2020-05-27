@@ -97,14 +97,14 @@ public class ClienteVO {
 
     @Override
     public String toString() {
-        return " - Nome: " + this.nome +
-                " - CPF: " + this.cpf +
-                " - RG: " + this.rg +
-                " - Email: " + this.email +
-                " - Telefone: " + this.telefone +
-                " - Endereco: " + this.endereco.toString() +
-                " -  Carro: " + this.carro.toString() +
-                " - ID: " + this.id;
+        return " - CLIENTE: " +
+               " - ID: " + this.id +
+               " - Nome: " + this.nome +
+               " - CPF: " + this.cpf +
+               " - RG: " + this.rg +
+               " - Email: " + this.email +
+               " - Telefone: " + this.telefone;
+
     }
 
 }

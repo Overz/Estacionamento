@@ -75,10 +75,10 @@ public class LostTicketVO {
     @Override
     public String toString() {
         return "Nome:" + nome +
-                " -  CPF: " + this.cpf +
-                " - placa: " + this.placa +
-                " - renavam: " + this.renavam +
-                " - formaPgto: " + this.formaPgto;
+               " -  CPF: " + this.cpf +
+               " - placa: " + this.placa +
+               " - renavam: " + this.renavam +
+               " - formaPgto: " + this.formaPgto;
     }
 
 }

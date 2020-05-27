@@ -2,8 +2,6 @@ package model.dao.movientos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.dao.cliente.ClienteDAO;
-import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.TicketVO;
 import util.Constantes;
 
@@ -22,7 +20,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         ticketVO = new TicketVO();
 
         try {
-            ticketVO.setId(result.getInt("idticket"));
+            ticketVO.setId(result.getInt("id"));
             ticketVO.setNumero(result.getLong("n_ticket"));
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));
@@ -81,7 +79,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public TicketVO consultarPorId(int id) {
-        String qry = "SELECT * FROM TICKET WHERE IDTICKET = ?";
+        String qry = "SELECT * FROM TICKET WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -165,30 +163,18 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean alterar(TicketVO object) {
-        String qry;
-//        String qry = Constantes.FLAG == 1 ? "UPDATE TICKET SET STATUSTICKET = ? WHERE IDTICKET = ?" : null;
-//        String qry = Constantes.FLAG == 2 ? "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?" : null;
-        if (Constantes.FLAG == 1) {
-            qry = "UPDATE TICKET SET STATUSTICKET = ?, VALIDADO = ? WHERE IDTICKET = ?";
-        } else {
-            qry = "UPDATE TICKET SET N_TICKET=?, VALOR=?, TIPO=?, HR_VALIDACAO=?, STATUSTICKET = ? WHERE IDTICKET=?";
-        }
+        String qry = "UPDATE TICKET SET VALOR = ?, TIPO = ?, HR_VALIDACAO = ?, STATUSTICKET = ?, VALIDADO = ? WHERE ID = ?";
+
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            if (Constantes.FLAG == 1) {
-                stmt.setBoolean(1, object.getStatus());
-                stmt.setBoolean(2, object.getValidado());
-                stmt.setInt(3, object.getId());
-            } else {
-                stmt.setLong(1, object.getNumero());
-                stmt.setDouble(2, object.getValor());
-                stmt.setString(3, object.getTipo());
-                stmt.setTimestamp(4, Timestamp.valueOf(object.getDataValidacao()));
-                stmt.setBoolean(5, object.getStatus());
-                stmt.setInt(6, object.getId());
-            }
+            stmt.setDouble(1, object.getValor());
+            stmt.setString(2, object.getTipo());
+            stmt.setTimestamp(3, Timestamp.valueOf(object.getDataValidacao()));
+            stmt.setBoolean(4, object.getStatus());
+            stmt.setBoolean(5, object.getValidado());
+            stmt.setInt(6, object.getId());
 
             if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
@@ -211,7 +197,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM TICKET WHERE IDTICKET = ?";
+        String qry = "DELETE FROM TICKET WHERE ID = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

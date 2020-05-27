@@ -1,5 +1,7 @@
 package util;
 
+import model.banco.BaseDAO;
+import model.dao.movientos.MovimentoDAO;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
 import model.vo.cliente.EnderecoVO;
@@ -11,38 +13,26 @@ import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
 
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class Util {
 
-    public static void ajustarTabelaNull(MovimentoVO movimento) {
-        if (movimento.getPlano() == null) {
+    private static long diff;
+    private static long days;
+    private static long hours;
+    private static long minutes;
+    private static long seconds;
 
-            MarcaVO marcaVO = new MarcaVO(0, "");
-            ModeloVO modeloVO = new ModeloVO(0, "", marcaVO);
-            EnderecoVO enderecoVO = new EnderecoVO(0, 0, "", "", "");
-            CarroVO carroVO = new CarroVO(0, "", "", modeloVO);
-            ClienteVO clienteVO = new ClienteVO(0, "", "", "", "", "", enderecoVO, carroVO);
-            ContratoVO contratoVO = new ContratoVO(0, 0, LocalDateTime.now(), LocalDateTime.now(), false, 0.0);
-            PlanoVO planoVO = new PlanoVO(0, "", "", clienteVO, contratoVO);
-            movimento.setPlano(planoVO);
-            if (movimento.getHr_entrada() == null) {
-                if (movimento.getTicket().getDataEntrada() != null) {
-                    movimento.setHr_entrada(movimento.getTicket().getDataValidacao());
-                }
-            }
-        }
-
-        if (movimento.getTicket() == null) {
-            TicketVO ticket = new TicketVO(0, 0, 0.0, "",
-                    LocalDateTime.now(), LocalDateTime.now(), false, false);
-            movimento.setTicket(ticket);
-        }
-
-    }
-
+    /**
+     * Formatador de valores;
+     *
+     * @param value double
+     * @return String
+     */
     public static String formatarValor(double value) {
         Locale locale = Locale.getDefault(Locale.Category.FORMAT);
         NumberFormat formatter = NumberFormat.getInstance(locale);
@@ -51,81 +41,124 @@ public class Util {
         return formatter.format(value);
     }
 
+    /**
+     * Verificar o dia atual, comparar com o movimento se o dia for diferente do atual,
+     * coloca o 'atual' de movimento false
+     *
+     * @param lista ArrayList<MovimentoVO>();
+     */
+    public static boolean atualizarObjetoMovimentoAtual(ArrayList<MovimentoVO> lista, Integer vaiFazer) {
+        Integer jaFez = 0;
+        int quantidade = 0;
+
+        if (!vaiFazer.equals(jaFez)) {
+            BaseDAO<MovimentoVO> daoM = new MovimentoDAO();
+
+            for (MovimentoVO movimento : lista) {
+                LocalDate dtMovimento = movimento.getHr_entrada().toLocalDate();
+                LocalDate now = LocalDate.now();
+
+                if (now.compareTo(dtMovimento) > 0) {
+                    movimento.setAtual(false);
+
+                    if (daoM.alterar(movimento)) {
+                        quantidade++;
+                    }
+                }
+            }
+            System.out.println("Quantidade de Movimentos Atuais Alterados(Atualizar Objeto): " + quantidade);
+            return true;
+        }
+        return false;
+    }
+
 
     // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
     // Ambos estão iguais
 
+//    long days = TimeUnit.MILLISECONDS.toDays(diff);
+//    long remainingHoursInMillis = diff - TimeUnit.DAYS.toMillis(days);
+//    long hours = TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis);
+//    long remainingMinutesInMillis = remainingHoursInMillis - TimeUnit.HOURS.toMillis(hours);
+//    long minutes = TimeUnit.MILLISECONDS.toMinutes(remainingMinutesInMillis);
+//    long remainingSecondsInMillis = remainingMinutesInMillis - TimeUnit.MINUTES.toMillis(minutes);
+//    long seconds = TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis);
+
+    /**
+     * Método que calcula diferença de dias, horas, minutos, segundos,
+     * podendo utilizar os getters apartir desse método
+     *
+     * @param diff long
+     */
+    public static void calcularDiff(long diff) {
+        Util.diff = diff;
+        days = daysTimeUnit();
+        hours = hoursTimeUnit();
+        minutes = minutesTimeUnit();
+        seconds = secondsTimeUnit();
+    }
+
     /**
      * Diferença de Dias ate Agora
      *
-     * @param diff long
      * @return long
      */
-    public static long diffDaysTimeUnit(long diff) {
+    private static long daysTimeUnit() {
         return TimeUnit.MILLISECONDS.toDays(diff);
     }
 
     /**
      * Milisegundos Restantes da Diferença de Dias
      *
-     * @param days long
-     * @param diff long
      * @return long
      */
-    public static long remainingHoursInMillis(long days, long diff) {
-        return diff - TimeUnit.DAYS.toMillis(diff);
+    private static long remainingHoursInMillis() {
+        return Util.diff - TimeUnit.DAYS.toMillis(daysTimeUnit());
     }
 
     /**
      * Horas Restantes da Diferença de Dias
      *
-     * @param remainingHoursInMillis long
      * @return long
      */
-    public static long diffHouersTimeUnir(long remainingHoursInMillis) {
-        return TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis);
+    private static long hoursTimeUnit() {
+        return TimeUnit.MILLISECONDS.toHours(remainingHoursInMillis());
     }
 
     /**
      * Milsegundos Restantes da Diferença de Horas
      *
-     * @param remainingHoursInMillis long
-     * @param hours                  long
      * @return long
      */
-    public static long remainingMinutesInMillis(long remainingHoursInMillis, long hours) {
-        return remainingHoursInMillis - TimeUnit.HOURS.toMillis(hours);
+    private static long remainingMinutesInMillis() {
+        return remainingHoursInMillis() - TimeUnit.HOURS.toMillis(hoursTimeUnit());
     }
 
     /**
      * Minutos Restantes da Diferença de Horas
      *
-     * @param remainingMinutesInMillis long
      * @return long
      */
-    public static long diffMinutesTimeUnit(long remainingMinutesInMillis) {
-        return TimeUnit.MILLISECONDS.toMillis(remainingMinutesInMillis);
+    private static long minutesTimeUnit() {
+        return TimeUnit.MILLISECONDS.toMillis(remainingMinutesInMillis());
     }
 
     /**
      * Milisegundos Restantes da Diferença de Minutos
      *
-     * @param remainingMinutesInMillis long
-     * @param minutes                  long
      * @return long
      */
-    public static long remainingSecondsInMillis(long remainingMinutesInMillis, long minutes) {
-        return remainingMinutesInMillis - TimeUnit.MINUTES.toMillis(minutes);
+    private static long remainingSecondsInMillis() {
+        return remainingMinutesInMillis() - TimeUnit.MINUTES.toMillis(minutesTimeUnit());
     }
 
     /**
      * Segundos Restantes da Diferença de Minutos
      *
-     * @param remainingSecondsInMillis long
      * @return long
      */
-    public static long diffSecondsTimeUnir(long remainingSecondsInMillis) {
-        return TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis);
+    private static long secondsTimeUnit() {
+        return TimeUnit.MILLISECONDS.toSeconds(remainingSecondsInMillis());
     }
 
     public static long diffSeconds(long diff) {
@@ -144,4 +177,29 @@ public class Util {
         return diff / (24 * 60 * 60 * 1000);
     }
 
+    // Getters
+    // Setters
+    public static long getDiff() {
+        return diff;
+    }
+
+    public static void setDiff(long diff) {
+        Util.diff = diff;
+    }
+
+    public static long getDays() {
+        return days;
+    }
+
+    public static long getHours() {
+        return hours;
+    }
+
+    public static long getMinutes() {
+        return minutes;
+    }
+
+    public static long getSeconds() {
+        return seconds;
+    }
 }

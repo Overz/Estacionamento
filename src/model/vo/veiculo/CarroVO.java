@@ -55,7 +55,7 @@ public class CarroVO {
     @Override
     public String toString() {
         return "Placa: " + this.placa +
-                " -  Cor: " + this.cor +
-                " -  Modelo: " + this.modelo.toString();
+               " -  Cor: " + this.cor +
+               " -  Modelo: " + this.modelo.toString();
     }
 }

@@ -102,10 +102,14 @@ public class TicketVO {
 
     @Override
     public String toString() {
-        return "ID: " + this.id +
-               " Número: " + this.numero +
-               " -  valor: " + this.valor +
-               " - dataEntrad: " + this.dataEntrada +
-               " -  dataValidacao: " + this.dataValidacao ;
+        return " - TICKET: " +
+               " - ID: " + id +
+               " - Nº: " + numero +
+               " - VALOR: " + valor +
+               " - TIPO: " + tipo +
+               " - DT_ENTRADA: " + dataEntrada +
+               " - DT_SAIDA: " + dataValidacao +
+               " - STATUS: " + status +
+               " - VALIDADO: " + validado;
     }
 }

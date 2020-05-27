@@ -1,5 +1,7 @@
 package model.vo.cliente;
 
+import util.Constantes;
+
 import java.time.LocalDateTime;
 
 public class ContratoVO {
@@ -10,14 +12,16 @@ public class ContratoVO {
     private LocalDateTime dtSaida;
     private boolean ativo;
     private double valor;
+    private String tipoPgto;
 
-    public ContratoVO(int id, long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida, boolean ativo, double valor) {
+    public ContratoVO(int id, long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida, boolean ativo, double valor, String tipoPgto) {
         this.id = id;
         this.numeroCartao = numeroCartao;
         this.dtEntrada = dtEntrada;
         this.dtSaida = dtSaida;
         this.ativo = ativo;
         this.valor = valor;
+        this.tipoPgto = tipoPgto;
     }
 
     public ContratoVO() {
@@ -71,13 +75,21 @@ public class ContratoVO {
         this.valor = valor;
     }
 
-    @Override
-    public String toString() {
-        return "Nº Cartão: " + this.numeroCartao +
-                " - Hora de Entrada: " + this.dtEntrada +
-                " - Hora de Saída: " + this.dtSaida +
-                " - Ativo?: " + this.ativo +
-                " - R$: " + this.valor;
+    public String getTipoPgto() {
+        return tipoPgto;
     }
 
+    public void setTipoPgto(String tipoPgto) {
+        this.tipoPgto = tipoPgto;
+    }
+
+    @Override
+    public String toString() {
+        return " - ID: " + this.id +
+               " - Nº: " + this.numeroCartao +
+               " - Hora de Entrada: " + this.dtEntrada.format(Constantes.DTF) +
+               " - Hora de Saída: " + this.dtSaida.format(Constantes.DTF) +
+               " - Ativo?: " + this.ativo +
+               " - R$: " + this.valor;
+    }
 }

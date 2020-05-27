@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 
 public class InicioView extends JPanel {
@@ -224,8 +226,20 @@ public class InicioView extends JPanel {
     }
 
     private void addListeners() {
-        txtTicket.addFocusListener(control.addFocusTxtTicket());
-        txtProcurar.addFocusListener(control.addFocusTxtProcurar());
+        txtTicket.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtTicket.setText("");
+                txtTicket.setForeground(Color.BLACK);
+            }
+        });
+        txtProcurar.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtProcurar.setText("");
+                txtProcurar.setForeground(Color.BLACK);
+            }
+        });
 
         btnCancelar.addActionListener(e -> txtTicket.setText("Nº Ticket"));
 

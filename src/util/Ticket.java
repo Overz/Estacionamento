@@ -32,27 +32,27 @@ public class Ticket {
 
     //Ticket attribute content
     private String contentTicket = "VINATERIA {{nameLocal}}\n" +
-            "EXPEDIDO EN: {{expedition}}\n" +
-            "DOMICILIO CONOCIDO MERIDA, YUC.\n" +
-            "=============================\n" +
-            "MERIDA, XXXXXXXXXXXX\n" +
-            "RFC: XXX-020226-XX9\n" +
-            "Caja # {{box}} - Ticket # {{ticket}}\n" +
-            "LE ATENDIO: {{cajero}}\n" +
-            "{{dateTime}}\n" +
-            "=============================\n" +
-            "{{items}}\n" +
-            "=============================\n" +
-            "SUBTOTAL: {{subTotal}}\n" +
-            "IVA: {{tax}}\n" +
-            "TOTAL: {{total}}\n\n" +
-            "RECIBIDO: {{recibo}}\n" +
-            "CAMBIO: {{change}}\n\n" +
-            "=============================\n" +
-            "GRACIAS POR SU COMPRA...\n" +
-            "ESPERAMOS SU VISITA NUEVAMENTE {{nameLocal}}\n" +
-            "\n" +
-            "\n";
+                                   "EXPEDIDO EN: {{expedition}}\n" +
+                                   "DOMICILIO CONOCIDO MERIDA, YUC.\n" +
+                                   "=============================\n" +
+                                   "MERIDA, XXXXXXXXXXXX\n" +
+                                   "RFC: XXX-020226-XX9\n" +
+                                   "Caja # {{box}} - Ticket # {{ticket}}\n" +
+                                   "LE ATENDIO: {{cajero}}\n" +
+                                   "{{dateTime}}\n" +
+                                   "=============================\n" +
+                                   "{{items}}\n" +
+                                   "=============================\n" +
+                                   "SUBTOTAL: {{subTotal}}\n" +
+                                   "IVA: {{tax}}\n" +
+                                   "TOTAL: {{total}}\n\n" +
+                                   "RECIBIDO: {{recibo}}\n" +
+                                   "CAMBIO: {{change}}\n\n" +
+                                   "=============================\n" +
+                                   "GRACIAS POR SU COMPRA...\n" +
+                                   "ESPERAMOS SU VISITA NUEVAMENTE {{nameLocal}}\n" +
+                                   "\n" +
+                                   "\n";
 
     //El constructor que setea los valores a la instancia
     Ticket(String nameLocal, String expedition, String box, String ticket, String caissier, String dateTime, String items, String subTotal, String tax, String total, String recibo, String change) {

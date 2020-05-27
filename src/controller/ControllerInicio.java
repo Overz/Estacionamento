@@ -54,7 +54,7 @@ public class ControllerInicio {
         this.limparTabela();
 
         DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
-        Object[] novaLinha = new Object[5];
+        Object[] novaColuna = new Object[5];
         if (Constantes.FLAG == 0) {
             lista = daoM.consultarTodos();
         }
@@ -62,22 +62,47 @@ public class ControllerInicio {
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() == null) {
-                Util.ajustarTabelaNull(movimento);
-            }
+            if (movimento.isAtual()) {
+                if (movimento.getTicket() != null) {
+                    // Coluna 1 (Ticket/Cartao)
+                    novaColuna[0] = movimento.getTicket().getNumero();
+                    // Coluna 2 (Carro)
+                    novaColuna[1] = "";
+                    // Coluna 3 (Placa)
+                    novaColuna[2] = "";
+                    // Coluna 4 (Cliente)
+                    novaColuna[3] = "";
+                    // Coluna 5 (Entrada)
+                    novaColuna[4] = movimento.getHr_saida().format(Constantes.DTF);
 
-            if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
-                novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
-            } else {
-                novaLinha[0] = movimento.getTicket().getNumero();
-            }
-            novaLinha[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
-            novaLinha[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
-            novaLinha[3] = movimento.getPlano().getCliente().getNome();
-            novaLinha[4] = movimento.getHr_entrada().format(Constantes.dtf);
+                    model.addRow(novaColuna);
+                }
+                if (movimento.getPlano() != null) {
+                    LocalDateTime now = LocalDateTime.now();
+                    LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
+                    if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
 
-//			 Adiciona a nova linha na tabela
-            model.addRow(novaLinha);
+                        // Coluna 1 (Ticket/Cartao)
+                        novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
+
+                        // Coluna 2 (Carro)
+                        novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
+
+                        // Coluna 3 (Placa)
+                        novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
+
+                        // Coluna 4 (Cliente)
+                        novaColuna[3] = movimento.getPlano().getCliente().getNome();
+
+                        // Coluna 5 (Dt Entrada)
+                        if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
+                            novaColuna[4] = movimento.getHr_entrada().format(Constantes.DTF);
+                        }
+
+                        model.addRow(novaColuna);
+                    }
+                }
+            }
         }
         int total = lista.size();
         this.addTotalVeiculos(total);
@@ -115,15 +140,6 @@ public class ControllerInicio {
                     JOptionPane.ERROR_MESSAGE);
         }
         System.out.println(m.toString());
-    }
-
-    /**
-     * Timer que mantém a tabela atualizada a cada 1 minuto
-     */
-    private void timerRefreshData() {
-        ActionListener event = e -> atualizarTabela();
-        Timer timer = new Timer(60000, event);
-        timer.start();
     }
 
     /**
@@ -204,8 +220,7 @@ public class ControllerInicio {
                 Constantes.INTERNAL_MESSAGE = 0;
                 return false;
             }
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -421,6 +436,7 @@ public class ControllerInicio {
         if (Constantes.FLAG == 1) {
             t = new TicketVO(generatedLong, LocalDateTime.now(), true, false);
             t = daoT.cadastrar(t);
+
             if (t != null) {
                 m = new MovimentoVO(t.getId(), t.getDataEntrada(), true, t);
                 m = daoM.cadastrar(m);
@@ -437,36 +453,6 @@ public class ControllerInicio {
         JOptionPane.showMessageDialog(inicioView,
                 inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    /**
-     * Adiciona focus no campo TxtTicket na tela;
-     *
-     * @return new FocusAdapter
-     */
-    public FocusListener addFocusTxtTicket() {
-        return new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                inicioView.getTxtTicket().setText("");
-                inicioView.getTxtProcurar().setForeground(Color.BLACK);
-            }
-        };
-    }
-
-    /**
-     * Adiciona focus no campo TxtProcurar na tela;
-     *
-     * @return new FocusAdapter
-     */
-    public FocusListener addFocusTxtProcurar() {
-        return new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                inicioView.getTxtProcurar().setText("");
-                inicioView.getTxtProcurar().setForeground(Color.BLACK);
-            }
-        };
     }
 
     /**
@@ -487,6 +473,15 @@ public class ControllerInicio {
 
     public void gerarComprovantePorLinha() {
         //TODO Usar a Classe GerarRelatorio para gerar um comprovante
+    }
+
+    /**
+     * Timer que mantém a tabela atualizada a cada 1 minuto
+     */
+    private void timerRefreshData() {
+        ActionListener event = e -> this.atualizarTabela();
+        Timer timer = new Timer(15000, event);
+        timer.start();
     }
 
 }

@@ -124,7 +124,7 @@ public class MovimentoView extends JPanel {
 
     }
 
-    private void addListeners(){
+    private void addListeners() {
         btnPesquisar.addActionListener(e -> {
             String dt1 = dtInicio.getDateStringOrEmptyString();
             String dt2 = dtFinal.getDateStringOrEmptyString();
