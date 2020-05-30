@@ -3,8 +3,8 @@ package controller;
 import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
 import model.vo.cliente.PlanoVO;
-import util.Constantes;
-import view.panels.ClienteView;
+import util.constantes.Colunas;
+import view.panels.mainCadastro.ClienteView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class ControllerCliente {
     private final ClienteView clienteView;
-    private BaseDAO<PlanoVO> daoP;
+    private final BaseDAO<PlanoVO> daoP;
     private ArrayList<PlanoVO> list;
     private String msg;
 
@@ -43,7 +43,7 @@ public class ControllerCliente {
     }
 
     private void limparTabela() {
-        clienteView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_CLIENTE));
+        clienteView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_CLIENTE));
     }
 
     private String calcularVencimento() {

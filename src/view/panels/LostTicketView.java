@@ -1,7 +1,7 @@
 package view.panels;
 
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
+import util.constantes.ConstInicio;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -107,9 +107,9 @@ public class LostTicketView extends JPanel {
 
     public void setButtons() {
         tiposPagamento = new ArrayList<String>();
-        tiposPagamento.add(Constantes.VAZIO);
-        tiposPagamento.add(Constantes.PGTO_DINHEIRO);
-        tiposPagamento.add(Constantes.PGTO_CARTAO);
+        tiposPagamento.add(ConstInicio.VAZIO);
+        tiposPagamento.add(ConstInicio.PGTO_DINHEIRO);
+        tiposPagamento.add(ConstInicio.PGTO_CARTAO);
 
         JComboBox<Object> comboBox = new JComboBox<Object>(tiposPagamento.toArray());
         comboBox.setFont(new Font("Arial", Font.BOLD, 14));

@@ -7,7 +7,7 @@ import model.seletor.Seletor;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -89,7 +89,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     public ArrayList<MovimentoVO> consultar(String... values) {
         String qry = "";
         Seletor seletor = new Seletor();
-        if (Constantes.FLAG == 0) {
+        if (ConstHelpers.FLAG == 0) {
             qry = "select * from movimento movi " +
                   "left join plano p on movi.idPlano = p.idplano " +
                   "left join ticket t on movi.idTicket = t.idticket " +
@@ -102,10 +102,10 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             if (seletor.temFiltro()) {
                 qry = seletor.criarFiltro(qry);
             }
-        } else if (Constantes.FLAG == 1) {
+        } else if (ConstHelpers.FLAG == 1) {
             qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.idticket " +
                   "where t.n_ticket like '%" + values[0] + "%' ";
-        } else if (Constantes.FLAG == 2) {
+        } else if (ConstHelpers.FLAG == 2) {
             qry = "select * from movimento ";
 
             LocalDate ld1 = LocalDate.parse(values[0]);
@@ -149,11 +149,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public MovimentoVO consultarPorId(int id) {
         String qry = "";
-        if (Constantes.FLAG == 0) {
+        if (ConstHelpers.FLAG == 0) {
             qry = "SELECT * FROM MOVIMENTO WHERE ID = ?";
-        } else if (Constantes.FLAG == 1) {
+        } else if (ConstHelpers.FLAG == 1) {
             qry = "SELECT * FROM MOVIMENTO WHERE IDTICKET = ?";
-        } else if (Constantes.FLAG == 2) {
+        } else if (ConstHelpers.FLAG == 2) {
             qry = "SELECT * FROM MOVIMENTO WHERE IDPLANO = ?";
         }
 
@@ -186,7 +186,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public MovimentoVO cadastrar(MovimentoVO newObject, String... values) {
         String qry;
-        if (Constantes.FLAG == 0) {
+        if (ConstHelpers.FLAG == 0) {
             qry = "INSERT INTO MOVIMENTO (hr_entrada, hr_saida, atual) VALUES (?,?,?)";
         } else {
             qry = "INSERT INTO MOVIMENTO (idticket, hr_entrada, atual) VALUES (?,?,?)";
@@ -195,7 +195,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            if (Constantes.FLAG == 0) {
+            if (ConstHelpers.FLAG == 0) {
                 stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_saida()));
                 stmt.setBoolean(3, newObject.isAtual());

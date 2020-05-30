@@ -1,7 +1,7 @@
 package model.bo;
 
 import model.vo.cliente.EnderecoVO;
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 public class EnderecoBO {
     public static boolean validarRua(EnderecoVO e) {
@@ -9,7 +9,7 @@ public class EnderecoBO {
                && !e.getRua().trim().isEmpty()
                && e.getRua().trim().length() > 5
                && e.getRua().trim().length() < 255
-               && e.getRua().trim().matches(Constantes.REGEX_PALAVRAS);
+               && e.getRua().trim().matches(ConstHelpers.REGEX_PALAVRAS);
     }
 
     public static boolean validarBairro(EnderecoVO e) {
@@ -17,7 +17,7 @@ public class EnderecoBO {
                && !e.getBairro().trim().isEmpty()
                && e.getBairro().trim().length() > 5
                && e.getBairro().trim().length() < 255
-               && e.getBairro().trim().matches(Constantes.REGEX_PALAVRAS);
+               && e.getBairro().trim().matches(ConstHelpers.REGEX_PALAVRAS);
     }
 
     public static boolean validarCidade(EnderecoVO e) {
@@ -25,7 +25,7 @@ public class EnderecoBO {
                && !e.getCidade().trim().isEmpty()
                && e.getCidade().trim().length() > 5
                && e.getCidade().trim().length() < 255
-               && e.getCidade().trim().matches(Constantes.REGEX_PALAVRAS);
+               && e.getCidade().trim().matches(ConstHelpers.REGEX_PALAVRAS);
     }
 
     public static boolean validarNumero(EnderecoVO e) {

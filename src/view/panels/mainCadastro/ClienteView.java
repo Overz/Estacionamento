@@ -1,16 +1,15 @@
-package view.panels;
+package view.panels.mainCadastro;
 
 import controller.ControllerCliente;
 import net.miginfocom.swing.MigLayout;
-import util.Modificacoes;
+import util.helpers.Modificacoes;
+import util.helpers.Util;
+import view.panels.mainView.MainView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ClienteView extends JPanel {
 
@@ -102,14 +101,14 @@ public class ClienteView extends JPanel {
 
         btnCadastrar = new JButton("Cadatrar");
         btnCadastrar.setBackground(Color.decode("#35D073"));
-        btnCadastrar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atutalizacao-50.png")));
+        btnCadastrar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atualizacao-50.png")));
         btnCadastrar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnCadastrar.setFont(new Font("Arial", Font.BOLD, 20));
         add(btnCadastrar, "cell 2 1,grow");
 
         btnAtualizar = new JButton("Atualizar");
         btnAtualizar.setBackground(Color.WHITE);
-        btnAtualizar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atutalizacao-50.png")));
+        btnAtualizar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atualizacao-50.png")));
         btnAtualizar.setFont(new Font("Arial", Font.BOLD, 20));
         btnAtualizar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnAtualizar.setEnabled(false);
@@ -151,6 +150,9 @@ public class ClienteView extends JPanel {
     }
 
     private void addListeners() {
+
+        Util.habilitarOpcoes(table, btnAtualizar, "#FF8C00", 2);
+
         cbConfirmaExclusao.addActionListener(e -> {
 
             if (cbConfirmaExclusao.isSelected()) {
@@ -165,17 +167,9 @@ public class ClienteView extends JPanel {
 
         });
 
-        btnCadastrar.addActionListener(e -> {
+        btnCadastrar.addActionListener(e -> MainView.swithPanel(MainView.CADASTRO_VIEW));
 
-            CadastroView cadastroView = new CadastroView();
-            MainView.swithPanel(cadastroView);
-
-        });
-
-        btnAtualizar.addActionListener(e -> {
-
-
-        });
+        btnAtualizar.addActionListener(e -> MainView.swithPanel(MainView.CADASTRO_VIEW));
 
         btnExcluir.addActionListener(e -> {
             control.removeSelectedRow();
@@ -184,34 +178,6 @@ public class ClienteView extends JPanel {
         btnProcurar.addActionListener(e -> {
 
 
-        });
-
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == MouseEvent.BUTTON1) {
-                    Object o = table.getModel().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
-                    if (o != null) {
-                        btnAtualizar.setBackground(Color.decode("#FF8C00"));
-                        btnAtualizar.setEnabled(true);
-                    }
-                }
-                /*
-                 * Remove o focus e as linhas selecionadas
-                 * da tabela e trasnfere para o campo de procura
-                 * apois 20 mili segundos
-                 */
-                if (table.hasFocus()) {
-                    ActionListener event = e1 -> {
-                        table.getSelectionModel().clearSelection();
-                        table.clearSelection();
-                        btnAtualizar.setBackground(Color.WHITE);
-                        btnAtualizar.setEnabled(false);
-                    };
-                    Timer timer = new Timer(20000, event);
-                    timer.start();
-                }
-            }
         });
     }
 

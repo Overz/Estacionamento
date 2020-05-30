@@ -1,6 +1,6 @@
 package model.vo.cliente;
 
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 import java.time.LocalDateTime;
 
@@ -87,8 +87,8 @@ public class ContratoVO {
     public String toString() {
         return " - ID: " + this.id +
                " - Nº: " + this.numeroCartao +
-               " - Hora de Entrada: " + this.dtEntrada.format(Constantes.DTF) +
-               " - Hora de Saída: " + this.dtSaida.format(Constantes.DTF) +
+               " - Hora de Entrada: " + this.dtEntrada.format(ConstHelpers.DTF) +
+               " - Hora de Saída: " + this.dtSaida.format(ConstHelpers.DTF) +
                " - Ativo?: " + this.ativo +
                " - R$: " + this.valor;
     }

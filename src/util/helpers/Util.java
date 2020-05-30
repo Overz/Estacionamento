@@ -1,21 +1,11 @@
-package util;
+package util.helpers;
 
-import model.banco.BaseDAO;
-import model.dao.movientos.MovimentoDAO;
-import model.vo.cliente.ClienteVO;
-import model.vo.cliente.ContratoVO;
-import model.vo.cliente.EnderecoVO;
-import model.vo.cliente.PlanoVO;
-import model.vo.movimentos.MovimentoVO;
-import model.vo.movimentos.TicketVO;
-import model.vo.veiculo.CarroVO;
-import model.vo.veiculo.MarcaVO;
-import model.vo.veiculo.ModeloVO;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -41,37 +31,39 @@ public class Util {
         return formatter.format(value);
     }
 
-    /**
-     * Verificar o dia atual, comparar com o movimento se o dia for diferente do atual,
-     * coloca o 'atual' de movimento false
-     *
-     * @param lista ArrayList<MovimentoVO>();
-     */
-    public static boolean atualizarObjetoMovimentoAtual(ArrayList<MovimentoVO> lista, Integer vaiFazer) {
-        Integer jaFez = 0;
-        int quantidade = 0;
-
-        if (!vaiFazer.equals(jaFez)) {
-            BaseDAO<MovimentoVO> daoM = new MovimentoDAO();
-
-            for (MovimentoVO movimento : lista) {
-                LocalDate dtMovimento = movimento.getHr_entrada().toLocalDate();
-                LocalDate now = LocalDate.now();
-
-                if (now.compareTo(dtMovimento) > 0) {
-                    movimento.setAtual(false);
-
-                    if (daoM.alterar(movimento)) {
-                        quantidade++;
+    public synchronized static void habilitarOpcoes(JTable table, JButton button, String color, int tipoCor) {
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == MouseEvent.BUTTON1) {
+                    Object o = table.getModel().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
+                    if (o != null) {
+                        if (tipoCor == 1) {
+                            button.setBackground(new Color(100, 149, 237));
+                        } else if (tipoCor == 2) {
+                            button.setBackground(Color.decode(color));
+                        }
+                        button.setEnabled(true);
                     }
                 }
+                /*
+                 * Remove o focus e as linhas selecionadas
+                 * da tabela e trasnfere para o campo de procura
+                 * apois 20 mili segundos
+                 */
+                if (table.hasFocus()) {
+                    ActionListener event = e1 -> {
+                        table.getSelectionModel().clearSelection();
+                        table.clearSelection();
+                        button.setBackground(Color.WHITE);
+                        button.setEnabled(false);
+                    };
+                    Timer timer = new Timer(30000, event);
+                    timer.start();
+                }
             }
-            System.out.println("Quantidade de Movimentos Atuais Alterados(Atualizar Objeto): " + quantidade);
-            return true;
-        }
-        return false;
+        });
     }
-
 
     // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'
     // Ambos estão iguais

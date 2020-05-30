@@ -10,14 +10,19 @@ import model.vo.cliente.ClienteVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import org.apache.commons.math3.random.RandomDataGenerator;
-import util.Constantes;
-import util.Util;
-import view.panels.InicioView;
+import util.constantes.Colunas;
+import util.constantes.ConstCaixa;
+import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
+import util.helpers.Util;
+import view.panels.mainView.InicioView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -55,7 +60,7 @@ public class ControllerInicio {
 
         DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
         Object[] novaColuna = new Object[5];
-        if (Constantes.FLAG == 0) {
+        if (ConstHelpers.FLAG == 0) {
             lista = daoM.consultarTodos();
         }
 
@@ -63,6 +68,8 @@ public class ControllerInicio {
         for (MovimentoVO movimento : lista) {
 
             if (movimento.isAtual()) {
+
+                //Ticket
                 if (movimento.getTicket() != null) {
                     // Coluna 1 (Ticket/Cartao)
                     novaColuna[0] = movimento.getTicket().getNumero();
@@ -73,10 +80,12 @@ public class ControllerInicio {
                     // Coluna 4 (Cliente)
                     novaColuna[3] = "";
                     // Coluna 5 (Entrada)
-                    novaColuna[4] = movimento.getHr_saida().format(Constantes.DTF);
+                    novaColuna[4] = movimento.getHr_saida().format(ConstHelpers.DTF);
 
                     model.addRow(novaColuna);
                 }
+
+                //Plano
                 if (movimento.getPlano() != null) {
                     LocalDateTime now = LocalDateTime.now();
                     LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
@@ -96,7 +105,7 @@ public class ControllerInicio {
 
                         // Coluna 5 (Dt Entrada)
                         if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
-                            novaColuna[4] = movimento.getHr_entrada().format(Constantes.DTF);
+                            novaColuna[4] = movimento.getHr_entrada().format(ConstHelpers.DTF);
                         }
 
                         model.addRow(novaColuna);
@@ -104,8 +113,7 @@ public class ControllerInicio {
                 }
             }
         }
-        int total = lista.size();
-        this.addTotalVeiculos(total);
+        this.addTotalVeiculos(lista.size());
     }
 
     private void addTotalVeiculos(int total) {
@@ -116,7 +124,7 @@ public class ControllerInicio {
      * Limpa a tela para revalidar os valores
      */
     private void limparTabela() {
-        inicioView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_INICIO));
+        inicioView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_INICIO));
     }
 
     /**
@@ -124,22 +132,27 @@ public class ControllerInicio {
      */
     public void removeSelectedRow() {
 
-        int row = inicioView.getTable().getSelectedRow();
-        MovimentoVO m = lista.get(row);
-        DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
-        model.removeRow(row);
-
         title = "Exclusão";
-        if (daoM.excluirPorID(m.getId())) {
-            msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
+        int row = inicioView.getTable().getSelectedRow();
+        if (row >= 0) {
+
+            MovimentoVO m = lista.get(row);
+            DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
+            model.removeRow(row);
+
+            if (daoM.excluirPorID(m.getId())) {
+                msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
+            } else {
+                msg = "ERRO AO REALIZAR EXCLUSÃO!";
+            }
             JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE);
+            System.out.println(m.toString());
         } else {
-            msg = "ERRO AO REALIZAR EXCLUSÃO!";
+            msg = "Escolha uma Linha para Remover!";
             JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
                     JOptionPane.ERROR_MESSAGE);
         }
-        System.out.println(m.toString());
     }
 
     /**
@@ -158,7 +171,7 @@ public class ControllerInicio {
                 }
                 JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
                         title, JOptionPane.INFORMATION_MESSAGE);
-            } else if (Constantes.INTERNAL_MESSAGE == 0) {
+            } else if (ConstHelpers.INTERNAL_MESSAGE == 0) {
                 title = "Erro";
                 msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!</body></html>";
                 JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
@@ -189,7 +202,7 @@ public class ControllerInicio {
             if (verificarTicketExistente(ticket)) {
                 if (t != null && t.getStatus().equals(true)) {
 
-                    Constantes.FLAG = 1;
+                    ConstHelpers.FLAG = 1;
                     m = daoM.consultarPorId(t.getId());
 
                     LocalDateTime ldtEntrada = m.getHr_entrada();
@@ -206,18 +219,18 @@ public class ControllerInicio {
                             title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
                     if (i == JOptionPane.YES_OPTION) {
-                        if (tipoPgto.equals(Constantes.PGTO_CARTAO)) {
-                            Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
-                            Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
-                        } else if (tipoPgto.equals(Constantes.PGTO_DINHEIRO)) {
-                            Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
-                            Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
+                        if (tipoPgto.equals(ConstInicio.PGTO_CARTAO)) {
+                            ConstCaixa.LBL_VALOR_CAIXA_CARTAO += valor;
+                            ConstCaixa.LBL_VALOR_CAIXA_TOTAL += valor;
+                        } else if (tipoPgto.equals(ConstInicio.PGTO_DINHEIRO)) {
+                            ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += valor;
+                            ConstCaixa.LBL_VALOR_CAIXA_TOTAL += valor;
                         }
                         return true;
                     }
                 }
 
-                Constantes.INTERNAL_MESSAGE = 0;
+                ConstHelpers.INTERNAL_MESSAGE = 0;
                 return false;
             }
         } catch (Exception e) {
@@ -254,7 +267,7 @@ public class ControllerInicio {
             if (verificarTicketExistente(ticket)) {
                 for (MovimentoVO movimentoVO : lista) {
                     if (m.getId() == movimentoVO.getId()) {
-                        Constantes.FLAG = 1;
+                        ConstHelpers.FLAG = 1;
                         this.atualizarDadosTicketValidado(t);
                         boolean a = daoT.alterar(t);
                         if (a) {
@@ -304,7 +317,7 @@ public class ControllerInicio {
     private synchronized void timerTicket() {
         ActionListener event = e -> {
             // validar o tipoPgto por X minutos
-            Constantes.FLAG = 1;
+            ConstHelpers.FLAG = 1;
             TicketVO oldTicket = t;
             oldTicket.setStatus(true);
             daoT.alterar(oldTicket);
@@ -349,30 +362,30 @@ public class ControllerInicio {
      */
     public void consultar(String tipo, String valor) {
         title = "Procurar";
-        Constantes.FLAG = 1;
+        ConstHelpers.FLAG = 1;
         switch (tipo) {
-            case Constantes.PROCURA:
-                Constantes.FLAG = 0;
+            case ConstInicio.PROCURA:
+                ConstHelpers.FLAG = 0;
                 this.atualizarTabela();
                 break;
-            case Constantes.PROCURA_CARRO:
+            case ConstInicio.PROCURA_CARRO:
                 if (CarroBO.validarCarro(valor)) {
-                    Constantes.INTERNAL_MESSAGE = 1;
+                    ConstHelpers.INTERNAL_MESSAGE = 1;
                     lista = daoM.consultar(valor);
                 }
                 break;
-            case Constantes.PROCURA_CLIENTE:
+            case ConstInicio.PROCURA_CLIENTE:
                 ClienteVO c = new ClienteVO();
                 c.setNome(valor);
                 if (ClienteBO.validarNomeCliente(c)) {
-                    Constantes.INTERNAL_MESSAGE = 2;
-                    Constantes.FLAG = 0;
+                    ConstHelpers.INTERNAL_MESSAGE = 2;
+                    ConstHelpers.FLAG = 0;
                     lista = daoM.consultar(valor);
                 }
                 break;
-            case Constantes.PROCURA_TICKET_CARTAO:
+            case ConstInicio.PROCURA_TICKET_CARTAO:
                 if (InicioBO.validarNumeroTicket(valor)) {
-                    Constantes.INTERNAL_MESSAGE = 3;
+                    ConstHelpers.INTERNAL_MESSAGE = 3;
                     lista = daoM.consultar(valor);
                 }
                 break;
@@ -384,7 +397,7 @@ public class ControllerInicio {
         }
 
         if (lista != null) {
-            Constantes.FLAG = 1;
+            ConstHelpers.FLAG = 1;
             atualizarTabela();
             msg = "<html><body>Consulta Realizada!</body></html>";
         } else {
@@ -419,7 +432,7 @@ public class ControllerInicio {
         long rightLimit = 999999999L;
         long generatedLong = randomGenerator(leftLimit, rightLimit);
 
-        Constantes.FLAG = 1;
+        ConstHelpers.FLAG = 1;
         String num = String.valueOf(generatedLong);
         lista = daoM.consultar(num);
 
@@ -427,13 +440,13 @@ public class ControllerInicio {
             for (MovimentoVO movimento : lista) {
                 long comparator = movimento.getTicket().getNumero();
                 if (comparator == generatedLong) {
-                    Constantes.FLAG = 1;
+                    ConstHelpers.FLAG = 1;
                     generatedLong = randomGenerator(leftLimit, rightLimit);
                 }
             }
         }
 
-        if (Constantes.FLAG == 1) {
+        if (ConstHelpers.FLAG == 1) {
             t = new TicketVO(generatedLong, LocalDateTime.now(), true, false);
             t = daoT.cadastrar(t);
 
@@ -441,7 +454,7 @@ public class ControllerInicio {
                 m = new MovimentoVO(t.getId(), t.getDataEntrada(), true, t);
                 m = daoM.cadastrar(m);
 
-                Constantes.FLAG = 0;
+                ConstHelpers.FLAG = 0;
                 this.atualizarTabela();
 
                 msg = "Ticket Gerado!";
@@ -471,16 +484,12 @@ public class ControllerInicio {
         inicioView.getTxtProcurar().setForeground(Color.BLACK);
     }
 
-    public void gerarComprovantePorLinha() {
-        //TODO Usar a Classe GerarRelatorio para gerar um comprovante
-    }
-
     /**
      * Timer que mantém a tabela atualizada a cada 1 minuto
      */
     private void timerRefreshData() {
         ActionListener event = e -> this.atualizarTabela();
-        Timer timer = new Timer(15000, event);
+        Timer timer = new Timer(30000, event);
         timer.start();
     }
 

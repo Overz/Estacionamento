@@ -1,4 +1,4 @@
-package view.panels.cadastro;
+package view.panels.mainCadastro.subCadastro;
 
 import net.miginfocom.swing.MigLayout;
 

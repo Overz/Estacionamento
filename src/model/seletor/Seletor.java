@@ -1,6 +1,6 @@
 package model.seletor;
 
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 import java.time.LocalDate;
 
@@ -20,17 +20,31 @@ public class Seletor {
     }
 
     /**
-     * where t.n_ticket like '%1%'
-     * or con.n_cartao like '%1%'
-     * or car.placa like '%1%'
-     * or modl.descricao like '%1%'
-     * or cli.nome like '%1%'
+     * where
+     * <p>
+     * Message == 3 {
+     * t.n_ticket like '%X_value%'
+     * or con.n_cartao like '%X_value%'
+     * }
+     * <p>
+     * Message == 1 {
+     * or car.placa like '%X_value%'
+     * or modl.descricao like '%X_value%'
+     * }
+     * <p>
+     * Message == 2 {
+     * or cli.nome like '%X_value%'
+     * }
+     * <p>
+     * Message == 4 {
+     * and hr_entrada >= 'X_value' and hr_saida <= 'X_value'
+     * }
      */
     public String criarFiltro(String qry) {
         boolean primeiro = true;
         qry += " where ";
 
-        if (Constantes.INTERNAL_MESSAGE == 3) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 3) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -39,7 +53,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (Constantes.INTERNAL_MESSAGE == 3) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 3) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -48,7 +62,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (Constantes.INTERNAL_MESSAGE == 1) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 1) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -57,7 +71,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (Constantes.INTERNAL_MESSAGE == 1) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 1) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -66,7 +80,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (Constantes.INTERNAL_MESSAGE == 2) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 2) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " OR ";
@@ -75,7 +89,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (Constantes.INTERNAL_MESSAGE == 4) {
+        if (ConstHelpers.INTERNAL_MESSAGE == 4) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " AND ";

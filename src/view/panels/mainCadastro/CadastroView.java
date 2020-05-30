@@ -1,14 +1,13 @@
-package view.panels;
+package view.panels.mainCadastro;
 
 import net.miginfocom.swing.MigLayout;
+import view.panels.mainView.MainView;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import static view.panels.MainView.*;
 
 public class CadastroView extends JPanel {
 
@@ -34,8 +33,8 @@ public class CadastroView extends JPanel {
         layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
         add(layeredPane, "cell 1 1 14 11,grow");
 
-        DADOS_CADASTRO_VIEW.setBorder(null);
-        layeredPane.add(DADOS_CADASTRO_VIEW, "cell 0 0,grow");
+        MainView.getDadosCadastroView().setBorder(null);
+        layeredPane.add(MainView.getDadosCadastroView(), "cell 0 0,grow");
 
     }
 
@@ -47,7 +46,7 @@ public class CadastroView extends JPanel {
         add(btnDados, "cell 1 0 2 1,grow");
         btnDados.addActionListener(e -> {
 
-            boolean bool = swithchPanel(DADOS_CADASTRO_VIEW);
+            boolean bool = swithchPanel(MainView.getDadosCadastroView());
             btnDados.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -69,7 +68,7 @@ public class CadastroView extends JPanel {
         add(btnEndereco, "cell 3 0 2 1,grow");
         btnEndereco.addActionListener(e -> {
 
-            boolean bool = swithchPanel(ENDERECO_CADASTRO_VIEW);
+            boolean bool = swithchPanel(MainView.getEnderecoCadastroView());
 
             btnEndereco.addMouseListener(new MouseAdapter() {
                 @Override
@@ -92,7 +91,7 @@ public class CadastroView extends JPanel {
         add(btnPlano, "cell 5 0 2 1,grow");
         btnPlano.addActionListener(e -> {
 
-            boolean bool = swithchPanel(PLANO_CADASTRO_VIEW);
+            boolean bool = swithchPanel(MainView.getPlanoCadastroView());
 
             btnPlano.addMouseListener(new MouseAdapter() {
                 @Override

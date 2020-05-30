@@ -1,7 +1,7 @@
 package model.vo.movimentos;
 
 import model.vo.cliente.PlanoVO;
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 import java.time.LocalDateTime;
 
@@ -87,8 +87,8 @@ public class MovimentoVO {
     public String toString() {
         return " - MOVIMENTO: " +
                " - ID: " + id +
-               " - DT_ENTRADA: " + hr_entrada.format(Constantes.DTF) +
-               " - DT_SAIDA: " + hr_saida.format(Constantes.DTF) +
+               " - DT_ENTRADA: " + hr_entrada.format(ConstHelpers.DTF) +
+               " - DT_SAIDA: " + hr_saida.format(ConstHelpers.DTF) +
                " - MOVI_ATUAL: " + atual;
     }
 }

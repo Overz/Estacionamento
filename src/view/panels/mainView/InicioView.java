@@ -1,9 +1,11 @@
-package view.panels;
+package view.panels.mainView;
 
 import controller.ControllerInicio;
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
-import util.Modificacoes;
+import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
+import util.helpers.Modificacoes;
+import util.helpers.Util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -33,14 +35,15 @@ public class InicioView extends JPanel {
         this.setBounds(100, 100, 1122, 789);
         this.setBackground(Color.WHITE);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
+        this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]",
+                "[10px][grow][grow][grow][grow][grow][grow][20px][grow][20px][grow][grow][grow][grow][grow][grow][grow][10px][grow][grow][10px]"));
 
         this.initialize();
     }
 
     private void initialize() {
-        Constantes.FLAG = 0;
-        Constantes.INTERNAL_MESSAGE = 0;
+        ConstHelpers.FLAG = 0;
+        ConstHelpers.INTERNAL_MESSAGE = 0;
 
         modificacao = new Modificacoes();
         control = new ControllerInicio(this);
@@ -85,7 +88,7 @@ public class InicioView extends JPanel {
         lblRegistroSaida.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblRegistroSaida, "cell 1 2 2 1,grow");
 
-        JLabel lblImprimirLinhaSelecionada = new JLabel("Imprimir / Remover Linha Selecionada:");
+        JLabel lblImprimirLinhaSelecionada = new JLabel("Remover Linha Selecionada:");
         lblImprimirLinhaSelecionada.setFont(new Font("Arial", Font.BOLD, 16));
         lblImprimirLinhaSelecionada.setBackground(Color.WHITE);
         add(lblImprimirLinhaSelecionada, "cell 4 18 4 2,grow");
@@ -143,7 +146,8 @@ public class InicioView extends JPanel {
         add(btnValidar, "cell 2 6,grow");
 
         btnRemover = new JButton("Remover Ticket / Cliente");
-        btnRemover.setBackground(Color.decode("#FF8C00"));
+        btnRemover.setEnabled(false);
+        btnRemover.setBackground(Color.WHITE);
         btnRemover.setFont(new Font("Arial", Font.BOLD, 16));
         btnRemover.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnRemover.setToolTipText("Remove os Clientes ou Tickets na Tabela");
@@ -155,13 +159,6 @@ public class InicioView extends JPanel {
         btnGerarTicket.setIcon(new ImageIcon(InicioView.class.getResource("/img/icons8-enviar-para-a-impressora-50.png")));
         btnGerarTicket.setFont(new Font("Arial", Font.BOLD, 16));
         add(btnGerarTicket, "cell 1 10 2 1,grow");
-
-        btnImprimirComprovanteTabela = new JButton("Imprimir Comprovante");
-        btnImprimirComprovanteTabela.setBackground(new Color(100, 149, 237));
-        btnImprimirComprovanteTabela.setFont(new Font("Arial", Font.BOLD, 16));
-        btnImprimirComprovanteTabela.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        btnImprimirComprovanteTabela.setToolTipText("Imprime comprovante de Clientes ou Tickets na Tabela");
-        add(btnImprimirComprovanteTabela, "cell 8 18 4 2,grow");
 
         btnAbrirEntrada = new JButton("Abrir Entrada");
         btnAbrirEntrada.setBackground(Color.WHITE);
@@ -205,8 +202,8 @@ public class InicioView extends JPanel {
 
     private void setComboBox() {
         ArrayList<String> formaPgto = new ArrayList<>();
-        formaPgto.add(Constantes.PGTO_DINHEIRO);
-        formaPgto.add(Constantes.PGTO_CARTAO);
+        formaPgto.add(ConstInicio.PGTO_DINHEIRO);
+        formaPgto.add(ConstInicio.PGTO_CARTAO);
 
         cbFormaPgto = new JComboBox<>(formaPgto.toArray());
         cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
@@ -214,10 +211,10 @@ public class InicioView extends JPanel {
         add(cbFormaPgto, "cell 1 8 2 1,grow");
 
         ArrayList<String> tipoProcura = new ArrayList<>();
-        tipoProcura.add(Constantes.PROCURA);
-        tipoProcura.add(Constantes.PROCURA_CLIENTE);
-        tipoProcura.add(Constantes.PROCURA_CARRO);
-        tipoProcura.add(Constantes.PROCURA_TICKET_CARTAO);
+        tipoProcura.add(ConstInicio.PROCURA);
+        tipoProcura.add(ConstInicio.PROCURA_CLIENTE);
+        tipoProcura.add(ConstInicio.PROCURA_CARRO);
+        tipoProcura.add(ConstInicio.PROCURA_TICKET_CARTAO);
 
         cbxProcurar = new JComboBox<>(tipoProcura.toArray());
         cbxProcurar.setFont(new Font("Arial", Font.BOLD, 18));
@@ -226,6 +223,9 @@ public class InicioView extends JPanel {
     }
 
     private void addListeners() {
+
+        Util.habilitarOpcoes(table, btnRemover, "#FF8C00", 2);
+
         txtTicket.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -248,7 +248,7 @@ public class InicioView extends JPanel {
             String tipoPgto = cbFormaPgto.getSelectedItem().toString();
             control.validate(tipoPgto, ticket);
             control.atualizarTabela();
-            Constantes.FLAG = 0;
+            ConstHelpers.FLAG = 0;
         });
 
         btnProcurar.addActionListener(e -> {
@@ -256,14 +256,12 @@ public class InicioView extends JPanel {
             String valor = txtProcurar.getText();
             control.consultar(tipo, valor);
             control.atualizarTabela();
-            Constantes.FLAG = 0;
+            ConstHelpers.FLAG = 0;
         });
 
         btnRemover.addActionListener(e -> control.removeSelectedRow());
 
         btnGerarTicket.addActionListener(e -> control.gerarTicket());
-
-        btnImprimirComprovanteTabela.addActionListener(e -> control.gerarComprovantePorLinha());
 
         control.controlarCancela(btnAbrirEntrada, lblCancelaEntrada);
 
@@ -288,6 +286,10 @@ public class InicioView extends JPanel {
 
     public JButton getBtnAbrirSaida() {
         return btnAbrirSaida;
+    }
+
+    public JButton getBtnImprimirComprovanteTabela() {
+        return btnImprimirComprovanteTabela;
     }
 
     public JTextField getTxtTicket() {

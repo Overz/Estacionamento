@@ -1,6 +1,6 @@
 package model.bo;
 
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 public class CarroBO {
     public static boolean validarCarro(String valor) {
@@ -8,6 +8,6 @@ public class CarroBO {
                && !valor.trim().isEmpty()
                && valor.trim().length() > 0
                && valor.trim().length() < 15
-               && valor.trim().matches(Constantes.REGEX_NUMEROS_PALAVRAS);
+               && valor.trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
     }
 }

@@ -4,8 +4,9 @@ import model.banco.BaseDAO;
 import model.bo.MovimentoBO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
-import util.Constantes;
-import util.Util;
+import util.constantes.Colunas;
+import util.constantes.ConstHelpers;
+import util.helpers.Util;
 import view.panels.MovimentoView;
 
 import javax.swing.*;
@@ -14,8 +15,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ControllerMovimento {
-    private MovimentoView movimentoView;
-    private BaseDAO<MovimentoVO> daoM;
+    private final MovimentoView movimentoView;
+    private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
 
     public ControllerMovimento(MovimentoView movimentoView) {
@@ -67,8 +68,8 @@ public class ControllerMovimento {
         } else {
             novaLinha[4] = "Aguardando Validação";
         }
-        novaLinha[5] = movimento.getHr_entrada().format(Constantes.DTF);
-        novaLinha[6] = movimento.getHr_saida().format(Constantes.DTF);
+        novaLinha[5] = movimento.getHr_entrada().format(ConstHelpers.DTF);
+        novaLinha[6] = movimento.getHr_saida().format(ConstHelpers.DTF);
     }
 
     /**
@@ -83,18 +84,18 @@ public class ControllerMovimento {
         novaLinha[2] = movimento.getPlano().getTipo();
         novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
         novaLinha[4] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
-        novaLinha[5] = movimento.getHr_entrada().format(Constantes.DTF);
-        novaLinha[6] = movimento.getHr_saida().format(Constantes.DTF);
+        novaLinha[5] = movimento.getHr_entrada().format(ConstHelpers.DTF);
+        novaLinha[6] = movimento.getHr_saida().format(ConstHelpers.DTF);
     }
 
     public void limparTabela() {
-        movimentoView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_MOVIMENTO));
+        movimentoView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_MOVIMENTO));
     }
 
     public void consultar(String dt1, String dt2) {
         if (validarForm(dt1, dt2)) {
-            Constantes.FLAG = 2;
-            Constantes.INTERNAL_MESSAGE = 4;
+            ConstHelpers.FLAG = 2;
+            ConstHelpers.INTERNAL_MESSAGE = 4;
             lista = daoM.consultar(dt1, dt2);
         } else {
             JOptionPane.showMessageDialog(movimentoView, movimentoView.getModificacao().labelConfig(movimentoView.getLblModificacao(),
@@ -107,8 +108,8 @@ public class ControllerMovimento {
     }
 
     public void consultarDiaAtual() {
-        Constantes.FLAG = 2;
-        Constantes.INTERNAL_MESSAGE = 4;
+        ConstHelpers.FLAG = 2;
+        ConstHelpers.INTERNAL_MESSAGE = 4;
         LocalDate dt = LocalDate.now();
         String hj = String.valueOf(dt);
         lista = daoM.consultar(hj, hj);

@@ -1,6 +1,6 @@
 package model.bo;
 
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 public class InicioBO {
 
@@ -10,9 +10,13 @@ public class InicioBO {
             a = value != null
                 && !value.trim().isEmpty()
                 && value.length() > 3
-                && value.trim().matches(Constantes.REGEX_NUMEROS);
+                && value.trim().matches(ConstHelpers.REGEX_NUMEROS);
         }
         return a;
+    }
+
+    public static void somaValoresTabela(double value) {
+
     }
 
     public static boolean validarComprovante() {

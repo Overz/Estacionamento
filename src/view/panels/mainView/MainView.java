@@ -1,10 +1,15 @@
-package view.panels;
+package view.panels.mainView;
 
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
-import view.panels.cadastro.DadosCadastroView;
-import view.panels.cadastro.EnderecoCadastroView;
-import view.panels.cadastro.PlanoCadastroView;
+import util.constantes.ConstCaixa;
+import view.panels.CaixaView;
+import view.panels.LostTicketView;
+import view.panels.MovimentoView;
+import view.panels.mainCadastro.CadastroView;
+import view.panels.mainCadastro.ClienteView;
+import view.panels.mainCadastro.subCadastro.DadosCadastroView;
+import view.panels.mainCadastro.subCadastro.EnderecoCadastroView;
+import view.panels.mainCadastro.subCadastro.PlanoCadastroView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +17,10 @@ import java.awt.*;
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
-    protected static final DadosCadastroView DADOS_CADASTRO_VIEW = new DadosCadastroView();
-    protected static final EnderecoCadastroView ENDERECO_CADASTRO_VIEW = new EnderecoCadastroView();
-    protected static final PlanoCadastroView PLANO_CADASTRO_VIEW = new PlanoCadastroView();
+    private static final DadosCadastroView DADOS_CADASTRO_VIEW = new DadosCadastroView();
+    private static final EnderecoCadastroView ENDERECO_CADASTRO_VIEW = new EnderecoCadastroView();
+    private static final PlanoCadastroView PLANO_CADASTRO_VIEW = new PlanoCadastroView();
+    private static final CadastroView CADASTRO_VIEW = new CadastroView();
     private static final InicioView INICIO_VIEW = new InicioView();
     private static final CaixaView CAIXA_VIEW = new CaixaView();
     private static final ClienteView CLIENTE_VIEW = new ClienteView();
@@ -57,9 +63,9 @@ public class MainView extends JFrame {
         String b = CAIXA_VIEW.getLblSaldoEmDinheiror().getText();
         String c = CAIXA_VIEW.getLblTotalCaixa().getText();
         if (a == null || a.equals("") || b == null || b.equals("") || c == null || c.equals("")) {
-            CAIXA_VIEW.getLblSaldoEmDinheiror().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_DINHEIRO));
-            CAIXA_VIEW.getLblSaldoEmCarto().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_CARTAO));
-            CAIXA_VIEW.getLblTotalCaixa().setText(String.valueOf(Constantes.LBL_VALOR_CAIXA_TOTAL));
+            CAIXA_VIEW.getLblSaldoEmDinheiror().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO));
+            CAIXA_VIEW.getLblSaldoEmCarto().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_CARTAO));
+            CAIXA_VIEW.getLblTotalCaixa().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_TOTAL));
         }
         INICIO_VIEW.getTxtTicket().repaint();
         INICIO_VIEW.getTxtTicket().revalidate();
@@ -80,6 +86,42 @@ public class MainView extends JFrame {
         layeredPane.repaint();
         layeredPane.revalidate();
 
+    }
+
+    public static DadosCadastroView getDadosCadastroView() {
+        return DADOS_CADASTRO_VIEW;
+    }
+
+    public static EnderecoCadastroView getEnderecoCadastroView() {
+        return ENDERECO_CADASTRO_VIEW;
+    }
+
+    public static PlanoCadastroView getPlanoCadastroView() {
+        return PLANO_CADASTRO_VIEW;
+    }
+
+    public static CadastroView getCadastroView() {
+        return CADASTRO_VIEW;
+    }
+
+    public static InicioView getInicioView() {
+        return INICIO_VIEW;
+    }
+
+    public static CaixaView getCaixaView() {
+        return CAIXA_VIEW;
+    }
+
+    public static ClienteView getClienteView() {
+        return CLIENTE_VIEW;
+    }
+
+    public static MovimentoView getMovimentoView() {
+        return MOVIMENTO_VIEW;
+    }
+
+    public static LostTicketView getLostTicketView() {
+        return LOST_TICKET_VIEW;
     }
 
     private void initialize() {
@@ -143,7 +185,7 @@ public class MainView extends JFrame {
         menuBar.add(Box.createHorizontalGlue());
 
         JButton btnConfig = new JButton("CONFIGURAÇÕES");
-        btnConfig.setIcon(new ImageIcon(MainView.class.getResource("/img/atutalizacao-50.png")));
+        btnConfig.setIcon(new ImageIcon(MainView.class.getResource("/img/atualizacao-50.png")));
         btnConfig.setFont(new Font("Arial", Font.BOLD, 16));
         btnConfig.setBorder(null);
         btnConfig.setBackground(Color.WHITE);

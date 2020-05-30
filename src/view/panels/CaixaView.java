@@ -2,8 +2,10 @@ package view.panels;
 
 import controller.ControllerCaixa;
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
-import util.Modificacoes;
+import util.constantes.ConstCaixa;
+import util.constantes.ConstHelpers;
+import util.helpers.Modificacoes;
+import util.helpers.Util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -30,7 +32,7 @@ public class CaixaView extends JPanel {
     }
 
     private void initialize() {
-        modificacao  = new Modificacoes();
+        modificacao = new Modificacoes();
         control = new ControllerCaixa(this);
 
         this.setJLabels_JSeparator();
@@ -55,19 +57,19 @@ public class CaixaView extends JPanel {
         lblDados.setBackground(Color.WHITE);
         add(lblDados, "cell 1 3,grow");
 
-        lblSaldoEmDinheiror = new JLabel(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
+        lblSaldoEmDinheiror = new JLabel(ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " + ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
         lblSaldoEmDinheiror.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmDinheiror.setForeground(Color.BLACK);
         lblSaldoEmDinheiror.setBackground(Color.WHITE);
         add(lblSaldoEmDinheiror, "cell 10 3 2 1,grow");
 
-        lblSaldoEmCarto = new JLabel(Constantes.LBL_TEXT_CAIXA_CARTAO + " " + Constantes.LBL_VALOR_CAIXA_CARTAO);
+        lblSaldoEmCarto = new JLabel(ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " + ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
         lblSaldoEmCarto.setFont(new Font("Arial", Font.BOLD, 14));
         lblSaldoEmCarto.setForeground(Color.BLACK);
         lblSaldoEmCarto.setBackground(Color.WHITE);
         add(lblSaldoEmCarto, "cell 13 3 2 1,grow");
 
-        lblTotalCaixa = new JLabel(Constantes.LBL_TEXT_CAIXA_TOTAL + " " + Constantes.LBL_VALOR_CAIXA_TOTAL);
+        lblTotalCaixa = new JLabel(ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " + ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
         lblTotalCaixa.setForeground(Color.BLACK);
         lblTotalCaixa.setFont(new Font("Arial", Font.BOLD, 14));
         lblTotalCaixa.setBackground(Color.WHITE);
@@ -76,15 +78,6 @@ public class CaixaView extends JPanel {
     }
 
     private void setButtons() {
-
-//        String stringRelatorio = "<html><body>Relatorio do<br align=Center>Último Caixa</body></html>";
-//        JButton btnRelatorio = new JButton(stringRelatorio);
-//        btnRelatorio.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-enviar-para-a-impressora-50.png")));
-////		btnRelatorioDoltimo.setBackground(new Color(100, 149, 237));
-//        btnRelatorio.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-//        btnRelatorio.setFont(new Font("Arial", Font.BOLD, 16));
-//        add(btnRelatorio, "cell 7 1 2 1,grow");
-//        btnRelatorio.addActionListener(e -> control.imprimirRelatorio());
 
         btnAdicionarValor = new JButton("Adicionar Valor");
         btnAdicionarValor.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-mais-50.png")));
@@ -109,6 +102,7 @@ public class CaixaView extends JPanel {
 
         String text = "<html><body align=Center>Imprimir Comprovante<br>(Linha Selecionada)</body></html>";
         btnImprimirComprovante = new JButton(text);
+        btnImprimirComprovante.setEnabled(false);
         btnImprimirComprovante.setIcon(new ImageIcon(CaixaView.class.getResource("/img/icons8-impressora-de-porta-aberta-50.png")));
         btnImprimirComprovante.setBackground(Color.WHITE);
         btnImprimirComprovante.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -137,13 +131,14 @@ public class CaixaView extends JPanel {
     }
 
     private void addListeners() {
+        Util.habilitarOpcoes(table, btnImprimirComprovante, "#FFFFF", 2);
         btnAdicionarValor.addActionListener(e -> {
-            Constantes.FLAG = 1;
+            ConstHelpers.FLAG = 1;
             control.showInputDialog();
         });
 
         btnRetirarValor.addActionListener(e -> {
-            Constantes.FLAG = 0;
+            ConstHelpers.FLAG = 0;
             control.showInputDialog();
         });
 

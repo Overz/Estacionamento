@@ -1,9 +1,9 @@
-package view.panels.cadastro;
+package view.panels.mainCadastro.subCadastro;
 
 import controller.ControllerCadastro;
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
-import util.Modificacoes;
+import util.constantes.Colunas;
+import util.helpers.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -127,7 +127,7 @@ public class DadosCadastroView extends JPanel {
         scrollPane.setBorder(new LineBorder(Color.BLACK, 1, true));
 
         Object[][] data = {{}};
-        table = new JTable(new DefaultTableModel(data, Constantes.COLUNAS_CADASTRO_CLIENTE));
+        table = new JTable(new DefaultTableModel(data, Colunas.COLUNAS_CADASTRO_CLIENTE));
 
         table = modificacoes.tableLookAndFiel(table);
         modificacoes.mostrarComboBoxJTabel_MarcaVO(table, table.getColumnModel().getColumn(1));

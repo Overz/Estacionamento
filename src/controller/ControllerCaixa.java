@@ -4,14 +4,18 @@ import model.banco.BaseDAO;
 import model.bo.CaixaBO;
 import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
-import util.Constantes;
-import util.Util;
-import util.relatorio.GeradorRelatorioCaixa;
+import util.constantes.Colunas;
+import util.constantes.ConstCaixa;
+import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
+import util.helpers.Util;
+import util.pdf.PdfComprovante;
 import view.panels.CaixaView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,11 +27,14 @@ public class ControllerCaixa {
     private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
     private String msg, title, jopValueComboBox, jopValueSaldo;
+    private MovimentoVO m;
+    private boolean primeiro = true;
 
     public ControllerCaixa(CaixaView caixaView) {
         this.caixaView = caixaView;
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
+        m = new MovimentoVO();
         this.timerRefreshData();
     }
 
@@ -37,11 +44,11 @@ public class ControllerCaixa {
             this.limparTabela();
             lista = daoM.consultarTodos();
 
-            DefaultTableModel model = (DefaultTableModel) caixaView.getTable().getModel();
-            Object[] novaColuna = new Object[6];
             int i = 0;
+            Object[] novaColuna = new Object[6];
+            LocalDateTime now = LocalDateTime.now();
+            DefaultTableModel model = (DefaultTableModel) caixaView.getTable().getModel();
             for (MovimentoVO movimento : lista) {
-                LocalDateTime now = LocalDateTime.now();
 
                 if (movimento.isAtual()) {
 
@@ -55,6 +62,8 @@ public class ControllerCaixa {
                             // Mantém a tabela atualizada com Ticket caso exista
                             this.atualizarTabelaTicket(movimento, dtTicketEntrada, dtTicketSaida, novaColuna);
 
+                            System.out.println("Linha:" + i);
+                            System.out.println("Ticket:");
                             System.out.println(movimento.toString());
                             System.out.println(movimento.getTicket().toString());
                             System.out.println();
@@ -66,20 +75,25 @@ public class ControllerCaixa {
                     // CARTÃO
                     if (movimento.getPlano() != null) {
                         LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
-//                        if (Constantes.INTERNAL_MESSAGE != 9) {
-//                            this.somarValoresContratoCliente(movimento, now.toLocalDate(), dtContratoEntrada.toLocalDate());
-//                        }
 
                         // Mantém a tabela atualizada com Plano caso exista
                         this.atualizarTabelaPlano(movimento, dtContratoEntrada, now, novaColuna);
 
+                        if (primeiro) {
+                            primeiro = false;
+                            this.somarValoresContratoCliente(now, dtContratoEntrada);
+                        }
+
+                        System.out.println("Linha:" + i);
+                        System.out.println("Plano:");
                         System.out.println(movimento.toString());
                         System.out.println(movimento.getPlano().toString());
                         System.out.println();
                         model.addRow(novaColuna);
                     }
+                    i++;
+                    this.m = movimento;
                 }
-                System.out.println("Nova Linha:" + i++);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,23 +116,28 @@ public class ControllerCaixa {
         novaColuna[1] = "TICKET";
 
         // Coluna 3 (Hr Entrada)
-        novaColuna[2] = dtTicketEntrada.format(Constantes.DTF);
+        novaColuna[2] = dtTicketEntrada.format(ConstHelpers.DTF);
 
         // Coluna 4 (Hr Validacao)
         if (!dtTicketEntrada.equals(dtTicketSaida)) {
-            novaColuna[3] = dtTicketSaida.format(Constantes.DTF);
+            novaColuna[3] = dtTicketSaida.format(ConstHelpers.DTF);
         } else {
             novaColuna[3] = "NÃO VALIDADO";
         }
 
         // Coluna 5 (Tipo Pagamento)
-        novaColuna[4] = movimento.getTicket().getTipo();
+        String tipo = movimento.getTicket().getTipo();
+        if (tipo != null) {
+            novaColuna[4] = movimento.getTicket().getTipo();
+        } else {
+            novaColuna[4] = "NÃO VALIDADO";
+        }
 
         // Coluna 6 (Valores)
         if (movimento.getTicket().getValor() > 0.0) {
             novaColuna[5] = "R$: " + Util.formatarValor(movimento.getTicket().getValor());
         } else {
-            novaColuna[5] = "R$:";
+            novaColuna[5] = "R$: NÃO VALIDADO";
         }
     }
 
@@ -142,42 +161,65 @@ public class ControllerCaixa {
 
         // Coluna 3 (Hr Entrada)
         if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
-            novaLinha[2] = movimento.getHr_entrada().format(Constantes.DTF);
+            novaLinha[2] = movimento.getHr_entrada().format(ConstHelpers.DTF);
         } else {
             novaLinha[2] = "";
         }
 
         // Coluna 4 (Hr Validade)
-        novaLinha[3] = movimento.getPlano().getContrato().getDtSaida().format(Constantes.DTF);
+        novaLinha[3] = movimento.getPlano().getContrato().getDtSaida().format(ConstHelpers.DTF);
 
         // Coluna 5 (Pagamento)
         novaLinha[4] = movimento.getPlano().getContrato().getTipoPgto();
 
         // Coluna 6 (Valores);
         novaLinha[5] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
-
-        System.out.println(movimento.toString());
-        System.out.println(movimento.getPlano().toString());
-        System.out.println();
     }
 
-    private void somarValoresContratoCliente(MovimentoVO movimento, LocalDate now, LocalDate dtContratoEntrada) {
-        String tipo = movimento.getPlano().getContrato().getTipoPgto();
-        for (int i = 0; i < lista.size(); i++) {
-            if (movimento.getPlano() != null) {
-                if (tipo.equals("DINHEIRO") && now.equals(dtContratoEntrada)) {
-                    Constantes.LBL_VALOR_CAIXA_DINHEIRO += movimento.getPlano().getContrato().getValor();
-                    Constantes.LBL_VALOR_CAIXA_TOTAL += movimento.getPlano().getContrato().getValor();
-                } else if (movimento.getPlano().getContrato().getTipoPgto().equals("CARTÃO") && now.equals(dtContratoEntrada)) {
-                    Constantes.LBL_VALOR_CAIXA_CARTAO += movimento.getPlano().getContrato().getValor();
-                    Constantes.LBL_VALOR_CAIXA_TOTAL += movimento.getPlano().getContrato().getValor();
+    /**
+     * Método para percorrer a lista uma vez e somar os valores dos planos já existentes,
+     * para atribuir aos Labels da tela de Caixa.
+     * <p>
+     * Método inútil em uma aplicação real, pois o cadastro gerado de um cliente, automaticamente já gera um valor, e um movimento,
+     * eventualmente, não tem a necessidade de percorrer esta lista para somar, pois o valor já vai ser atribuido a Constantes.X_Valor
+     *
+     * @param now               LocalDateTime
+     * @param dtContratoEntrada LocalDateTime
+     */
+    public void somarValoresContratoCliente(LocalDateTime now, LocalDateTime dtContratoEntrada) {
+        try {
+            for (MovimentoVO m : lista) {
+                if (m.getPlano() != null) {
+                    String plano = m.getPlano().getContrato().getTipoPgto();
+                    if (plano.equals("DINHEIRO") && now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
+                        ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += m.getPlano().getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
+                    } else if (plano.equals("CARTÃO")) {
+                        ConstCaixa.LBL_VALOR_CAIXA_CARTAO += m.getPlano().getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
+                    }
                 }
+
+//                if (m.getTicket() != null) {
+//                    String ticket = m.getTicket().getTipo();
+//                    double valor = m.getTicket().getValor();
+//
+//                    if (ticket.equals("DINHEIRO")) {
+//                        Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
+//                        Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
+//                    } else if (ticket.equals("CARTÃO")) {
+//                        Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
+//                        Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
+//                    }
+//                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void limparTabela() {
-        caixaView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Constantes.COLUNAS_CAIXA));
+        caixaView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_CAIXA));
     }
 
     /**
@@ -189,8 +231,8 @@ public class ControllerCaixa {
         title = "Adicionar Valor";
         msg = "Escolha o Tipo de Entrada:";
 
-        if (Constantes.FLAG == 1) {
-            Object[] opcoes = {Constantes.PGTO_DINHEIRO, Constantes.PGTO_CARTAO};
+        if (ConstHelpers.FLAG == 1) {
+            Object[] opcoes = {ConstInicio.PGTO_DINHEIRO, ConstInicio.PGTO_CARTAO};
             jopValueComboBox = (String) JOptionPane.showInputDialog(caixaView, msg, title,
                     JOptionPane.QUESTION_MESSAGE, null, opcoes, "");
         }
@@ -201,13 +243,13 @@ public class ControllerCaixa {
             Double c = Double.valueOf(jopValueSaldo);
 
             // Se add com sucesso, mostra uma Mensagem que adc com sucesso, se não, msg com erro
-            if (Constantes.FLAG == 1) {
+            if (ConstHelpers.FLAG == 1) {
                 r = this.addValor(jopValueComboBox, c);
                 this.msgAdicionar(r);
             }
 
             // Se remover com sucesso, mostra uma Mensagem que removeu com sucesso, se não, msg com Erro
-            if (Constantes.FLAG == 0) {
+            if (ConstHelpers.FLAG == 0) {
                 r = this.removerValor(c);
                 this.msgRemover(r);
             }
@@ -228,27 +270,27 @@ public class ControllerCaixa {
      */
     private boolean addValor(String tipo, Double... values) {
         boolean bool = false;
-        if (tipo.equals(Constantes.PGTO_DINHEIRO)) {
+        if (tipo.equals(ConstInicio.PGTO_DINHEIRO)) {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
-                    Constantes.LBL_VALOR_CAIXA_DINHEIRO += a;
+                    ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += a;
                     bool = true;
                 } else {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmDinheiror().setText(Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " + Constantes.LBL_VALOR_CAIXA_DINHEIRO);
+            caixaView.getLblSaldoEmDinheiror().setText(ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " + ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
         }
-        if (tipo.equals(Constantes.PGTO_CARTAO)) {
+        if (tipo.equals(ConstInicio.PGTO_CARTAO)) {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
-                    Constantes.LBL_VALOR_CAIXA_CARTAO += a;
+                    ConstCaixa.LBL_VALOR_CAIXA_CARTAO += a;
                     bool = true;
                 } else {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmCarto().setText(Constantes.LBL_TEXT_CAIXA_CARTAO + " " + Constantes.LBL_VALOR_CAIXA_CARTAO);
+            caixaView.getLblSaldoEmCarto().setText(ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " + ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
         }
         return bool;
     }
@@ -262,8 +304,8 @@ public class ControllerCaixa {
     private boolean removerValor(Double... values) {
         for (Double a : values) {
             if (CaixaBO.validarValorDigitado(a)) {
-                if (Constantes.LBL_VALOR_CAIXA_TOTAL > 0.0) {
-                    Constantes.LBL_VALOR_CAIXA_TOTAL -= a;
+                if (ConstCaixa.LBL_VALOR_CAIXA_TOTAL > 0.0) {
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= a;
 //                    this.controlarValorLabel();
                     return true;
                 }
@@ -312,32 +354,32 @@ public class ControllerCaixa {
     private void totalizarCaixa() {
         double c = 0.0, d = 0.0;
         try {
-            if (Constantes.FLAG == 1) {
-                if (jopValueComboBox.equals(Constantes.PGTO_DINHEIRO)) {
+            if (ConstHelpers.FLAG == 1) {
+                if (jopValueComboBox.equals(ConstInicio.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(jopValueSaldo);
                 }
-                if (jopValueComboBox.equals(Constantes.PGTO_CARTAO)) {
+                if (jopValueComboBox.equals(ConstInicio.PGTO_CARTAO)) {
                     d = Double.parseDouble(jopValueSaldo);
                 }
-                Constantes.LBL_VALOR_CAIXA_TOTAL += c;
-                Constantes.LBL_VALOR_CAIXA_TOTAL += d;
+                ConstCaixa.LBL_VALOR_CAIXA_TOTAL += c;
+                ConstCaixa.LBL_VALOR_CAIXA_TOTAL += d;
             }
-            if (Constantes.FLAG == 0) {
-                if (jopValueComboBox.equals(Constantes.PGTO_DINHEIRO)) {
+            if (ConstHelpers.FLAG == 0) {
+                if (jopValueComboBox.equals(ConstInicio.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(jopValueSaldo);
                 }
-                if (jopValueComboBox.equals(Constantes.PGTO_CARTAO)) {
+                if (jopValueComboBox.equals(ConstInicio.PGTO_CARTAO)) {
                     d = Double.parseDouble(jopValueSaldo);
                 }
-                if (Constantes.LBL_VALOR_CAIXA_TOTAL == 0.0) {
+                if (ConstCaixa.LBL_VALOR_CAIXA_TOTAL == 0.0) {
                     JOptionPane.showMessageDialog(caixaView, "Total do Caixa já consta em R$ 0.0 !\n Essa ação não ira ser realizada.", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
-                    Constantes.LBL_VALOR_CAIXA_TOTAL -= c;
-                    Constantes.LBL_VALOR_CAIXA_TOTAL -= d;
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= c;
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= d;
                 }
             }
-            caixaView.getLblTotalCaixa().setText(Constantes.LBL_TEXT_CAIXA_TOTAL + "" + Constantes.LBL_VALOR_CAIXA_TOTAL);
+            caixaView.getLblTotalCaixa().setText(ConstCaixa.LBL_TEXT_CAIXA_TOTAL + "" + ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -349,13 +391,13 @@ public class ControllerCaixa {
         int i = 0;
         ArrayList<String> nomes = new ArrayList<>();
         ArrayList<Double> valores = new ArrayList<>();
-        GeradorRelatorioCaixa relatorio = new GeradorRelatorioCaixa();
+        PdfComprovante relatorio = new PdfComprovante();
 
         for (MovimentoVO movimentoVO : lista) {
             i++;
             nomes.add(movimentoVO.getPlano().getCliente().getNome());
             valores.add(movimentoVO.getTicket().getValor());
-            relatorio.pegarResultados(nomes, valores, i);
+//            relatorio.pegarResultados(nomes, valores, i);
         }
 
         this.verificarDia();
@@ -430,14 +472,14 @@ public class ControllerCaixa {
     /**
      * Timer que mantém a tabela e os Labels atualizados a cada 1 minuto
      */
-    private synchronized void timerRefreshData() {
+    private void timerRefreshData() {
         ActionListener event = e -> {
-            String concatD = Constantes.LBL_TEXT_CAIXA_DINHEIRO + " " +
-                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_DINHEIRO);
-            String concatC = Constantes.LBL_TEXT_CAIXA_CARTAO + " " +
-                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_CARTAO);
-            String concatT = Constantes.LBL_TEXT_CAIXA_TOTAL + " " +
-                             Util.formatarValor(Constantes.LBL_VALOR_CAIXA_TOTAL);
+            String concatD = ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " +
+                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
+            String concatC = ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " +
+                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
+            String concatT = ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " +
+                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
 
             caixaView.getLblSaldoEmDinheiror().setText(concatD);
             caixaView.getLblSaldoEmCarto().setText(concatC);
@@ -445,12 +487,67 @@ public class ControllerCaixa {
 
             this.atualizarTabela();
         };
-        Timer timer = new Timer(15000, event);
+        Timer timer = new Timer(30000, event);
         timer.start();
     }
 
     public void imprimirComprovante() {
         //TODO Por linha selecionada
+    }
+
+    /**
+     * Cria um JFileChooser e cria um PDF
+     */
+    public void gerarComprovantePorLinha() {
+
+        title = "Criação do PDF";
+        String userName = System.getProperty("user.home");
+        File dir = new File(userName + "/Desktop");
+
+        JFileChooser jfc = new JFileChooser();
+        jfc.setCurrentDirectory(dir);
+        jfc.setDialogTitle("Salvar em...");
+        int i = jfc.showSaveDialog(caixaView);
+
+        if (i == JFileChooser.APPROVE_OPTION) {
+            int row = caixaView.getTable().getSelectedRow();
+            MovimentoVO movimentoVO = lista.get(row);
+            String caminhoEscolhido = jfc.getSelectedFile().getAbsolutePath();
+            PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
+            i = pdf.gerarPdf();
+            msg = criarRespostaResultadoPDF(i);
+            JOptionPane.showMessageDialog(caixaView, caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), msg),
+                    title, JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    /**
+     * Cria uma mensagem de retorno ao gerar o PDF
+     *
+     * @param i int
+     * @return String
+     */
+    private String criarRespostaResultadoPDF(int i) {
+        String msg = "";
+        if (i == 0) {
+            msg = "PDF Gerado!";
+        }
+        if (i == 1) {
+            msg += "Erro ao criar o Cabeçalho no PDF!";
+        }
+        if (i == 2) {
+            msg += "Erro ao criar as Informações Extras no PDF!";
+        }
+        if (i == 3) {
+            msg += "Erro ao criar os Dados de Entrada no PDF!";
+        }
+        if (i == 4) {
+            msg += "Erro ao criar Código de Barras no PDF!";
+        }
+        if (i == 5) {
+            msg += "Erro ao criar os Dados de Saída no PDF!";
+        }
+        return msg;
     }
 
 }

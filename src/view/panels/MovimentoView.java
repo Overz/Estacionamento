@@ -4,8 +4,8 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import controller.ControllerMovimento;
 import net.miginfocom.swing.MigLayout;
-import util.Constantes;
-import util.Modificacoes;
+import util.constantes.ConstHelpers;
+import util.helpers.Modificacoes;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -36,8 +36,8 @@ public class MovimentoView extends JPanel {
 
     public void initialize() {
 
-        Constantes.FLAG = 2;
-        Constantes.INTERNAL_MESSAGE = 4;
+        ConstHelpers.FLAG = 2;
+        ConstHelpers.INTERNAL_MESSAGE = 4;
 
         modificacao = new Modificacoes();
         control = new ControllerMovimento(this);

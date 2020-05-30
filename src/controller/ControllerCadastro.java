@@ -4,8 +4,8 @@ import model.banco.BaseDAO;
 import model.dao.cliente.ClienteDAO;
 import model.vo.cliente.ClienteVO;
 import model.vo.veiculo.CarroVO;
-import util.Constantes;
-import view.panels.cadastro.DadosCadastroView;
+import util.constantes.ConstHelpers;
+import view.panels.mainCadastro.subCadastro.DadosCadastroView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -44,7 +44,7 @@ public class ControllerCadastro {
      */
     public void getResultadoForm() {
         ActionListener event = e -> {
-            Constantes.FLAG = 1;
+            ConstHelpers.FLAG = 1;
             cliente.setNome(cadastroView.getTxtNome().getText());
             cliente.setCpf(cadastroView.getTxtCPF().getText());
             cliente.setRg(cadastroView.getTxtRG().getText());
@@ -68,10 +68,5 @@ public class ControllerCadastro {
         Timer timer = new Timer(300, event);
         timer.setRepeats(true);
         timer.start();
-    }
-
-    private void teste() {
-
-
     }
 }

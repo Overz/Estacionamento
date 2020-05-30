@@ -3,7 +3,7 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.vo.movimentos.TicketVO;
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     @Override
     public TicketVO cadastrar(TicketVO newObject, String... values) {
         String qry;
-        if (Constantes.FLAG == 1) {
+        if (ConstHelpers.FLAG == 1) {
             qry = "INSERT INTO TICKET (N_TICKET, HR_ENTRADA, STATUSTICKET, VALIDADO) " +
                   "VALUES (?, ?, ?, ?)";
         } else {
@@ -121,7 +121,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            if (Constantes.FLAG == 1) {
+            if (ConstHelpers.FLAG == 1) {
                 stmt.setLong(1, newObject.getNumero());
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDataEntrada()));
                 stmt.setBoolean(3, newObject.getStatus());

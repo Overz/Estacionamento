@@ -1,7 +1,7 @@
 package model.bo;
 
 import model.vo.cliente.ClienteVO;
-import util.Constantes;
+import util.constantes.ConstHelpers;
 
 public class ClienteBO {
 
@@ -10,14 +10,14 @@ public class ClienteBO {
                && !c.getNome().trim().isEmpty()
                && c.getNome().trim().length() > 0
                && c.getNome().trim().length() < 255
-               && c.getNome().trim().matches(Constantes.REGEX_PALAVRAS);
+               && c.getNome().trim().matches(ConstHelpers.REGEX_PALAVRAS);
     }
 
     public static boolean validarCPFcliente(ClienteVO c) {
         return c.getCpf() != null
                && !c.getCpf().trim().isEmpty()
                && c.getCpf().trim().length() == 11
-               && c.getCpf().trim().matches(Constantes.REGEX_NUMEROS);
+               && c.getCpf().trim().matches(ConstHelpers.REGEX_NUMEROS);
     }
 
     public static boolean validarRG(ClienteVO c) {
@@ -25,7 +25,7 @@ public class ClienteBO {
                && !c.getRg().trim().isEmpty()
                && c.getRg().trim().length() > 0
                && c.getRg().trim().length() <= 11
-               && c.getRg().trim().matches(Constantes.REGEX_NUMEROS);
+               && c.getRg().trim().matches(ConstHelpers.REGEX_NUMEROS);
     }
 
     public static boolean validarEmail(ClienteVO c) {
@@ -41,6 +41,6 @@ public class ClienteBO {
                && !c.getTelefone().trim().isEmpty()
                && c.getTelefone().trim().length() > 0
                && c.getTelefone().trim().length() <= 16
-               && c.getTelefone().trim().matches(Constantes.REGEX_NUMEROS);
+               && c.getTelefone().trim().matches(ConstHelpers.REGEX_NUMEROS);
     }
 }
