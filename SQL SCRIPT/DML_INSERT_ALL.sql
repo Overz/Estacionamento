@@ -106,9 +106,9 @@ VALUES ('2', '2', '2', 'JOAO', '00000000030', '7891234', 'teste3@email.com', '48
 
 -- TICKET
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`, `hr_entrada`, `statusTicket`, `validado`)
-VALUES ('1', '0101010101', now(), '1', '1');
+VALUES ('1', '0101010101', now(), '1', '0');
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`, `hr_entrada`, `statusTicket`, `validado`)
-VALUES ('2', '0202020202', now(), '1', '1');
+VALUES ('2', '0202020202', now(), '1', '0');
 
 -- CONTRATO
 INSERT INTO `dbestacionamento`.`contrato` (`id`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)

@@ -27,7 +27,7 @@ public class InicioView extends JPanel {
     private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
     private JTextField txtTicket;
-    private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificadoParaExibicao;
+    private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificacao;
     private JTextField txtProcurar;
 
     public InicioView() {
@@ -93,7 +93,7 @@ public class InicioView extends JPanel {
         lblImprimirLinhaSelecionada.setBackground(Color.WHITE);
         add(lblImprimirLinhaSelecionada, "cell 4 18 4 2,grow");
 
-        lblTotalDeVeiculos = new JLabel("Total de Veiculos:");
+        lblTotalDeVeiculos = new JLabel("Total de Veiculos Atuais:");
         lblTotalDeVeiculos.setFont(new Font("Arial", Font.BOLD, 14));
         add(lblTotalDeVeiculos, "cell 4 1 2 1,grow");
 
@@ -312,8 +312,8 @@ public class InicioView extends JPanel {
         return lblCancelaSaída;
     }
 
-    public JLabel getLblModificadoParaExibicao() {
-        return lblModificadoParaExibicao;
+    public JLabel getLblModificacao() {
+        return lblModificacao;
     }
 
 }

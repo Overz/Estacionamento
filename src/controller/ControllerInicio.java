@@ -14,6 +14,7 @@ import util.constantes.Colunas;
 import util.constantes.ConstCaixa;
 import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
+import util.helpers.Modificacoes;
 import util.helpers.Util;
 import view.panels.mainView.InicioView;
 
@@ -64,6 +65,7 @@ public class ControllerInicio {
             lista = daoM.consultarTodos();
         }
 
+        LocalDateTime now = LocalDateTime.now();
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
 
@@ -71,53 +73,73 @@ public class ControllerInicio {
 
                 //Ticket
                 if (movimento.getTicket() != null) {
-                    // Coluna 1 (Ticket/Cartao)
-                    novaColuna[0] = movimento.getTicket().getNumero();
-                    // Coluna 2 (Carro)
-                    novaColuna[1] = "";
-                    // Coluna 3 (Placa)
-                    novaColuna[2] = "";
-                    // Coluna 4 (Cliente)
-                    novaColuna[3] = "";
-                    // Coluna 5 (Entrada)
-                    novaColuna[4] = movimento.getHr_saida().format(ConstHelpers.DTF);
-
+                    this.atualizarTabelaTicket(movimento, novaColuna);
                     model.addRow(novaColuna);
                 }
 
                 //Plano
                 if (movimento.getPlano() != null) {
-                    LocalDateTime now = LocalDateTime.now();
-                    LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
-                    if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
-
-                        // Coluna 1 (Ticket/Cartao)
-                        novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
-
-                        // Coluna 2 (Carro)
-                        novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
-
-                        // Coluna 3 (Placa)
-                        novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
-
-                        // Coluna 4 (Cliente)
-                        novaColuna[3] = movimento.getPlano().getCliente().getNome();
-
-                        // Coluna 5 (Dt Entrada)
-                        if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
-                            novaColuna[4] = movimento.getHr_entrada().format(ConstHelpers.DTF);
+                    boolean temLinha = false;
+                    this.atualizarTabelaPlano(movimento, novaColuna, now);
+                    for (Object o : novaColuna) {
+                        if (o != null) {
+                            temLinha = true;
                         }
-
+                    }
+                    if (temLinha) {
                         model.addRow(novaColuna);
                     }
                 }
             }
         }
-        this.addTotalVeiculos(lista.size());
+        this.addTotalVeiculos(lista, now);
     }
 
-    private void addTotalVeiculos(int total) {
-        inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos: " + total);
+    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna) {
+        // Coluna 1 (Ticket/Cartao)
+        novaColuna[0] = movimento.getTicket().getNumero();
+        // Coluna 2 (Carro)
+        novaColuna[1] = "";
+        // Coluna 3 (Placa)
+        novaColuna[2] = "";
+        // Coluna 4 (Cliente)
+        novaColuna[3] = "";
+        // Coluna 5 (Entrada)
+        novaColuna[4] = movimento.getHr_saida().format(ConstHelpers.DTF);
+    }
+
+    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+        LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
+        if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
+
+            // Coluna 1 (Ticket/Cartao)
+            novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
+
+            // Coluna 2 (Carro)
+            novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
+
+            // Coluna 3 (Placa)
+            novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
+
+            // Coluna 4 (Cliente)
+            novaColuna[3] = movimento.getPlano().getCliente().getNome();
+
+            // Coluna 5 (Dt Entrada)
+            if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
+                novaColuna[4] = movimento.getHr_entrada().format(ConstHelpers.DTF);
+            }
+        }
+
+    }
+
+    private void addTotalVeiculos(ArrayList<MovimentoVO> lista, LocalDateTime now) {
+        int i = 0;
+        for (MovimentoVO movimento : lista) {
+            if (movimento.getHr_entrada().toLocalDate().equals(now.toLocalDate())) {
+                i++;
+            }
+        }
+        inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos: " + i);
     }
 
     /**
@@ -145,12 +167,12 @@ public class ControllerInicio {
             } else {
                 msg = "ERRO AO REALIZAR EXCLUSÃO!";
             }
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title,
                     JOptionPane.ERROR_MESSAGE);
             System.out.println(m.toString());
         } else {
             msg = "Escolha uma Linha para Remover!";
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title,
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title,
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -164,22 +186,22 @@ public class ControllerInicio {
     public void validate(String tipoPgto, String ticket) {
         if (InicioBO.validarNumeroTicket(ticket)) {
             if (validarCalculo(tipoPgto, ticket)) {
-                if (validarTicket(ticket)) {
+                if (validarTicket(ticket, tipoPgto)) {
                     msg = "Ticket Valido Por: " + minutes + " minuto's!";
                 } else {
                     msg = "Erro ao Validar o Ticket\n";
                 }
-                JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
                         title, JOptionPane.INFORMATION_MESSAGE);
             } else if (ConstHelpers.INTERNAL_MESSAGE == 0) {
                 title = "Erro";
                 msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!</body></html>";
-                JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
                         title, JOptionPane.WARNING_MESSAGE);
             }
         } else {
             msg = "Por Favor, Digite o Ticket Corretamente!";
-            JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg), title, JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title, JOptionPane.WARNING_MESSAGE);
         }
         this.ajustarFocusTxtTicket();
     }
@@ -215,7 +237,7 @@ public class ControllerInicio {
                     String format = Util.formatarValor(valor);
                     title = "Validação";
                     msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
-                    int i = JOptionPane.showConfirmDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                    int i = JOptionPane.showConfirmDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
                             title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
                     if (i == JOptionPane.YES_OPTION) {
@@ -262,13 +284,13 @@ public class ControllerInicio {
      * @param ticket String
      * @return true/false
      */
-    private boolean validarTicket(String ticket) {
+    private boolean validarTicket(String ticket, String tipoPgto) {
         try {
             if (verificarTicketExistente(ticket)) {
                 for (MovimentoVO movimentoVO : lista) {
                     if (m.getId() == movimentoVO.getId()) {
                         ConstHelpers.FLAG = 1;
-                        this.atualizarDadosTicketValidado(t);
+                        this.atualizarDadosTicketValidado(t, tipoPgto);
                         boolean a = daoT.alterar(t);
                         if (a) {
                             this.timerTicket();
@@ -304,11 +326,12 @@ public class ControllerInicio {
      *
      * @param t TicketVO
      */
-    private void atualizarDadosTicketValidado(TicketVO t) {
+    private void atualizarDadosTicketValidado(TicketVO t, String tipoPgto) {
+        t.setValor(valor);
+        t.setTipo(tipoPgto);
+        t.setDataValidacao(LocalDateTime.now());
         t.setStatus(false);
         t.setValidado(true);
-        t.setValor(valor);
-        t.setDataValidacao(LocalDateTime.now());
     }
 
     /**
@@ -405,7 +428,7 @@ public class ControllerInicio {
         }
 
         this.ajustarFocusTxtProcurar();
-        JOptionPane.showMessageDialog(inicioView, inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+        JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -464,7 +487,7 @@ public class ControllerInicio {
             }
         }
         JOptionPane.showMessageDialog(inicioView,
-                inicioView.getModificacao().labelConfig(inicioView.getLblModificadoParaExibicao(), msg),
+                Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 

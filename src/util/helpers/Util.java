@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +64,19 @@ public class Util {
                 }
             }
         });
+    }
+
+    public static int abrirJFileChooser(JPanel panel, JFileChooser jFileChooser) {
+        String userName = System.getProperty("user.home");
+        File dir = new File(userName + "/Desktop");
+
+        jFileChooser.setCurrentDirectory(dir);
+        jFileChooser.setDialogTitle("Salvar em...");
+        return jFileChooser.showSaveDialog(panel);
+    }
+
+    public static String caminhoFileChooser(File file) {
+        return file.getAbsolutePath();
     }
 
     // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'

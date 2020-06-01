@@ -6,6 +6,7 @@ import model.dao.movientos.MovimentoDAO;
 import model.vo.movimentos.MovimentoVO;
 import util.constantes.Colunas;
 import util.constantes.ConstHelpers;
+import util.helpers.Modificacoes;
 import util.helpers.Util;
 import view.panels.MovimentoView;
 
@@ -98,7 +99,7 @@ public class ControllerMovimento {
             ConstHelpers.INTERNAL_MESSAGE = 4;
             lista = daoM.consultar(dt1, dt2);
         } else {
-            JOptionPane.showMessageDialog(movimentoView, movimentoView.getModificacao().labelConfig(movimentoView.getLblModificacao(),
+            JOptionPane.showMessageDialog(movimentoView, Modificacoes.labelConfig(movimentoView.getLblModificacao(),
                     "Por favor, Digite todas as Datas"), "Erro", JOptionPane.INFORMATION_MESSAGE);
         }
     }

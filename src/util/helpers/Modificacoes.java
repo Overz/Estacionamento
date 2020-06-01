@@ -27,7 +27,7 @@ public class Modificacoes {
      * @param text:  String
      * @return label + text
      */
-    public JLabel labelConfig(JLabel label, String text) {
+    public static JLabel labelConfig(JLabel label, String text) {
 
         label = new JLabel();
         label.setText(text);
@@ -70,7 +70,8 @@ public class Modificacoes {
     }
 
     /**
-     * Configura a Tabela para editar os campos de acordo com sua instancia
+     * Configura a Tabela para editar as celulas, deixando elas centralizadas,
+     * para esquerda, ou direita
      *
      * @param table: JTable
      * @return table

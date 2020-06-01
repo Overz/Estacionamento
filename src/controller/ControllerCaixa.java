@@ -8,6 +8,7 @@ import util.constantes.Colunas;
 import util.constantes.ConstCaixa;
 import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
+import util.helpers.Modificacoes;
 import util.helpers.Util;
 import util.pdf.PdfComprovante;
 import view.panels.CaixaView;
@@ -15,7 +16,6 @@ import view.panels.CaixaView;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,14 +27,12 @@ public class ControllerCaixa {
     private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<MovimentoVO> lista;
     private String msg, title, jopValueComboBox, jopValueSaldo;
-    private MovimentoVO m;
     private boolean primeiro = true;
 
     public ControllerCaixa(CaixaView caixaView) {
         this.caixaView = caixaView;
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
-        m = new MovimentoVO();
         this.timerRefreshData();
     }
 
@@ -92,7 +90,6 @@ public class ControllerCaixa {
                         model.addRow(novaColuna);
                     }
                     i++;
-                    this.m = movimento;
                 }
             }
         } catch (Exception e) {
@@ -327,7 +324,7 @@ public class ControllerCaixa {
             this.msg = "Erro ao Adicionar o Valor, Por favor, Digite Corretamente!";
         }
         JOptionPane.showMessageDialog(caixaView,
-                caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), this.msg),
+                Modificacoes.labelConfig(caixaView.getLblModificacao(), this.msg),
                 this.title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -344,7 +341,7 @@ public class ControllerCaixa {
             msg = "Erro ao Remover Valores<br>Menores que o Total!";
         }
         JOptionPane.showMessageDialog(caixaView,
-                caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), this.msg),
+                Modificacoes.labelConfig(caixaView.getLblModificacao(), this.msg),
                 this.title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -436,7 +433,7 @@ public class ControllerCaixa {
         if (startOfDay.compareTo(now) < 0 && endOfDay.compareTo(now) > 0) {
             title = "ATENÇÂO!";
             msg = "<html><body>Deseja Realmente Fechar o Caixa?<br>- Após fechar o Caixa, os valores Anteriores<br> não Aparecerão</body></html>";
-            int i = JOptionPane.showConfirmDialog(caixaView, caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), msg), title,
+            int i = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg), title,
                     JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (i == JOptionPane.YES_OPTION) {
@@ -464,7 +461,7 @@ public class ControllerCaixa {
         }
         System.out.println("Quantidade de Movimentos Alterados(Atualizar Status): " + quantidade);
         msg = "Registros Alterados: " + quantidade;
-        JOptionPane.showMessageDialog(caixaView, caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), msg),
+        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
         return true;
     }
@@ -491,63 +488,46 @@ public class ControllerCaixa {
         timer.start();
     }
 
-    public void imprimirComprovante() {
-        //TODO Por linha selecionada
-    }
-
     /**
      * Cria um JFileChooser e cria um PDF
      */
     public void gerarComprovantePorLinha() {
 
         title = "Criação do PDF";
-        String userName = System.getProperty("user.home");
-        File dir = new File(userName + "/Desktop");
 
-        JFileChooser jfc = new JFileChooser();
-        jfc.setCurrentDirectory(dir);
-        jfc.setDialogTitle("Salvar em...");
-        int i = jfc.showSaveDialog(caixaView);
+        int row = caixaView.getTable().getSelectedRow();
+        MovimentoVO movimentoVO = lista.get(row);
 
-        if (i == JFileChooser.APPROVE_OPTION) {
-            int row = caixaView.getTable().getSelectedRow();
-            MovimentoVO movimentoVO = lista.get(row);
-            String caminhoEscolhido = jfc.getSelectedFile().getAbsolutePath();
-            PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
-            i = pdf.gerarPdf();
-            msg = criarRespostaResultadoPDF(i);
-            JOptionPane.showMessageDialog(caixaView, caixaView.getModificacao().labelConfig(caixaView.getLblModificacao(), msg),
-                    title, JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
+        if (movimentoVO.getPlano() == null) {
+            if (movimentoVO.getTicket() != null) {
+                if (movimentoVO.getTicket().getValidado()) {
 
-    /**
-     * Cria uma mensagem de retorno ao gerar o PDF
-     *
-     * @param i int
-     * @return String
-     */
-    private String criarRespostaResultadoPDF(int i) {
-        String msg = "";
-        if (i == 0) {
-            msg = "PDF Gerado!";
+                    JFileChooser jfc = new JFileChooser();
+                    int i = Util.abrirJFileChooser(caixaView, jfc);
+
+                    if (i == JFileChooser.APPROVE_OPTION) {
+                        String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
+                        PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
+                        msg = pdf.gerarPdf();
+                        if (msg == null || msg.isEmpty() || msg.isBlank()) {
+                            msg = "PDF Gerado!";
+                        }
+                    } else {
+                        msg = "<html><body>Operação Cancelada</body></html>";
+                    }
+                } else {
+                    msg = "<html><body>Por favor, Selecione um Ticket já validado!</body></html>";
+                }
+            } else {
+                msg = "<html><body>Erro ao criar um Comprovante" +
+                      "<br> com o Ticket Selecionado!</body></html>";
+            }
+        } else {
+            msg = "Por favor, Selecione Somente TICKET!";
         }
-        if (i == 1) {
-            msg += "Erro ao criar o Cabeçalho no PDF!";
-        }
-        if (i == 2) {
-            msg += "Erro ao criar as Informações Extras no PDF!";
-        }
-        if (i == 3) {
-            msg += "Erro ao criar os Dados de Entrada no PDF!";
-        }
-        if (i == 4) {
-            msg += "Erro ao criar Código de Barras no PDF!";
-        }
-        if (i == 5) {
-            msg += "Erro ao criar os Dados de Saída no PDF!";
-        }
-        return msg;
+
+        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg),
+                title, JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

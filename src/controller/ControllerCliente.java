@@ -4,6 +4,7 @@ import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
 import model.vo.cliente.PlanoVO;
 import util.constantes.Colunas;
+import util.helpers.Modificacoes;
 import view.panels.mainCadastro.ClienteView;
 
 import javax.swing.*;
@@ -65,7 +66,7 @@ public class ControllerCliente {
 
         this.atualizarTabela();
 
-        JOptionPane.showMessageDialog(clienteView, clienteView.getModificacao().labelConfig(clienteView.getLblModificacao(), msg), "EXCLUSÂO",
+        JOptionPane.showMessageDialog(clienteView, Modificacoes.labelConfig(clienteView.getLblModificacao(), msg), "EXCLUSÂO",
                 JOptionPane.ERROR_MESSAGE);
 
         System.out.println(p.toString());

@@ -10,26 +10,40 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
+
+/**
+ * Esta classe usa uma API chamada IText para criar um PDF, mas também pode ser usado PDFBox
+ * Cria um PDF como comprovante de um Ticket de Estacionamento
+ * Com exemplos para implementa os Dados ao PDF
+ * <p>
+ * Exemplos:
+ * <p>
+ * 1 - Paragrafos
+ * 2 - Imagens
+ * 3 - Tabelas (Com 3 tipos diferentes de implementação)
+ * 4 - Criptografia
+ */
 public class PdfComprovante {
 
-    private static final String EXTENSAO = ".pdf";
     private static final DateTimeFormatter DAY_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter HOUR_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss - a");
+    private static final DateTimeFormatter HOUR_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private static final String EXTENSAO = ".pdf";
+    private static final String PASS = "";
+    private static final String OWNER_PASS = "";
+    private static String CAMINHO;
     private Font mainFont, fontForAll;
-    private Chunk mainChunk, secondChunk, thirdChunk, fourthChunk, fiveChunk;
-    private Phrase mainFrase, secondFrase, thirdFrase;
-    private Paragraph mainPrgf, secondPrgf, thirdPrgf, prgfCodeBar, finalPrgf;
+    private Chunk mainChunk, secondChunk, thirdChunk;
+    private Phrase mainFrase;
+    private Paragraph mainPrgf, secondPrgf, prgfCodeBar;
     private Path path;
     private Image img;
     private MovimentoVO m;
-    private String caminho;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
-        this.caminho = caminho;
+        CAMINHO = caminho;
         this.m = movimento;
         this.mainFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD, BaseColor.BLACK);
         this.fontForAll = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD, BaseColor.BLACK);
@@ -45,98 +59,92 @@ public class PdfComprovante {
         mainChunk = new Chunk();
         secondChunk = new Chunk();
         thirdChunk = new Chunk();
-        fourthChunk = new Chunk();
-        fiveChunk = new Chunk();
 
         mainFrase = new Phrase();
-        secondFrase = new Phrase();
-        thirdFrase = new Phrase();
 
         mainPrgf = new Paragraph();
         secondPrgf = new Paragraph();
         prgfCodeBar = new Paragraph();
-        thirdPrgf = new Paragraph();
-        finalPrgf = new Paragraph();
     }
 
     /**
      * Método principal para gerar um PDF;
+     * <p>
+     * Método estão sendo utilziados Tag's HTML nas mensagens de retorno,
+     * pois está sendo retornado para um Label, e utilizado em um JOptionPane,
+     * quebra de Linha em HTML com a tag "br" é necessario com essa configuração
+     *
+     * @return String
      */
-    public int gerarPdf() {
-        int i = 0;
+    public String gerarPdf() {
+        String msg = "<html><body>";
         try {
-            Element e1, e2, e3, e4, e5;
-            path = Paths.get(ClassLoader.getSystemResource("img/code-bar-GG-1.png").toURI());
-
-            // Instancia o documento PDF
-            Document document = new Document();
-            document.setMargins(0, 0, 0, 0);
-            // Caminho + Nome do Pdf
-            PdfWriter.getInstance(document, new FileOutputStream(caminho + EXTENSAO));
-
-            Rectangle rect = new Rectangle(85, 200);
-
-            document.open(); // Necessario para abrir, e digitar os valores dentro do PDF
 
             // Inicia os Atributos
             this.instanciarAtributos();
 
-            // Adiciona o Cabeçalho Paragrafo(Header) - Primeiro Paragrafo
-            e1 = this.addHeader(mainChunk, secondChunk, mainPrgf);
-            if (e1 != null) {
-                document.add(e1);
+            Element header, info, codeBar, tableData;
+            path = Paths.get(ClassLoader.getSystemResource("img/code-bar-GG-1.png").toURI());
+
+            // Instancia o documento PDF
+            Document document = new Document();
+            document.setMargins(180, 180, 50, 0);
+
+            // Caminho + Extensão do Pdf onde ele ira ser gravado
+            PdfWriter.getInstance(document, new FileOutputStream(CAMINHO + EXTENSAO));
+
+            document.open(); // Necessario para abrir, e digitar os valores dentro do PDF
+
+            // Adiciona o Cabeçalho (Header) - Primeiro Paragrafo
+            header = this.addHeader(mainChunk, secondChunk, mainPrgf);
+            if (header != null) {
+                document.add(header);
             } else {
-                i = 1;
+                msg += "Erro ao Adicionar o Cabeçalho ao PDF<br>";
             }
 
             // Adiciona o Informações descritas após o cabeçalho (Informação Adicional) - Segundo Paragrafo
-            e2 = this.addInformation(thirdChunk, mainFrase, secondPrgf);
-            if (e2 != null) {
-                document.add(e2);
+            info = this.addInformation(thirdChunk, mainFrase, secondPrgf);
+            if (info != null) {
+                document.add(info);
             } else {
-                i = 2;
-            }
-
-            // Adiciona os Dados do Ticket selecionado ao Entrar (Ticket, Data, Hora) - Terceiro Paragrafo
-            e3 = this.addInitialData(fourthChunk, secondFrase, thirdPrgf);
-            if (e3 != null) {
-                document.add(e3);
-            } else {
-                i = 3;
+                msg += "Erro ao Adicionar as Informações de Perda ao PDF<br> ";
             }
 
             // Adiciona o Codigo de Barras (Code-Bar)
             img = Image.getInstance(path.toAbsolutePath().toString());
-            e4 = this.addCodeBar(prgfCodeBar, img);
-            if (e4 != null) {
-                Paragraph paragraph = new Paragraph("   ");
-                document.add(e4);
-                document.add(paragraph);
+            codeBar = this.addBarCode(prgfCodeBar, img);
+            if (codeBar != null) {
+                document.add(codeBar);
             } else {
-                i = 4;
-            }
-
-            // Adiciona os Dados do Ticket selecionado ao Saír (Data, Hora, Valor) - Paragrafo final
-            e5 = this.addFinalData(fiveChunk, thirdFrase, finalPrgf);
-            if (e5 != null) {
-                document.add(e5);
-            } else {
-                i = 5;
+                msg += "Erro ao Adicionar o Código de Barras ao PDF<br>";
             }
 
             // Cria a Tabela para o PDF
-//            PdfPTable table = new PdfPTable(3);
-//            document.add(this.addTable(table));
-
-            // Adiciona cripitografia (User/Password)
-//            this.encryption();
+            tableData = this.addTable(2);
+            if (tableData != null) {
+                document.add(tableData);
+            } else {
+                msg += "Erro ao Criar a Tabela ao PDF<br>";
+            }
 
             document.close(); // Necessario fechar o documento para que os dados sejam salvos
 
-        } catch (DocumentException | URISyntaxException | IOException e) {
-            e.printStackTrace();
+        } catch (DocumentException e1) {
+            System.out.println("Causa: " + e1.getCause());
+            System.out.println("Msg: " + e1.getMessage());
+            msg += "Erro ao Salvar o Documento<br>";
+        } catch (URISyntaxException e2) {
+            System.out.println("Reason: " + e2.getReason());
+            System.out.println("Input: " + e2.getInput());
+            System.out.println("Msg: " + e2.getMessage());
+            msg += "Erro ao Especificar o Caminho do Arquivo em: " + CAMINHO + "" + EXTENSAO + "<br>";
+        } catch (IOException e3) {
+            System.out.println("Causa: " + e3.getCause());
+            System.out.println("Msg: " + e3.getMessage());
+            msg += "Erro ao Salvar o Documento em: " + CAMINHO + "" + EXTENSAO + "<br>Documento se Encontra em Aberto!<br>";
         }
-        return i;
+        return msg + "</body></html>";
     }
 
     /**
@@ -149,7 +157,7 @@ public class PdfComprovante {
     private Element addHeader(Chunk mainChunk, Chunk secondChunk, Paragraph mainPrgf) {
         mainChunk.append("Senac - Easy Way\n");
         mainChunk.setFont(mainFont);
-        secondChunk.append("Estacionamento\n\n\n");
+        secondChunk.append("Estacionamento\n\n");
         secondChunk.setFont(fontForAll);
         mainPrgf.add(mainChunk);
         mainPrgf.add(secondChunk);
@@ -167,7 +175,7 @@ public class PdfComprovante {
      */
     private Element addInformation(Chunk secondChunk, Phrase mainFrase, Paragraph secondPrgf) {
         String msg = "Carencia Rotativa 10 minutos\n" +
-                     "Ticket perdido: R$ 20.0\n\n\n";
+                     "Ticket perdido: R$ 20.0\n\n";
         secondChunk.append(msg);
         mainFrase.add(secondChunk);
         mainFrase.setFont(fontForAll);
@@ -177,39 +185,13 @@ public class PdfComprovante {
     }
 
     /**
-     * Adiciona os Dados de Entrada do Ticket ao PDF
-     *
-     * @param thirdChunk Chunk
-     * @param mainFrase  Phrase
-     * @param thirdPrgf  Paragraph
-     * @return Element
-     */
-    private Element addInitialData(Chunk thirdChunk, Phrase mainFrase, Paragraph thirdPrgf) {
-        try {
-            LocalDateTime dtEntrada = m.getHr_entrada();
-            if (dtEntrada != null) {
-                String ticket = "Ticket: " + this.m.getTicket().getNumero() + Chunk.NEWLINE;
-                String data = "Entrada: " + dtEntrada.toLocalDate().format(DAY_FORMAT) + Chunk.NEWLINE;
-                String time = "Hora: " + dtEntrada.toLocalTime().format(HOUR_FORMAT) + Chunk.NEWLINE;
-
-                thirdChunk.append(ticket);
-                _util_(thirdChunk, mainFrase, thirdPrgf, data, time);
-            }
-            return thirdPrgf;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
      * Adiciona o Código de Barras ao PDF
      *
      * @param prgfCodeBar Paragraph
      * @param img         Image
      * @return Element
      */
-    private Element addCodeBar(Paragraph prgfCodeBar, Image img) {
+    private Element addBarCode(Paragraph prgfCodeBar, Image img) {
         img.setAlignment(Element.ALIGN_CENTER);
         prgfCodeBar.setAlignment(Element.ALIGN_CENTER);
         prgfCodeBar.add(img);
@@ -217,66 +199,19 @@ public class PdfComprovante {
     }
 
     /**
-     * Usado para não repetir método, apenas formata os dados
-     * com os valores passados e retorna para o lugar correto.
-     *
-     * @param chunk Chunk
-     * @param frase Phrase
-     * @param prgf  Paragraph
-     * @param time  String
-     * @param valor String
-     */
-    private void _util_(Chunk chunk, Phrase frase, Paragraph prgf, String time, String valor) {
-        chunk.append(time);
-        chunk.append(valor);
-
-        frase.add(chunk);
-        frase.setFont(fontForAll);
-
-        prgf.add(frase);
-        prgf.setAlignment(Element.ALIGN_CENTER);
-    }
-
-    /**
-     * Adiciona os Dados de Saída do ticket ao PDF
-     *
-     * @param fiveChunk  Chunk
-     * @param thirdFrase Phrase
-     * @param finalPrgf  Paragraph
-     * @return Element
-     */
-    private Element addFinalData(Chunk fiveChunk, Phrase thirdFrase, Paragraph finalPrgf) {
-        try {
-            LocalDateTime dtSaida = m.getHr_saida();
-            double value = m.getTicket().getValor();
-            if (dtSaida != null) {
-                if (value > 0.0) {
-                    String time = "Hora Saída: " + dtSaida.toLocalTime().format(HOUR_FORMAT) + Chunk.NEWLINE;
-                    String valor = "R$: " + Util.formatarValor(value) + Chunk.NEWLINE;
-
-                    _util_(fiveChunk, thirdFrase, finalPrgf, time, valor);
-                }
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return finalPrgf;
-    }
-
-    /**
      * Adiciona os Dados Modificados em Tabela ao PDF
      *
-     * @param table PdfPTable
      * @return Element
      */
-    private Element addTable(PdfPTable table) {
+    private Element addTable(final int colunas) {
+        PdfPTable table = new PdfPTable(colunas);
         try {
-            this.addTableHeader(table);
-            this.addRows(table);
-            this.addCustomRows(table);
-        } catch (URISyntaxException | BadElementException | IOException e) {
+            this.addCustomRowsData(table);
+
+//            this.addTableHeader(table);
+//            this.addRowsExample(table);
+//            this.addCustomRowsExample(table);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return table;
@@ -288,12 +223,14 @@ public class PdfComprovante {
      * @param table PdfPTable
      */
     private void addTableHeader(PdfPTable table) {
-        Stream.of("column header 1", "column header 2", "column header 3")
+        Stream.of("Dados", "Valores")
                 .forEach(columnTitle -> {
                     PdfPCell header = new PdfPCell();
-                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                    header.setBorderWidth(2);
+                    header.setBorderWidth(0);
+                    header.setBorder(Rectangle.NO_BORDER);
+                    header.setBackgroundColor(BaseColor.WHITE);
                     header.setPhrase(new Phrase(columnTitle));
+                    header.setHorizontalAlignment(Element.ALIGN_CENTER);
                     table.addCell(header);
                 });
     }
@@ -304,7 +241,7 @@ public class PdfComprovante {
      *
      * @param table PdfPTable
      */
-    private void addRows(PdfPTable table) {
+    private void addRowsExample(PdfPTable table) {
         table.addCell("row 1, col 1");
         table.addCell("row 1, col 2");
         table.addCell("row 1, col 3");
@@ -317,12 +254,8 @@ public class PdfComprovante {
      * - Alinhamentos Verticais
      *
      * @param table PdfPTable
-     * @throws URISyntaxException  exception
-     * @throws BadElementException exception
-     * @throws IOException         exception
      */
-    private void addCustomRows(PdfPTable table)
-            throws URISyntaxException, BadElementException, IOException {
+    private void addCustomRowsExample(PdfPTable table) throws IOException, BadElementException {
 
         img = Image.getInstance(path.toAbsolutePath().toString());
         img.scalePercent(10);
@@ -343,19 +276,88 @@ public class PdfComprovante {
     }
 
     /**
-     * Criptografia com senha
-     * Usuario: userpass
-     * Senha: 0
+     * Adiciona as Células customizadas
+     *
+     * @param table PdfPTable
      */
-    private void encryption() {
+    private void addCustomRowsData(PdfPTable table) {
         try {
-            PdfReader pdfReader = new PdfReader("Comprovante.pdf");
+
+            // Coluna 1 - Linha 1
+            PdfPCell col1_row1 = new PdfPCell(new Phrase("Ticket"));
+            table.addCell(configCell(col1_row1, 0));
+
+            // Coluna 2 - Linha 1
+            String ticket = String.valueOf(m.getTicket().getNumero());
+            PdfPCell col2_row1 = new PdfPCell(new Phrase(ticket));
+            table.addCell(configCell(col2_row1, 1));
+
+            // Coluna 1 - Linha 2
+            PdfPCell col1_row2 = new PdfPCell(new Phrase("Entrada"));
+            table.addCell(configCell(col1_row2, 0));
+
+            // Coluna 2 - Linha 2
+            String dt = m.getTicket().getDataEntrada().toLocalDate().format(DAY_FORMAT);
+            String entrada = m.getTicket().getDataEntrada().toLocalTime().format(HOUR_FORMAT);
+            PdfPCell col2_row2 = new PdfPCell(new Phrase(dt + "\n" + entrada));
+            table.addCell(configCell(col2_row2, 1));
+
+            // Coluna 1 - Linha 3
+            PdfPCell col1_row3 = new PdfPCell(new Phrase("Saída"));
+            table.addCell(configCell(col1_row3, 0));
+
+
+            // Coluna 2 - Linha 3
+            String saida = m.getTicket().getDataValidacao().toLocalTime().format(HOUR_FORMAT);
+            PdfPCell col2_row3 = new PdfPCell(new Phrase(saida));
+            table.addCell(configCell(col2_row3, 1));
+
+            // Coluna 1 - Linha 4
+            PdfPCell col1_row4 = new PdfPCell(new Phrase("R$"));
+            table.addCell(configCell(col1_row4, 0));
+
+            PdfPCell col2_row4 = new PdfPCell(new Phrase(Util.formatarValor(m.getTicket().getValor())));
+            table.addCell(configCell(col2_row4, 1));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Remove as bordas da celula/tabela e direciona para esquerda ou direita
+     *
+     * @param cell    PdfPCell
+     * @param direcao int
+     * @return PdfPCell
+     */
+    private PdfPCell configCell(PdfPCell cell, int direcao) {
+        cell.setBorderWidth(0);
+        cell.setBorder(Rectangle.NO_BORDER);
+        if (direcao == 0) {
+            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
+        } else {
+            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        }
+        return cell;
+    }
+
+    /**
+     * Criptografia
+     * <p>
+     * Necessario localizar o Arquivo para gera a Criptografia
+     */
+    private void encryption(String nomeArquivo, String saidaArquivo) {
+        try {
+            PdfReader pdfReader = new PdfReader(nomeArquivo);
             PdfStamper pdfStamper = new PdfStamper(pdfReader,
-                    new FileOutputStream("EncryptionPDF.pdf"));
-            pdfStamper.setEncryption("userpass".getBytes(),
-                    "0".getBytes(),
+                    new FileOutputStream(saidaArquivo));
+
+            // Password, OwnerPassword, Permissão, Criptografia
+            pdfStamper.setEncryption(PASS.getBytes(),
+                    OWNER_PASS.getBytes(),
                     0,
-                    PdfWriter.ENCRYPTION_AES_256);
+                    PdfWriter.ENCRYPTION_AES_256 | PdfWriter.DO_NOT_ENCRYPT_METADATA);
 
             pdfStamper.close();
         } catch (IOException | DocumentException e) {

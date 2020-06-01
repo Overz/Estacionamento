@@ -131,7 +131,9 @@ public class CaixaView extends JPanel {
     }
 
     private void addListeners() {
-        Util.habilitarOpcoes(table, btnImprimirComprovante, "#FFFFF", 2);
+
+        Util.habilitarOpcoes(table, btnImprimirComprovante, "", 1);
+
         btnAdicionarValor.addActionListener(e -> {
             ConstHelpers.FLAG = 1;
             control.showInputDialog();
@@ -144,7 +146,7 @@ public class CaixaView extends JPanel {
 
         btnFecharCaixa.addActionListener(e -> control.fecharCaixa());
 
-        btnImprimirComprovante.addActionListener(e -> control.imprimirComprovante());
+        btnImprimirComprovante.addActionListener(e -> control.gerarComprovantePorLinha());
 
     }
 
@@ -166,10 +168,6 @@ public class CaixaView extends JPanel {
 
     public JLabel getLblModificacao() {
         return lblModificacao;
-    }
-
-    public Modificacoes getModificacao() {
-        return modificacao;
     }
 
 }
