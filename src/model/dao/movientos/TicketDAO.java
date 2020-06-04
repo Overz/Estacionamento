@@ -44,7 +44,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public ArrayList<TicketVO> consultarTodos() {
-        String qry = "SELECT * FROM TICKET";
+        String qry = "select * from ticket;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -79,7 +79,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public TicketVO consultarPorId(int id) {
-        String qry = "SELECT * FROM TICKET WHERE ID = ?";
+        String qry = "select * from ticket where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -111,11 +111,11 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     public TicketVO cadastrar(TicketVO newObject, String... values) {
         String qry;
         if (ConstHelpers.FLAG == 1) {
-            qry = "INSERT INTO TICKET (N_TICKET, HR_ENTRADA, STATUSTICKET, VALIDADO) " +
-                  "VALUES (?, ?, ?, ?)";
+            qry = "insert into ticket (n_ticket, hr_entrada, statusticket, validado)" +
+                  "values (?,?,?,?);";
         } else {
-            qry = "INSERT INTO TICKET (N_TICKET, VALOR, TIPO, HR_ENTRADA, HR_VALIDACAO, STATUSTICKET, VALIDADO" +
-                  "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            qry = "insert into ticket (n_ticket, valor, tipo, hr_entrada, hr_saida, statusticket, validado" +
+                  "values (?,?,?,?,?,?,?);";
         }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -163,7 +163,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean alterar(TicketVO object) {
-        String qry = "UPDATE TICKET SET VALOR = ?, TIPO = ?, HR_VALIDACAO = ?, STATUSTICKET = ?, VALIDADO = ? WHERE ID = ?";
+        String qry = "update ticket set valor=?, tipo=?, hr_validacao=?, statusticket=?, validado=? where id=?;";
 
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -197,7 +197,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM TICKET WHERE ID = ?";
+        String qry = "delete from ticket where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

@@ -30,7 +30,7 @@ CREATE TABLE `dbestacionamento`.`modelo`
 
 CREATE TABLE `dbestacionamento`.`carro`
 (
-    `id`       INT NULL AUTO_INCREMENT,
+    `id`       INT NOT NULL AUTO_INCREMENT,
     `idModelo` INT NOT NULL,
     `placa`    VARCHAR(45),
     `cor`      VARCHAR(45),
@@ -57,7 +57,7 @@ CREATE TABLE `dbestacionamento`.`ticket`
 (
     `id`           INT                        NOT NULL AUTO_INCREMENT,
     `n_ticket`     LONG                       NOT NULL,
-    `valor`        DECIMAL                    NULL,
+    `valor`        DECIMAL(10, 5)             NULL,
     `tipo`         ENUM ("DINHEIRO","CARTÃO") NULL,
     `hr_entrada`   TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `hr_validacao` TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,

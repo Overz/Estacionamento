@@ -68,7 +68,6 @@ public class ControllerInicio {
         LocalDateTime now = LocalDateTime.now();
         // Percorre os empregados para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
-
             if (movimento.isAtual()) {
 
                 //Ticket
@@ -84,6 +83,9 @@ public class ControllerInicio {
                     for (Object o : novaColuna) {
                         if (o != null) {
                             temLinha = true;
+                        } else {
+                            temLinha = false;
+                            break;
                         }
                     }
                     if (temLinha) {
@@ -132,6 +134,12 @@ public class ControllerInicio {
 
     }
 
+    /**
+     * totaliza a quantidade de veiculos ATUAIS, e adiciona a um Label na tela
+     *
+     * @param lista ArrayList<MovimentoVO>
+     * @param now   LocalDateTime
+     */
     private void addTotalVeiculos(ArrayList<MovimentoVO> lista, LocalDateTime now) {
         int i = 0;
         for (MovimentoVO movimento : lista) {
@@ -167,12 +175,12 @@ public class ControllerInicio {
             } else {
                 msg = "ERRO AO REALIZAR EXCLUSÃO!";
             }
-            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title,
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title,
                     JOptionPane.ERROR_MESSAGE);
             System.out.println(m.toString());
         } else {
             msg = "Escolha uma Linha para Remover!";
-            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title,
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title,
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -191,17 +199,17 @@ public class ControllerInicio {
                 } else {
                     msg = "Erro ao Validar o Ticket\n";
                 }
-                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
+                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg),
                         title, JOptionPane.INFORMATION_MESSAGE);
             } else if (ConstHelpers.INTERNAL_MESSAGE == 0) {
                 title = "Erro";
                 msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!</body></html>";
-                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
+                JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg),
                         title, JOptionPane.WARNING_MESSAGE);
             }
         } else {
             msg = "Por Favor, Digite o Ticket Corretamente!";
-            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg), title, JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title, JOptionPane.WARNING_MESSAGE);
         }
         this.ajustarFocusTxtTicket();
     }
@@ -237,7 +245,7 @@ public class ControllerInicio {
                     String format = Util.formatarValor(valor);
                     title = "Validação";
                     msg = "<html><body>Total(R$): " + format + "<br>Deseja Validar este Ticket?</body></html>";
-                    int i = JOptionPane.showConfirmDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
+                    int i = JOptionPane.showConfirmDialog(inicioView, Modificacoes.labelConfig(msg),
                             title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
                     if (i == JOptionPane.YES_OPTION) {
@@ -384,11 +392,10 @@ public class ControllerInicio {
      * @param valor String
      */
     public void consultar(String tipo, String valor) {
+        ConstHelpers.FLAG = 0;
         title = "Procurar";
-        ConstHelpers.FLAG = 1;
         switch (tipo) {
             case ConstInicio.PROCURA:
-                ConstHelpers.FLAG = 0;
                 this.atualizarTabela();
                 break;
             case ConstInicio.PROCURA_CARRO:
@@ -402,13 +409,13 @@ public class ControllerInicio {
                 c.setNome(valor);
                 if (ClienteBO.validarNomeCliente(c)) {
                     ConstHelpers.INTERNAL_MESSAGE = 2;
-                    ConstHelpers.FLAG = 0;
                     lista = daoM.consultar(valor);
                 }
                 break;
             case ConstInicio.PROCURA_TICKET_CARTAO:
                 if (InicioBO.validarNumeroTicket(valor)) {
                     ConstHelpers.INTERNAL_MESSAGE = 3;
+                    ConstHelpers.FLAG = 1;
                     lista = daoM.consultar(valor);
                 }
                 break;
@@ -428,7 +435,7 @@ public class ControllerInicio {
         }
 
         this.ajustarFocusTxtProcurar();
-        JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
+        JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -487,7 +494,7 @@ public class ControllerInicio {
             }
         }
         JOptionPane.showMessageDialog(inicioView,
-                Modificacoes.labelConfig(inicioView.getLblModificacao(), msg),
+                Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 

@@ -66,7 +66,7 @@ public class ControllerCliente {
 
         this.atualizarTabela();
 
-        JOptionPane.showMessageDialog(clienteView, Modificacoes.labelConfig(clienteView.getLblModificacao(), msg), "EXCLUSÂO",
+        JOptionPane.showMessageDialog(clienteView, Modificacoes.labelConfig(msg), "EXCLUSÂO",
                 JOptionPane.ERROR_MESSAGE);
 
         System.out.println(p.toString());

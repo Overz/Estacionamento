@@ -53,7 +53,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public ArrayList<PlanoVO> consultarTodos() {
-        String qry = "SELECT * FROM PLANO";
+        String qry = "select * from plano;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -88,7 +88,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public PlanoVO consultarPorId(int id) {
-        String qry = "SELECT * FROM PLANO WHERE id = ?";
+        String qry = "select * from plano where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -117,7 +117,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public PlanoVO cadastrar(PlanoVO newObject, String... values) {
-        String qry = "INSERT INTO PLANO (tipo, descricao) VALUES (?,?)";
+        String qry = "insert into plano (tipo, descricao) values (?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -149,7 +149,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public boolean alterar(PlanoVO object) {
-        String qry = "UPDATE PLANO SET TIPO=?, DESCRICAO=?";
+        String qry = "update plano set tipo=?, descricao=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -178,7 +178,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM PLANO WHERE id = ?";
+        String qry = "delete from plano where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

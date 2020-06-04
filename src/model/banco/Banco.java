@@ -50,6 +50,7 @@ import java.sql.*;
  * FONTE:
  * {@link https://pt.stackoverflow.com/questions/99620/qual-a-diferen%C3%A7a-entre-o-statement-e-o-preparedstatement}
  */
+@SuppressWarnings("JavadocReference")
 public class Banco {
 
     public static final int CODIGO_RETORNO_ERRO_EXCLUSAO = 0;
@@ -59,8 +60,7 @@ public class Banco {
     private static final String CONEXAO = "jdbc:mysql://localhost:3306/" + BANCO
                                           + "?useTimezone=true&serverTimezone=America/Sao_Paulo&zeroDateTimeBehavior=convertToNull";
     private static final String USUARIO = "root";
-    private static final String SENHA = "";
-    private static boolean teste;
+    private static final String SENHA = "30752287";
 
     /**
      * Estabelece a conexão JBDC considerando as configurações da classe Banco.

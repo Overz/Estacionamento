@@ -57,7 +57,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public ArrayList<ClienteVO> consultarTodos() {
-        String qry = "SELECT * FROM CLIENTE";
+        String qry = "select * from cliente;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -92,7 +92,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public ClienteVO consultarPorId(int id) {
-        String qry = "SELECT * FROM CLIENTE WHERE ID =?";
+        String qry = "select * from cliente where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -121,7 +121,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public ClienteVO cadastrar(ClienteVO newObject, String... values) {
-        String qry = "INSERT INTO CLIENTE (nome, cpf, rg, email, telefone) VALUES (?,?,?,?,?)";
+        String qry = "insert into cliente (nome, cpf, rg, email, telefone) values (?,?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -156,7 +156,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public boolean alterar(ClienteVO object) {
-        String qry = "UPDATE CLIENTE SET NOME=?, CPF=?, RG=?, EMAIL=?, TELEFONE=? WHERE ID=?";
+        String qry = "update cliente set nome=?, cpf=?, rg=?, email=?, telefone=?, where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -189,7 +189,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM CLIENTE WHERE ID = ?";
+        String qry = "delete from cliente where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

@@ -10,16 +10,15 @@ import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
 import util.helpers.Modificacoes;
 import util.helpers.Util;
+import util.pdf.PdfCaixaFinal;
 import util.pdf.PdfComprovante;
 import view.panels.CaixaView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.io.File;
+import java.time.*;
 import java.util.ArrayList;
 
 public class ControllerCaixa {
@@ -34,6 +33,7 @@ public class ControllerCaixa {
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
         this.timerRefreshData();
+        this.informarFechamentoCaixa();
     }
 
     public void atualizarTabela() {
@@ -185,33 +185,40 @@ public class ControllerCaixa {
      */
     public void somarValoresContratoCliente(LocalDateTime now, LocalDateTime dtContratoEntrada) {
         try {
+            boolean data = false;
+            if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())){
+                data = true;
+            }
             for (MovimentoVO m : lista) {
                 if (m.getPlano() != null) {
                     String plano = m.getPlano().getContrato().getTipoPgto();
-                    if (plano.equals("DINHEIRO") && now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
+                    if (plano.equals("DINHEIRO") && data) {
                         ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += m.getPlano().getContrato().getValor();
                         ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
-                    } else if (plano.equals("CARTÃO")) {
+                    } else if (plano.equals("CARTÃO") && data) {
                         ConstCaixa.LBL_VALOR_CAIXA_CARTAO += m.getPlano().getContrato().getValor();
                         ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
                     }
                 }
 
-//                if (m.getTicket() != null) {
-//                    String ticket = m.getTicket().getTipo();
-//                    double valor = m.getTicket().getValor();
-//
-//                    if (ticket.equals("DINHEIRO")) {
-//                        Constantes.LBL_VALOR_CAIXA_DINHEIRO += valor;
-//                        Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
-//                    } else if (ticket.equals("CARTÃO")) {
-//                        Constantes.LBL_VALOR_CAIXA_CARTAO += valor;
-//                        Constantes.LBL_VALOR_CAIXA_TOTAL += valor;
-//                    }
-//                }
+                if (m.getTicket() != null) {
+                    String ticket = m.getTicket().getTipo();
+                    double valor = m.getTicket().getValor();
+
+                    if (ticket.equals("DINHEIRO") && data) {
+                        ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += valor;
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += valor;
+                    } else if (ticket.equals("CARTÃO") && data) {
+                        ConstCaixa.LBL_VALOR_CAIXA_CARTAO += valor;
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += valor;
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println(e.getLocalizedMessage());
+            System.out.println(e.getCause());
         }
     }
 
@@ -324,7 +331,7 @@ public class ControllerCaixa {
             this.msg = "Erro ao Adicionar o Valor, Por favor, Digite Corretamente!";
         }
         JOptionPane.showMessageDialog(caixaView,
-                Modificacoes.labelConfig(caixaView.getLblModificacao(), this.msg),
+                Modificacoes.labelConfig(msg),
                 this.title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -341,7 +348,7 @@ public class ControllerCaixa {
             msg = "Erro ao Remover Valores<br>Menores que o Total!";
         }
         JOptionPane.showMessageDialog(caixaView,
-                Modificacoes.labelConfig(caixaView.getLblModificacao(), this.msg),
+                Modificacoes.labelConfig(msg),
                 this.title, JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -369,7 +376,8 @@ public class ControllerCaixa {
                     d = Double.parseDouble(jopValueSaldo);
                 }
                 if (ConstCaixa.LBL_VALOR_CAIXA_TOTAL == 0.0) {
-                    JOptionPane.showMessageDialog(caixaView, "Total do Caixa já consta em R$ 0.0 !\n Essa ação não ira ser realizada.", "Erro",
+                    msg = "<html><body>Total do Caixa já consta em R$ 0.0 !<br>Essa ação não ira ser realizada.</body></html>";
+                    JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg), "Erro",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= c;
@@ -382,29 +390,18 @@ public class ControllerCaixa {
         }
     }
 
+    /**
+     * Main methodo para fechar o caixa
+     */
     public void fecharCaixa() {
-        //TODO Realizar ação para fechar o caixa de acordo com o DIA, os dados utilizados na tabela
-        //TODO e realizar i limpeza dos dados do caixa na tabela.
-        int i = 0;
-        ArrayList<String> nomes = new ArrayList<>();
-        ArrayList<Double> valores = new ArrayList<>();
-        PdfComprovante relatorio = new PdfComprovante();
-
-        for (MovimentoVO movimentoVO : lista) {
-            i++;
-            nomes.add(movimentoVO.getPlano().getCliente().getNome());
-            valores.add(movimentoVO.getTicket().getValor());
-//            relatorio.pegarResultados(nomes, valores, i);
-        }
-
-        this.verificarDia();
+        title = "Fechamento do Caixa";
+        realizarFechamento();
     }
 
     /**
-     * Pega os dados do Dia atual
+     * Verifica a hora do dia atual, para fechar o caixa
      */
     private void verificarDia() {
-
         LocalDate localDate = LocalDate.now();
         LocalTime startTime = LocalTime.of(8, 0, 0);
         LocalTime endTime = LocalTime.of(20, 0, 0);
@@ -412,45 +409,65 @@ public class ControllerCaixa {
         LocalDateTime endOfDay = LocalDateTime.of(localDate, endTime);
         LocalDateTime now = LocalDateTime.now();
 
-        LocalTime timeInicio = LocalTime.of(8, 0);
-        LocalTime timeMeio = LocalTime.of(12, 0);
-        LocalTime timePosMeio = LocalTime.of(13, 0);
-        LocalTime timeFinal = LocalTime.of(22, 0);
+//        LocalTime timeInicio = LocalTime.of(8, 0);
+//        LocalTime timeMeio = LocalTime.of(12, 0);
+//        LocalTime timePosMeio = LocalTime.of(13, 0);
+//        LocalTime timeFinal = LocalTime.of(22, 0);
 
-        Duration d1 = Duration.between(timeInicio, timeMeio);
-        Duration d2 = Duration.between(timePosMeio, timeFinal);
-        Duration d3 = Duration.between(timeInicio, timeFinal);
+//        Duration d1 = Duration.between(timeInicio, timeMeio);
+//        Duration d2 = Duration.between(timePosMeio, timeFinal);
+//        Duration d3 = Duration.between(timeInicio, timeFinal);
 
-
-        this.encerrarDia(startOfDay, endOfDay, now);
+        if (now.getHour() >= startOfDay.getHour() && now.getHour() <= endOfDay.getHour()) {
+            realizarFechamento();
+        }
     }
 
-    private void encerrarDia(LocalDateTime startOfDay, LocalDateTime endOfDay, LocalDateTime now) {
-        //TODO Calcular o dia referente ao sistema, salvar esses horarios em uma variavel
-        //TODO remover os valores da tabela e da lista
-        //TODO Impedir que o sistema consulte os valores quando o caixa for fechado
-
-        if (startOfDay.compareTo(now) < 0 && endOfDay.compareTo(now) > 0) {
-            title = "ATENÇÂO!";
-            msg = "<html><body>Deseja Realmente Fechar o Caixa?<br>- Após fechar o Caixa, os valores Anteriores<br> não Aparecerão</body></html>";
-            int i = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg), title,
-                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-            if (i == JOptionPane.YES_OPTION) {
-                if (this.atualizarStatusMovimento(lista)) {
-                    this.atualizarTabela();
-                }
-            }
+    /**
+     * Mostra uma mensagem perguntando ao usuario se deseja realizar o fechamento
+     */
+    private void realizarFechamento() {
+        int i;
+        msg = "<html><body>" +
+              "Deseja Realmente Fechar o Caixa?" +
+              "<br>Ao Fechar o Caixa:" +
+              "<br>-Listagem de Movimento sera Zerada!" +
+              "<br>-Não aparecerá mais a Tela Principal!" +
+              "</body></html>";
+        i = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            msg = gerarRelatorioPdf();
+        } else {
+            msg = "Ação Cancelada!";
         }
+        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg), title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Gera um Relatorio em PDF com os dados do dia após o fechamento do caixa
+     */
+    private String gerarRelatorioPdf() {
+
+        JFileChooser jFileChooser = new JFileChooser();
+        int i = Util.abrirJFileChooser(caixaView, jFileChooser);
+
+        if (i == JFileChooser.APPROVE_OPTION) {
+            lista = daoM.consultarTodos();
+            atualizarStatusMovimento(lista);
+
+            String caminhoEscolhido = Util.caminhoFileChooser(jFileChooser.getSelectedFile());
+            PdfCaixaFinal pdf = new PdfCaixaFinal(lista, caminhoEscolhido);
+            msg = pdf.gerarPdf();
+        }
+        return msg;
     }
 
     /**
      * Método para Fechar o Caixa atual;
      *
      * @param lista ArrayList
-     * @return true/false
      */
-    private boolean atualizarStatusMovimento(ArrayList<MovimentoVO> lista) {
+    private void atualizarStatusMovimento(ArrayList<MovimentoVO> lista) {
         int quantidade = 0;
         BaseDAO<MovimentoVO> daoM = new MovimentoDAO();
         for (MovimentoVO movimento : lista) {
@@ -459,11 +476,26 @@ public class ControllerCaixa {
                 quantidade++;
             }
         }
-        System.out.println("Quantidade de Movimentos Alterados(Atualizar Status): " + quantidade);
+
         msg = "Registros Alterados: " + quantidade;
-        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg),
+        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
-        return true;
+        System.out.println("Quantidade de Movimentos Alterados(Atualizar Status): " + quantidade);
+    }
+
+    /**
+     * Informar uma mensagem ao usuário sobre a disponibilidade de fechamento do caixa
+     */
+    private void informarFechamentoCaixa() {
+        LocalDate day = LocalDate.now();
+        LocalTime endTime = LocalTime.of(20, 0, 0);
+        LocalDateTime endOfDay = LocalDateTime.of(day, endTime);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (now.getHour() >= endOfDay.getHour()) {
+            String msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
+            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     /**
@@ -509,9 +541,6 @@ public class ControllerCaixa {
                         String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
                         PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
                         msg = pdf.gerarPdf();
-                        if (msg == null || msg.isEmpty() || msg.isBlank()) {
-                            msg = "PDF Gerado!";
-                        }
                     } else {
                         msg = "<html><body>Operação Cancelada</body></html>";
                     }
@@ -526,7 +555,7 @@ public class ControllerCaixa {
             msg = "Por favor, Selecione Somente TICKET!";
         }
 
-        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(caixaView.getLblModificacao(), msg),
+        JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
     }
 

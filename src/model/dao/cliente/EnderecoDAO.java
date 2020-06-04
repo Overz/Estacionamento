@@ -42,7 +42,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public ArrayList<EnderecoVO> consultarTodos() {
-        String qry = "SELECT * FROM ENDERECO";
+        String qry = "select * from endereco;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -77,7 +77,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public EnderecoVO consultarPorId(int id) {
-        String qry = "SELECT * FROM ENDERECO WHERE id = ?";
+        String qry = "select * from endereco where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -106,7 +106,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public EnderecoVO cadastrar(EnderecoVO newObject, String... values) {
-        String qry = "INSERT INTO ENDERECO (numero, rua, bairro, cidade) VALUES (?,?,?,?)";
+        String qry = "insert into endereco (numero, rua, bairro, cidade) values (?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -140,7 +140,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public boolean alterar(EnderecoVO object) {
-        String qry = "UPDATE ENDERECO SET NUMERO=?, RUA=?, BAIRRO=?, CIDADE=? WHERE ID=?";
+        String qry = "update endereco set numer=?, rua=?, bairro=?, cidade=?, where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -172,7 +172,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM ENDERECO WHERE ID = ?";
+        String qry = "delete from endereco where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

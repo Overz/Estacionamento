@@ -49,7 +49,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public ArrayList<CarroVO> consultarTodos() {
-        String qry = "SELECT * FROM CARRO";
+        String qry = "select * from carro;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -85,7 +85,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public CarroVO consultarPorId(int id) {
-        String qry = "SELECT * FROM CARRO WHERE ID = ?";
+        String qry = "select * from carro where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -114,7 +114,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public CarroVO cadastrar(CarroVO newObject, String... values) {
-        String qry = "INSERT INTO CARRO (placa, cor) VALUES (?,?)";
+        String qry = "insert into carro (placa, cor) values (?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -146,7 +146,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public boolean alterar(CarroVO object) {
-        String qry = "UPDATE CARRO SET PLACA=?, COR=?";
+        String qry = "update carro set placa=?, cor=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -175,7 +175,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM CARRO WHERE ID = ?";
+        String qry = "delete from carro where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

@@ -41,7 +41,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public ArrayList<ContratoVO> consultarTodos() {
-        String qry = "SELECT * FROM CONTRATO";
+        String qry = "select * from contrato;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -77,7 +77,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public ContratoVO consultarPorId(int id) {
-        String qry = "SELECT * FROM CONTRATO WHERE ID = ?";
+        String qry = "select * from contrato where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -106,7 +106,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public ContratoVO cadastrar(ContratoVO newObject, String... values) {
-        String qry = "INSERT INTO CONTRATO (N_CARTAO, DT_ENTRADA, DT_SAIDA, ATIVO, VALOR) VALUES (?,?,?,?,?)";
+        String qry = "insert into contrato (n_cartao, dt_entrada, dt_saida, ativo, valor) values (?,?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
         try {
@@ -141,7 +141,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public boolean alterar(ContratoVO object) {
-        String qry = "UPDATE CONTRATO SET N_CARTAO=?, DT_ENTRADA=?, DT_SAIDA=?, ATIVO=?, VALOR=? WHERE ID =?";
+        String qry = "update contrato set n_cartao=?, dt_entrada=?, dt_saida=?, ativo=?, valor=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -173,7 +173,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM CONTRATO WHERE ID =?";
+        String qry = "delete from contrato where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

@@ -3,7 +3,6 @@ package model.bo;
 import util.constantes.ConstHelpers;
 
 public class InicioBO {
-
     public static boolean validarNumeroTicket(String... values) {
         boolean a = false;
         for (String value : values) {
@@ -13,13 +12,5 @@ public class InicioBO {
                 && value.trim().matches(ConstHelpers.REGEX_NUMEROS);
         }
         return a;
-    }
-
-    public static void somaValoresTabela(double value) {
-
-    }
-
-    public static boolean validarComprovante() {
-        return false;
     }
 }

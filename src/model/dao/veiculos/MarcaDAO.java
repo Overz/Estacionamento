@@ -39,7 +39,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public ArrayList<MarcaVO> consultarTodos() {
-        String qry = "SELECT * FROM MARCA";
+        String qry = "select * from marca;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -74,7 +74,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public MarcaVO consultarPorId(int id) {
-        String qry = "SELECT * FROM MARCA WHERE ID = ?";
+        String qry = "select * from marca where id = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -103,7 +103,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public MarcaVO cadastrar(MarcaVO newObject, String... values) {
-        String qry = "INSERT INTO MARCA (nome) VALUES (?)";
+        String qry = "insert into marca (nome) values (?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -134,7 +134,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public boolean alterar(MarcaVO object) {
-        String qry = "UPDATE MARCA SET NOME=? WHERE ID=?";
+        String qry = "update marca set nome=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -163,7 +163,7 @@ public class MarcaDAO implements BaseDAO<MarcaVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM MARCA WHERE ID = ?";
+        String qry = "delete from marca where id = ?";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

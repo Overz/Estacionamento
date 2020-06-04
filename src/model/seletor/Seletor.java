@@ -47,7 +47,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 3) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " OR ";
+                    qry += " or ";
                 }
                 qry += " t.n_ticket like '%" + valor + "%' ";
                 primeiro = false;
@@ -56,7 +56,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 3) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " OR ";
+                    qry += " or ";
                 }
                 qry += " con.n_cartao like '%" + valor + "%' ";
                 primeiro = false;
@@ -65,7 +65,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 1) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " OR ";
+                    qry += " or ";
                 }
                 qry += " car.placa like '%" + valor + "%' ";
                 primeiro = false;
@@ -74,7 +74,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 1) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " OR ";
+                    qry += " or ";
                 }
                 qry += " modl.descricao like '%" + valor + "%' ";
                 primeiro = false;
@@ -83,7 +83,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 2) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " OR ";
+                    qry += " or ";
                 }
                 qry += " cli.nome like '%" + valor + "%' ";
                 primeiro = false;
@@ -92,7 +92,7 @@ public class Seletor {
         if (ConstHelpers.INTERNAL_MESSAGE == 4) {
             if (temFiltro) {
                 if (!primeiro) {
-                    qry += " AND ";
+                    qry += " and ";
                 }
                 qry += " hr_entrada >= '" + dt1 + "' and  hr_saida <= '" + dt2 + "' ";
                 primeiro = false;

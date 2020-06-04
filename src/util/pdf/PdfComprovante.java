@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 
@@ -28,12 +27,8 @@ import java.util.stream.Stream;
  */
 public class PdfComprovante {
 
-    private static final DateTimeFormatter DAY_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter HOUR_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss");
-    private static final String EXTENSAO = ".pdf";
     private static final String PASS = "";
     private static final String OWNER_PASS = "";
-    private static String CAMINHO;
     private Font mainFont, fontForAll;
     private Chunk mainChunk, secondChunk, thirdChunk;
     private Phrase mainFrase;
@@ -43,7 +38,7 @@ public class PdfComprovante {
     private MovimentoVO m;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
-        CAMINHO = caminho;
+        PdfHelpers.CAMINHO = caminho;
         this.m = movimento;
         this.mainFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD, BaseColor.BLACK);
         this.fontForAll = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD, BaseColor.BLACK);
@@ -91,7 +86,7 @@ public class PdfComprovante {
             document.setMargins(180, 180, 50, 0);
 
             // Caminho + Extensão do Pdf onde ele ira ser gravado
-            PdfWriter.getInstance(document, new FileOutputStream(CAMINHO + EXTENSAO));
+            PdfWriter.getInstance(document, new FileOutputStream(PdfHelpers.CAMINHO + PdfHelpers.EXTENSAO));
 
             document.open(); // Necessario para abrir, e digitar os valores dentro do PDF
 
@@ -138,11 +133,15 @@ public class PdfComprovante {
             System.out.println("Reason: " + e2.getReason());
             System.out.println("Input: " + e2.getInput());
             System.out.println("Msg: " + e2.getMessage());
-            msg += "Erro ao Especificar o Caminho do Arquivo em: " + CAMINHO + "" + EXTENSAO + "<br>";
+            msg += "Erro ao Especificar o Caminho do Arquivo em: " + PdfHelpers.CAMINHO + "" + PdfHelpers.EXTENSAO + "<br>";
         } catch (IOException e3) {
             System.out.println("Causa: " + e3.getCause());
             System.out.println("Msg: " + e3.getMessage());
-            msg += "Erro ao Salvar o Documento em: " + CAMINHO + "" + EXTENSAO + "<br>Documento se Encontra em Aberto!<br>";
+            msg += "Erro ao Salvar o Documento em: " + PdfHelpers.CAMINHO + "" + PdfHelpers.EXTENSAO + "<br>Documento se Encontra em Aberto!<br>";
+        }
+
+        if (msg.equals("<html><body>")){
+            msg += "Pdf Gerado!";
         }
         return msg + "</body></html>";
     }
@@ -297,8 +296,8 @@ public class PdfComprovante {
             table.addCell(configCell(col1_row2, 0));
 
             // Coluna 2 - Linha 2
-            String dt = m.getTicket().getDataEntrada().toLocalDate().format(DAY_FORMAT);
-            String entrada = m.getTicket().getDataEntrada().toLocalTime().format(HOUR_FORMAT);
+            String dt = m.getTicket().getDataEntrada().toLocalDate().format(PdfHelpers.DAY_FORMAT);
+            String entrada = m.getTicket().getDataEntrada().toLocalTime().format(PdfHelpers.HOUR_FORMAT);
             PdfPCell col2_row2 = new PdfPCell(new Phrase(dt + "\n" + entrada));
             table.addCell(configCell(col2_row2, 1));
 
@@ -308,7 +307,7 @@ public class PdfComprovante {
 
 
             // Coluna 2 - Linha 3
-            String saida = m.getTicket().getDataValidacao().toLocalTime().format(HOUR_FORMAT);
+            String saida = m.getTicket().getDataValidacao().toLocalTime().format(PdfHelpers.HOUR_FORMAT);
             PdfPCell col2_row3 = new PdfPCell(new Phrase(saida));
             table.addCell(configCell(col2_row3, 1));
 

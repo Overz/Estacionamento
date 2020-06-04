@@ -47,7 +47,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public ArrayList<ModeloVO> consultarTodos() {
-        String qry = "SELECT * FROM MODELO";
+        String qry = "select * from modelo;";
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -82,7 +82,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public ModeloVO consultarPorId(int id) {
-        String qry = "SELECT * FROM MODELO WHERE ID = ?";
+        String qry = "select * from modelo where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -112,7 +112,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public ModeloVO cadastrar(ModeloVO newObject, String... values) {
-        String qry = "INSERT INTO MODELO (descricao) VALUES (?)";
+        String qry = "insert into modelo (descricao) values (?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -143,7 +143,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public boolean alterar(ModeloVO object) {
-        String qry = "UPDATE MODELO SET DESCRICAO=? WHERE ID=?";
+        String qry = "update modelo set descricao=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -172,7 +172,7 @@ public class ModeloDAO implements BaseDAO<ModeloVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM MODELO WHERE ID = ?";
+        String qry = "delete from modelo where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

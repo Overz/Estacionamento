@@ -23,13 +23,12 @@ public class Modificacoes {
      * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
      * padronizados.
      *
-     * @param label: JLabel
      * @param text:  String
      * @return label + text
      */
-    public static JLabel labelConfig(JLabel label, String text) {
+    public static JLabel labelConfig(String text) {
 
-        label = new JLabel();
+        JLabel label = new JLabel();
         label.setText(text);
         label.setFont(new Font("Arial", Font.BOLD, 20));
         label.setBackground(Color.WHITE);

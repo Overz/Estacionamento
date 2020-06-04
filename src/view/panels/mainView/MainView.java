@@ -2,6 +2,7 @@ package view.panels.mainView;
 
 import net.miginfocom.swing.MigLayout;
 import util.constantes.ConstCaixa;
+import util.helpers.Modificacoes;
 import view.panels.CaixaView;
 import view.panels.LostTicketView;
 import view.panels.MovimentoView;
@@ -13,6 +14,9 @@ import view.panels.mainCadastro.subCadastro.PlanoCadastroView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class MainView extends JFrame {
 
@@ -86,42 +90,6 @@ public class MainView extends JFrame {
         layeredPane.repaint();
         layeredPane.revalidate();
 
-    }
-
-    public static DadosCadastroView getDadosCadastroView() {
-        return DADOS_CADASTRO_VIEW;
-    }
-
-    public static EnderecoCadastroView getEnderecoCadastroView() {
-        return ENDERECO_CADASTRO_VIEW;
-    }
-
-    public static PlanoCadastroView getPlanoCadastroView() {
-        return PLANO_CADASTRO_VIEW;
-    }
-
-    public static CadastroView getCadastroView() {
-        return CADASTRO_VIEW;
-    }
-
-    public static InicioView getInicioView() {
-        return INICIO_VIEW;
-    }
-
-    public static CaixaView getCaixaView() {
-        return CAIXA_VIEW;
-    }
-
-    public static ClienteView getClienteView() {
-        return CLIENTE_VIEW;
-    }
-
-    public static MovimentoView getMovimentoView() {
-        return MOVIMENTO_VIEW;
-    }
-
-    public static LostTicketView getLostTicketView() {
-        return LOST_TICKET_VIEW;
     }
 
     private void initialize() {
@@ -200,4 +168,41 @@ public class MainView extends JFrame {
         menuBar.add(strut5);
 
     }
+
+    public static DadosCadastroView getDadosCadastroView() {
+        return DADOS_CADASTRO_VIEW;
+    }
+
+    public static EnderecoCadastroView getEnderecoCadastroView() {
+        return ENDERECO_CADASTRO_VIEW;
+    }
+
+    public static PlanoCadastroView getPlanoCadastroView() {
+        return PLANO_CADASTRO_VIEW;
+    }
+
+    public static CadastroView getCadastroView() {
+        return CADASTRO_VIEW;
+    }
+
+    public static InicioView getInicioView() {
+        return INICIO_VIEW;
+    }
+
+    public static CaixaView getCaixaView() {
+        return CAIXA_VIEW;
+    }
+
+    public static ClienteView getClienteView() {
+        return CLIENTE_VIEW;
+    }
+
+    public static MovimentoView getMovimentoView() {
+        return MOVIMENTO_VIEW;
+    }
+
+    public static LostTicketView getLostTicketView() {
+        return LOST_TICKET_VIEW;
+    }
+
 }

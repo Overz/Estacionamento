@@ -52,7 +52,7 @@ public class CaixaView extends JPanel {
         lblCaixa.setFont(new Font("Arial", Font.BOLD, 20));
         add(lblCaixa, "cell 1 1 2 1,grow");
 
-        JLabel lblDados = new JLabel("Dados:");
+        JLabel lblDados = new JLabel("Dados do Dia:");
         lblDados.setFont(new Font("Arial", Font.BOLD, 14));
         lblDados.setBackground(Color.WHITE);
         add(lblDados, "cell 1 3,grow");

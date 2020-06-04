@@ -99,8 +99,8 @@ public class ControllerMovimento {
             ConstHelpers.INTERNAL_MESSAGE = 4;
             lista = daoM.consultar(dt1, dt2);
         } else {
-            JOptionPane.showMessageDialog(movimentoView, Modificacoes.labelConfig(movimentoView.getLblModificacao(),
-                    "Por favor, Digite todas as Datas"), "Erro", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(movimentoView,
+                    Modificacoes.labelConfig("Por favor, Digite todas as Datas"), "Erro", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 

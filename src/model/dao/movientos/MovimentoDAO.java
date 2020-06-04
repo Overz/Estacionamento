@@ -56,7 +56,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public ArrayList<MovimentoVO> consultarTodos() {
-        String qry = "SELECT * FROM MOVIMENTO WHERE ATUAL = 1 ORDER BY HR_ENTRADA";
+        String qry = "select * from movimento where atual=1 order by hr_entrada;";
 
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -91,19 +91,19 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         Seletor seletor = new Seletor();
         if (ConstHelpers.FLAG == 0) {
             qry = "select * from movimento movi " +
-                  "left join plano p on movi.idPlano = p.idplano " +
-                  "left join ticket t on movi.idTicket = t.idticket " +
-                  "left join contrato con on p.idContrato = con.idcontrato " +
-                  "left join cliente cli on p.idCliente = cli.idcliente " +
-                  "left join carro car on cli.idCarro = car.idcarro " +
-                  "left join modelo modl on car.idModelo = modl.idmodelo";
+                  "left join plano p on movi.idPlano = p.id " +
+                  "left join ticket t on movi.idTicket = t.id " +
+                  "left join contrato con on p.idContrato = con.id " +
+                  "left join cliente cli on p.idCliente = cli.id " +
+                  "left join carro car on cli.idCarro = car.id " +
+                  "left join modelo modl on car.idModelo = modl.id";
 
             seletor.setValor(values[0].toUpperCase());
             if (seletor.temFiltro()) {
                 qry = seletor.criarFiltro(qry);
             }
         } else if (ConstHelpers.FLAG == 1) {
-            qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.idticket " +
+            qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.id " +
                   "where t.n_ticket like '%" + values[0] + "%' ";
         } else if (ConstHelpers.FLAG == 2) {
             qry = "select * from movimento ";
@@ -150,11 +150,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     public MovimentoVO consultarPorId(int id) {
         String qry = "";
         if (ConstHelpers.FLAG == 0) {
-            qry = "SELECT * FROM MOVIMENTO WHERE ID = ?";
+            qry = "select * from movimento where id=?;";
         } else if (ConstHelpers.FLAG == 1) {
-            qry = "SELECT * FROM MOVIMENTO WHERE IDTICKET = ?";
+            qry = "select * from movimento where idticket=?;";
         } else if (ConstHelpers.FLAG == 2) {
-            qry = "SELECT * FROM MOVIMENTO WHERE IDPLANO = ?";
+            qry = "select * from movimento wheree idplano=?;";
         }
 
         conn = Banco.getConnection();
@@ -187,9 +187,9 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     public MovimentoVO cadastrar(MovimentoVO newObject, String... values) {
         String qry;
         if (ConstHelpers.FLAG == 0) {
-            qry = "INSERT INTO MOVIMENTO (hr_entrada, hr_saida, atual) VALUES (?,?,?)";
+            qry = "insert into movimento (hr_entrada, hr_saida, atual) values (?,?,?);";
         } else {
-            qry = "INSERT INTO MOVIMENTO (idticket, hr_entrada, atual) VALUES (?,?,?)";
+            qry = "insert into movimento (idticket, hr_entrada, atual) values (?,?,?);";
         }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -230,7 +230,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean alterar(MovimentoVO object) {
-        String qry = "UPDATE MOVIMENTO SET HR_ENTRADA = ?, HR_SAIDA = ?";
+        String qry = "update movimento set hr_entrada=?, hr_saida=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -259,7 +259,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "DELETE FROM MOVIMENTO WHERE ID = ?";
+        String qry = "delete from movimento where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
