@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -93,7 +94,7 @@ public class Util {
      * @param btns             Array[]
      */
     public static void mudarCorBotao(boolean visible, boolean defaultBackgroud, String strMainColor, String strRestColors,
-                                     Color mainColor, Color restColors, JButton... btns) {
+                                     Color mainColor, Color restColors, JButton... btns) throws NoSuchMethodException {
         try {
             for (int j = 0; j < btns.length; j++) {
                 JButton button = btns[j];
@@ -130,6 +131,7 @@ public class Util {
         } catch (Exception e) {
             System.out.println(e.getCause());
             System.out.println(e.getMessage());
+            System.out.println(e.getClass().getMethod("mudarCorBotao", Util.class, Color.class, String.class, Array.class));
             e.printStackTrace();
         }
     }

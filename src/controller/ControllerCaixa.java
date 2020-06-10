@@ -543,23 +543,13 @@ public class ControllerCaixa {
     private void informarFechamentoCaixa() {
         LocalDateTime now = LocalDateTime.now();
         LocalDate day = LocalDate.now();
-        LocalTime endTime = null;
-
-        if (ConstHelpers.HORA == 0) {
-            endTime = LocalTime.of(20, 0); // Default = 20:00h
-        } else if (ConstHelpers.HORA >= now.getHour()) {
-            endTime = LocalTime.of(ConstHelpers.HORA, ConstHelpers.MIN);
-        } else {
-            msg = "Por favor, Selecione um horario Acima do Atual!";
-        }
-
+        LocalTime endTime = LocalTime.of(20, 0);
         LocalDateTime endOfDay = LocalDateTime.of(day, endTime); // Fim do Dia
 
         if (now.getHour() >= endOfDay.getHour()) {
             msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
+            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -568,16 +558,29 @@ public class ControllerCaixa {
     private void timerRefreshLabel() {
         try {
             ActionListener event = e -> {
-                String concatD = ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " +
-                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
-                String concatC = ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " +
-                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
-                String concatT = ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " +
-                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
+                try {
+                    String concatD = ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " +
+                                     Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
+                    String concatC = ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " +
+                                     Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
+                    String concatT = ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " +
+                                     Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
 
-                caixaView.getLblSaldoEmDinheiror().setText(concatD);
-                caixaView.getLblSaldoEmCarto().setText(concatC);
-                caixaView.getLblTotalCaixa().setText(concatT);
+                    caixaView.getLblSaldoEmDinheiror().setText(concatD);
+                    caixaView.getLblSaldoEmCarto().setText(concatC);
+                    caixaView.getLblTotalCaixa().setText(concatT);
+                } catch (Exception e1) {
+                    System.out.println(e1.getClass().getSimpleName());
+                    try {
+                        System.out.println(e1.getClass().getMethod("timerRefreshLabel",
+                                CaixaView.class, ControllerCaixa.class, String.class, ActionListener.class));
+                    } catch (NoSuchMethodException e2) {
+                        e2.printStackTrace();
+                    }
+                    System.out.println(e1.getMessage());
+                    System.out.println(e1.getCause());
+                    e1.printStackTrace();
+                }
             };
             Timer timer = new Timer(1000, event);
             timer.start();

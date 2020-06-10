@@ -17,7 +17,7 @@ import java.awt.event.MouseEvent;
 public class CadastroView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
-    private final JLayeredPane layeredPane;
+    private JLayeredPane layeredPane;
     private JButton btnPlano, btnDados, btnEndereco;
     private static JButton btnSalvar;
     private Boolean bool;
@@ -27,17 +27,16 @@ public class CadastroView extends JPanel {
         this.setBounds(100, 100, 1145, 908);
         this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[50px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px][35px][35px][10px]"));
 
-        layeredPane = new JLayeredPane();
-        layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        add(layeredPane, "cell 1 1 14 11,grow");
-
-        layeredPane.add(MainView.getDadosCadastroView(), "cell 0 0,grow");
-
         this.initialize();
     }
 
     public void initialize() {
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        layeredPane.add(MainView.getDadosCadastroView(), "cell 0 0,grow");
+        add(layeredPane, "cell 1 1 14 11,grow");
 
         this.setButtons();
 

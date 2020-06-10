@@ -19,7 +19,7 @@ public class CaixaView extends JPanel {
     private ControllerCaixa control;
 
     private JTable table;
-    private JLabel lblSaldoEmDinheiror, lblSaldoEmCarto, lblTotalCaixa, lblModificacao;
+    private JLabel lblSaldoEmDinheiror, lblSaldoEmCarto, lblTotalCaixa;
     private JButton btnAdicionarValor, btnRetirarValor, btnFecharCaixa, btnImprimirComprovante;
 
     public CaixaView() {
@@ -164,10 +164,6 @@ public class CaixaView extends JPanel {
 
     public JLabel getLblTotalCaixa() {
         return lblTotalCaixa;
-    }
-
-    public JLabel getLblModificacao() {
-        return lblModificacao;
     }
 
 }

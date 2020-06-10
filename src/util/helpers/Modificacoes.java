@@ -23,7 +23,7 @@ public class Modificacoes {
      * Modifica e retorna Label contendo uma Mensagem, com fonte, cor e tamanhos
      * padronizados.
      *
-     * @param text:  String
+     * @param text: String
      * @return label + text
      */
     public static JLabel labelConfig(String text) {
@@ -34,7 +34,7 @@ public class Modificacoes {
         label.setBackground(Color.WHITE);
         label.setForeground(Color.BLACK);
 
-        if (text.trim().isEmpty() || text.trim().equals("")) {
+        if (text == null || text.trim().isEmpty() || text.trim().equals("")) {
             label.setText(
                     "<html><body>Erro: >> Modificacoes.class<br>Method: labelConfig.<br>Motivo: Campo Vazio</body></html>");
             return label;

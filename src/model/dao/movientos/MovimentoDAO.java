@@ -85,6 +85,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         return null;
     } // OK
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<MovimentoVO> consultar(String... values) {
         String qry = "";
@@ -198,12 +199,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             if (ConstHelpers.FLAG == 0) {
                 stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_saida()));
-                stmt.setBoolean(3, newObject.isAtual());
             } else {
                 stmt.setInt(1, newObject.getId());
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_entrada()));
-                stmt.setBoolean(3, newObject.isAtual());
             }
+            stmt.setBoolean(3, newObject.isAtual());
 
             stmt.execute();
             result = stmt.getGeneratedKeys();

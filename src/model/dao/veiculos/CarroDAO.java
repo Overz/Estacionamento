@@ -77,6 +77,7 @@ public class CarroDAO implements BaseDAO<CarroVO> {
         return null;
     } // OK
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<CarroVO> consultar(String... values) {
         return null;

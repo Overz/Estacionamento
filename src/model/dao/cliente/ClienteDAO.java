@@ -84,6 +84,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
         return null;
     } // OK
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<ClienteVO> consultar(String... values) {
         return null;
