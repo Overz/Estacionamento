@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Util {
 
-    private static long diff;
-    private static long days;
-    private static long hours;
-    private static long minutes;
-    private static long seconds;
+    private static long diff; // Diferença ENTRE Dias
+    private static long days; // Diferença de Dias
+    private static long hours; // Diferença de Horas
+    private static long minutes; // Diferença de Minutos
+    private static long seconds; // DIferença de Segundos
 
     /**
      * Formatador de valores;
@@ -32,6 +32,15 @@ public class Util {
         return formatter.format(value);
     }
 
+    /**
+     * Evento de Click, caso pressionado um pré-requisito na tela
+     * realiza ações de Enable(True)
+     *
+     * @param table   JTable
+     * @param button  JButton
+     * @param color   String
+     * @param tipoCor int
+     */
     public synchronized static void habilitarOpcoes(JTable table, JButton button, String color, int tipoCor) {
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,6 +75,72 @@ public class Util {
         });
     }
 
+    /**
+     * Automação de Cor(Background):
+     *
+     * <p>Se o <strong>PRIMEIRO</strong> botão/algo estiver visivel e a cor: {@code String/Color != null || !empity}
+     * o botão recebe uma cor.</p>
+     *
+     * <p>Caso tenha uma cor secundaria, para <strong>demais botões</strong>
+     * estes receberão, caso contrario, uma cor <strong>Default</strong>(new Jbutton().getBackgroundColor)</p>
+     *
+     * <p><strong>ESTES BOTÕES RECEBERÃO AS CORES COM A RESPECTIVA ORDEM DE ADIÇÃO</strong></p>
+     *
+     * @param visible          boolean
+     * @param defaultBackgroud boolean
+     * @param strMainColor     String
+     * @param mainColor        Color
+     * @param btns             Array[]
+     */
+    public static void mudarCorBotao(boolean visible, boolean defaultBackgroud, String strMainColor, String strRestColors,
+                                     Color mainColor, Color restColors, JButton... btns) {
+        try {
+            for (int j = 0; j < btns.length; j++) {
+                JButton button = btns[j];
+                if (visible) {
+                    // Primeiro Botão
+                    if (button.equals(btns[0])) {
+                        if (!strMainColor.trim().isEmpty() && !strMainColor.trim().isBlank()) {
+                            button.setBackground(Color.decode(strMainColor));
+                        } else if (mainColor != null) {
+                            button.setBackground(mainColor);
+                        }
+                    }
+
+                    // Demais Botões
+                    if (j >= 1) {
+                        if (defaultBackgroud) {
+                            if (button.equals(btns[j]) || button.equals(btns[btns.length - 1])) {
+                                if (button.equals(btns[j])) {
+                                    button.setBackground(new JButton().getBackground());
+                                }
+                            }
+                        } else if (!strRestColors.trim().isBlank() && !strRestColors.trim().isBlank()) {
+                            if (button.equals(btns[j])) {
+                                button.setBackground(Color.decode(strRestColors));
+                            }
+                        } else if (restColors != null) {
+                            if (button.equals(btns[j])) {
+                                button.setBackground(restColors);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Abre um JFileChooser com um Caminho Pré-Definido /Home/ ou /Desktop
+     *
+     * @param panel        Panel
+     * @param jFileChooser JFileChooser
+     * @return int - SaveDialog(...-1,0,1...)
+     */
     public static int abrirJFileChooser(JPanel panel, JFileChooser jFileChooser) {
         String userName = System.getProperty("user.home");
         File dir = new File(userName + "/Desktop");
@@ -75,6 +150,12 @@ public class Util {
         return jFileChooser.showSaveDialog(panel);
     }
 
+    /**
+     * Retorna o Caminho Absoluto do JFileChooser
+     *
+     * @param file File
+     * @return String - Path = (/home/user/path/)
+     */
     public static String caminhoFileChooser(File file) {
         return file.getAbsolutePath();
     }
@@ -184,7 +265,6 @@ public class Util {
     }
 
     // Getters
-    // Setters
     public static long getDiff() {
         return diff;
     }

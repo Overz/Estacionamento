@@ -24,6 +24,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -61,8 +62,12 @@ public class ControllerInicio {
 
         DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
         Object[] novaColuna = new Object[5];
+        // Flag Inicial
         if (ConstHelpers.FLAG == 0) {
-            lista = daoM.consultarTodos();
+            ConstHelpers.FLAG = 2; // Flag Consultar Todos usado em MovimentoDAO - Consultar
+            ConstHelpers.SUB_FLAG = 4; // Subglag para criar o seletor de Data na classe Seletor
+            String dt = String.valueOf(LocalDate.now());
+            lista = daoM.consultar(dt, dt);
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -72,7 +77,7 @@ public class ControllerInicio {
 
                 //Ticket
                 if (movimento.getTicket() != null) {
-                    this.atualizarTabelaTicket(movimento, novaColuna);
+                    this.atualizarTabelaTicket(movimento, novaColuna, now);
                     model.addRow(novaColuna);
                 }
 
@@ -97,7 +102,19 @@ public class ControllerInicio {
         this.addTotalVeiculos(lista, now);
     }
 
-    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna) {
+    /**
+     * Tabela de Ticket
+     *
+     * @param movimento  MovimentoVO
+     * @param novaColuna Objet[]
+     */
+    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+        LocalDateTime entrada = movimento.getHr_entrada();
+
+        // Impede que o Plano/Cliente seja Preenchido na tabela
+        // caso o dia de entrada desse cliente, seja != do dia de hj
+//        if (entrada.toLocalDate().equals(now.toLocalDate())) {
+
         // Coluna 1 (Ticket/Cartao)
         novaColuna[0] = movimento.getTicket().getNumero();
         // Coluna 2 (Carro)
@@ -107,31 +124,35 @@ public class ControllerInicio {
         // Coluna 4 (Cliente)
         novaColuna[3] = "";
         // Coluna 5 (Entrada)
-        novaColuna[4] = movimento.getHr_saida().format(ConstHelpers.DTF);
+        novaColuna[4] = entrada.format(ConstHelpers.DTF);
+//        }
     }
 
+    /**
+     * Tabela de Cliente
+     *
+     * @param movimento  MovimentoVO
+     * @param novaColuna Object[]
+     * @param now        LocalDateTime
+     */
     private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
-        LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
-        if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
+        LocalDateTime entrada = movimento.getHr_entrada();
 
-            // Coluna 1 (Ticket/Cartao)
-            novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
+        // Impede que o Plano/Cliente seja Preenchido na tabela
+        // caso o dia de entrada desse cliente, seja != do dia de hj
+//        if (entrada.toLocalDate().equals(now.toLocalDate())) {
 
-            // Coluna 2 (Carro)
-            novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
-
-            // Coluna 3 (Placa)
-            novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
-
-            // Coluna 4 (Cliente)
-            novaColuna[3] = movimento.getPlano().getCliente().getNome();
-
-            // Coluna 5 (Dt Entrada)
-            if (dtContratoEntrada.toLocalDate().equals(now.toLocalDate())) {
-                novaColuna[4] = movimento.getHr_entrada().format(ConstHelpers.DTF);
-            }
-        }
-
+        // Coluna 1 (Ticket/Cartao)
+        novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
+        // Coluna 2 (Carro)
+        novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
+        // Coluna 3 (Placa)
+        novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
+        // Coluna 4 (Cliente)
+        novaColuna[3] = movimento.getPlano().getCliente().getNome();
+        // Coluna 5 (Dt Entrada)
+        novaColuna[4] = entrada.format(ConstHelpers.DTF);
+//        }
     }
 
     /**
@@ -142,10 +163,10 @@ public class ControllerInicio {
      */
     private void addTotalVeiculos(ArrayList<MovimentoVO> lista, LocalDateTime now) {
         int i = 0;
-        for (MovimentoVO movimento : lista) {
-            if (movimento.getHr_entrada().toLocalDate().equals(now.toLocalDate())) {
-                i++;
-            }
+        for (int j = 0; j < lista.size(); j++) {
+//            if (movimento.getHr_entrada().toLocalDate().equals(now.toLocalDate())) {
+            i++;
+//            }
         }
         inicioView.getLblTotalDeVeiculos().setText("Total de Veiculos: " + i);
     }
@@ -191,7 +212,7 @@ public class ControllerInicio {
      * @param tipoPgto String
      * @param ticket   String
      */
-    public void validate(String tipoPgto, String ticket) {
+    public void realizarSaida(String tipoPgto, String ticket) {
         if (InicioBO.validarNumeroTicket(ticket)) {
             if (validarCalculo(tipoPgto, ticket)) {
                 if (validarTicket(ticket, tipoPgto)) {
@@ -201,7 +222,7 @@ public class ControllerInicio {
                 }
                 JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg),
                         title, JOptionPane.INFORMATION_MESSAGE);
-            } else if (ConstHelpers.INTERNAL_MESSAGE == 0) {
+            } else if (ConstHelpers.SUB_FLAG == 0) {
                 title = "Erro";
                 msg = "<html><body>Ação Cancelada!<br>O Ticket não foi validado!</body></html>";
                 JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg),
@@ -232,7 +253,7 @@ public class ControllerInicio {
             if (verificarTicketExistente(ticket)) {
                 if (t != null && t.getStatus().equals(true)) {
 
-                    ConstHelpers.FLAG = 1;
+                    ConstHelpers.FLAG = 1; // Flag para consultar o ID do Ticket na tabela movimento no método Consultar por ID
                     m = daoM.consultarPorId(t.getId());
 
                     LocalDateTime ldtEntrada = m.getHr_entrada();
@@ -260,7 +281,7 @@ public class ControllerInicio {
                     }
                 }
 
-                ConstHelpers.INTERNAL_MESSAGE = 0;
+                ConstHelpers.SUB_FLAG = 0;
                 return false;
             }
         } catch (Exception e) {
@@ -300,7 +321,8 @@ public class ControllerInicio {
                         ConstHelpers.FLAG = 1;
                         this.atualizarDadosTicketValidado(t, tipoPgto);
                         boolean a = daoT.alterar(t);
-                        if (a) {
+                        boolean b = daoM.alterar(m);
+                        if (a && b) {
                             this.timerTicket();
                             return true;
                         }
@@ -340,6 +362,8 @@ public class ControllerInicio {
         t.setDataValidacao(LocalDateTime.now());
         t.setStatus(false);
         t.setValidado(true);
+        m.setHr_entrada(m.getHr_entrada());
+        m.setHr_saida(t.getDataValidacao());
     }
 
     /**
@@ -347,13 +371,18 @@ public class ControllerInicio {
      */
     private synchronized void timerTicket() {
         ActionListener event = e -> {
-            // validar o tipoPgto por X minutos
+            // validar o Ticket por X minutos
             ConstHelpers.FLAG = 1;
             TicketVO oldTicket = t;
             oldTicket.setStatus(true);
             daoT.alterar(oldTicket);
         };
-        Timer timer = new Timer(60000, event);
+        Timer timer;
+        if (ConstHelpers.TEMPO_TICKET == 0) {
+            timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
+        } else {
+            timer = new Timer(ConstHelpers.TEMPO_TICKET, event);
+        }
         timer.setRepeats(false);
         timer.start();
         minutes = TimeUnit.MILLISECONDS.toMinutes(timer.getDelay());
@@ -400,7 +429,7 @@ public class ControllerInicio {
                 break;
             case ConstInicio.PROCURA_CARRO:
                 if (CarroBO.validarCarro(valor)) {
-                    ConstHelpers.INTERNAL_MESSAGE = 1;
+                    ConstHelpers.SUB_FLAG = 1;
                     lista = daoM.consultar(valor);
                 }
                 break;
@@ -408,13 +437,13 @@ public class ControllerInicio {
                 ClienteVO c = new ClienteVO();
                 c.setNome(valor);
                 if (ClienteBO.validarNomeCliente(c)) {
-                    ConstHelpers.INTERNAL_MESSAGE = 2;
+                    ConstHelpers.SUB_FLAG = 2;
                     lista = daoM.consultar(valor);
                 }
                 break;
             case ConstInicio.PROCURA_TICKET_CARTAO:
                 if (InicioBO.validarNumeroTicket(valor)) {
-                    ConstHelpers.INTERNAL_MESSAGE = 3;
+                    ConstHelpers.SUB_FLAG = 3;
                     ConstHelpers.FLAG = 1;
                     lista = daoM.consultar(valor);
                 }
@@ -440,17 +469,6 @@ public class ControllerInicio {
     }
 
     /**
-     * Cria um limite minimo e maximo de numeros para gerar um ticket
-     *
-     * @param leftLimit  long
-     * @param rightLimit long
-     * @return long
-     */
-    private long randomGenerator(long leftLimit, long rightLimit) {
-        return new RandomDataGenerator().nextLong(leftLimit, rightLimit);
-    }
-
-    /**
      * Gera um Ticket e compara se já existe,
      * Caso exista, ele repete criando um outro diferente,
      * e Cadastra no DB
@@ -460,7 +478,7 @@ public class ControllerInicio {
 
         long leftLimit = 9999L;
         long rightLimit = 999999999L;
-        long generatedLong = randomGenerator(leftLimit, rightLimit);
+        long generatedLong = randomTicketGenerator(leftLimit, rightLimit);
 
         ConstHelpers.FLAG = 1;
         String num = String.valueOf(generatedLong);
@@ -471,7 +489,7 @@ public class ControllerInicio {
                 long comparator = movimento.getTicket().getNumero();
                 if (comparator == generatedLong) {
                     ConstHelpers.FLAG = 1;
-                    generatedLong = randomGenerator(leftLimit, rightLimit);
+                    generatedLong = randomTicketGenerator(leftLimit, rightLimit);
                 }
             }
         }
@@ -499,6 +517,17 @@ public class ControllerInicio {
     }
 
     /**
+     * Cria um limite minimo e maximo de numeros para gerar um ticket
+     *
+     * @param leftLimit  long
+     * @param rightLimit long
+     * @return long
+     */
+    private long randomTicketGenerator(long leftLimit, long rightLimit) {
+        return new RandomDataGenerator().nextLong(leftLimit, rightLimit);
+    }
+
+    /**
      * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
      */
     private void ajustarFocusTxtTicket() {
@@ -515,11 +544,11 @@ public class ControllerInicio {
     }
 
     /**
-     * Timer que mantém a tabela atualizada a cada 1 minuto
+     * Timer que mantém a tabela atualizada a cada X tempo
      */
     private void timerRefreshData() {
         ActionListener event = e -> this.atualizarTabela();
-        Timer timer = new Timer(30000, event);
+        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();
     }
 

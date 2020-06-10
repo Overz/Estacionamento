@@ -37,7 +37,7 @@ public class MovimentoView extends JPanel {
     public void initialize() {
 
         ConstHelpers.FLAG = 2;
-        ConstHelpers.INTERNAL_MESSAGE = 4;
+        ConstHelpers.SUB_FLAG = 4;
 
         modificacao = new Modificacoes();
         control = new ControllerMovimento(this);

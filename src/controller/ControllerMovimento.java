@@ -13,6 +13,7 @@ import view.panels.MovimentoView;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ControllerMovimento {
@@ -60,6 +61,8 @@ public class ControllerMovimento {
      * @param novaLinha Object[]
      */
     private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaLinha) {
+        LocalDateTime entrada = movimento.getHr_entrada();
+        LocalDateTime saida = movimento.getHr_saida();
         novaLinha[0] = movimento.getTicket().getNumero();
         novaLinha[1] = "";
         novaLinha[2] = "";
@@ -67,10 +70,14 @@ public class ControllerMovimento {
         if (movimento.getTicket().getValor() > 0.0) {
             novaLinha[4] = "R$: " + Util.formatarValor(movimento.getTicket().getValor());
         } else {
-            novaLinha[4] = "Aguardando Validação";
+            novaLinha[4] = "AGUARDANDO";
         }
-        novaLinha[5] = movimento.getHr_entrada().format(ConstHelpers.DTF);
-        novaLinha[6] = movimento.getHr_saida().format(ConstHelpers.DTF);
+        novaLinha[5] = entrada.format(ConstHelpers.DTF);
+        if (saida == null) {
+            novaLinha[6] = "AGUARDANDO";
+        } else {
+            novaLinha[6] = saida.format(ConstHelpers.DTF);
+        }
     }
 
     /**
@@ -80,13 +87,19 @@ public class ControllerMovimento {
      * @param novaLinha Object[]
      */
     private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaLinha) {
+        LocalDateTime entrada = movimento.getHr_entrada();
+        LocalDateTime saida = movimento.getHr_saida();
         novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
         novaLinha[1] = movimento.getPlano().getCliente().getNome();
         novaLinha[2] = movimento.getPlano().getTipo();
         novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
         novaLinha[4] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
-        novaLinha[5] = movimento.getHr_entrada().format(ConstHelpers.DTF);
-        novaLinha[6] = movimento.getHr_saida().format(ConstHelpers.DTF);
+        novaLinha[5] = entrada.format(ConstHelpers.DTF);
+        if (saida == null) {
+            novaLinha[6] = "AGUARDANDO";
+        } else {
+            novaLinha[6] = saida.format(ConstHelpers.DTF);
+        }
     }
 
     public void limparTabela() {
@@ -96,7 +109,7 @@ public class ControllerMovimento {
     public void consultar(String dt1, String dt2) {
         if (validarForm(dt1, dt2)) {
             ConstHelpers.FLAG = 2;
-            ConstHelpers.INTERNAL_MESSAGE = 4;
+            ConstHelpers.SUB_FLAG = 4;
             lista = daoM.consultar(dt1, dt2);
         } else {
             JOptionPane.showMessageDialog(movimentoView,
@@ -110,7 +123,7 @@ public class ControllerMovimento {
 
     public void consultarDiaAtual() {
         ConstHelpers.FLAG = 2;
-        ConstHelpers.INTERNAL_MESSAGE = 4;
+        ConstHelpers.SUB_FLAG = 4;
         LocalDate dt = LocalDate.now();
         String hj = String.valueOf(dt);
         lista = daoM.consultar(hj, hj);

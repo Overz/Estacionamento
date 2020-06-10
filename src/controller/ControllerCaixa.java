@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ControllerCaixa {
     private final CaixaView caixaView;
@@ -33,6 +34,7 @@ public class ControllerCaixa {
         daoM = new MovimentoDAO();
         lista = new ArrayList<>();
         this.timerRefreshData();
+        this.timerRefreshLabel();
         this.informarFechamentoCaixa();
     }
 
@@ -79,7 +81,7 @@ public class ControllerCaixa {
 
                         if (primeiro) {
                             primeiro = false;
-                            this.somarValoresContratoCliente(now, dtContratoEntrada);
+                            this.somarValoresTabela(now, dtContratoEntrada);
                         }
 
                         System.out.println("Linha:" + i);
@@ -116,10 +118,10 @@ public class ControllerCaixa {
         novaColuna[2] = dtTicketEntrada.format(ConstHelpers.DTF);
 
         // Coluna 4 (Hr Validacao)
-        if (!dtTicketEntrada.equals(dtTicketSaida)) {
-            novaColuna[3] = dtTicketSaida.format(ConstHelpers.DTF);
-        } else {
+        if (dtTicketSaida == null) {
             novaColuna[3] = "NÃO VALIDADO";
+        } else {
+            novaColuna[3] = dtTicketSaida.format(ConstHelpers.DTF);
         }
 
         // Coluna 5 (Tipo Pagamento)
@@ -147,7 +149,7 @@ public class ControllerCaixa {
      * @param novaLinha         Object[]
      */
     private void atualizarTabelaPlano(MovimentoVO movimento, LocalDateTime dtContratoEntrada, LocalDateTime now, Object[] novaLinha) {
-
+        LocalDateTime saida = movimento.getPlano().getContrato().getDtSaida();
         // Coluna 1 (Ticket/Cartao)
         if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
             novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
@@ -164,7 +166,11 @@ public class ControllerCaixa {
         }
 
         // Coluna 4 (Hr Validade)
-        novaLinha[3] = movimento.getPlano().getContrato().getDtSaida().format(ConstHelpers.DTF);
+        if (saida != null) {
+            novaLinha[3] = saida.format(ConstHelpers.DTF);
+        } else {
+            novaLinha[3] = "AGUARDANDO";
+        }
 
         // Coluna 5 (Pagamento)
         novaLinha[4] = movimento.getPlano().getContrato().getTipoPgto();
@@ -183,10 +189,10 @@ public class ControllerCaixa {
      * @param now               LocalDateTime
      * @param dtContratoEntrada LocalDateTime
      */
-    public void somarValoresContratoCliente(LocalDateTime now, LocalDateTime dtContratoEntrada) {
+    public void somarValoresTabela(LocalDateTime now, LocalDateTime dtContratoEntrada) {
         try {
             boolean data = false;
-            if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())){
+            if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
                 data = true;
             }
             for (MovimentoVO m : lista) {
@@ -222,6 +228,9 @@ public class ControllerCaixa {
         }
     }
 
+    /**
+     * Limpa a tablea
+     */
     public void limparTabela() {
         caixaView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_CAIXA));
     }
@@ -392,51 +401,19 @@ public class ControllerCaixa {
 
     /**
      * Main methodo para fechar o caixa
+     * Mostra uma mensagem para fechar o caixa
      */
     public void fecharCaixa() {
         title = "Fechamento do Caixa";
-        realizarFechamento();
-    }
-
-    /**
-     * Verifica a hora do dia atual, para fechar o caixa
-     */
-    private void verificarDia() {
-        LocalDate localDate = LocalDate.now();
-        LocalTime startTime = LocalTime.of(8, 0, 0);
-        LocalTime endTime = LocalTime.of(20, 0, 0);
-        LocalDateTime startOfDay = LocalDateTime.of(localDate, startTime);
-        LocalDateTime endOfDay = LocalDateTime.of(localDate, endTime);
-        LocalDateTime now = LocalDateTime.now();
-
-//        LocalTime timeInicio = LocalTime.of(8, 0);
-//        LocalTime timeMeio = LocalTime.of(12, 0);
-//        LocalTime timePosMeio = LocalTime.of(13, 0);
-//        LocalTime timeFinal = LocalTime.of(22, 0);
-
-//        Duration d1 = Duration.between(timeInicio, timeMeio);
-//        Duration d2 = Duration.between(timePosMeio, timeFinal);
-//        Duration d3 = Duration.between(timeInicio, timeFinal);
-
-        if (now.getHour() >= startOfDay.getHour() && now.getHour() <= endOfDay.getHour()) {
-            realizarFechamento();
-        }
-    }
-
-    /**
-     * Mostra uma mensagem perguntando ao usuario se deseja realizar o fechamento
-     */
-    private void realizarFechamento() {
-        int i;
         msg = "<html><body>" +
-              "Deseja Realmente Fechar o Caixa?" +
-              "<br>Ao Fechar o Caixa:" +
-              "<br>-Listagem de Movimento sera Zerada!" +
-              "<br>-Não aparecerá mais a Tela Principal!" +
+              "Deseja Realmente Fechar o Caixa?<br>" +
+              "<br>Ao Fechar o Caixa:<br>" +
+              "<br>-Listagem de Movimento Atual será Zerada !" +
+              "<br>-Não aparecerá mais a Tela Principal !" +
               "</body></html>";
-        i = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
-            msg = gerarRelatorioPdf();
+            msg = gerarPdf();
         } else {
             msg = "Ação Cancelada!";
         }
@@ -444,26 +421,56 @@ public class ControllerCaixa {
     }
 
     /**
-     * Gera um Relatorio em PDF com os dados do dia após o fechamento do caixa
+     * Escolhe um caminho para gerar o PDF, e verifica se o arquivo já existe
+     *
+     * @return String
      */
-    private String gerarRelatorioPdf() {
+    private String gerarPdf() {
 
         JFileChooser jFileChooser = new JFileChooser();
         int i = Util.abrirJFileChooser(caixaView, jFileChooser);
-
         if (i == JFileChooser.APPROVE_OPTION) {
-            lista = daoM.consultarTodos();
-            atualizarStatusMovimento(lista);
 
+            File file = new File(jFileChooser.getSelectedFile().toString() + ".pdf");
+            if (file.exists()) {
+                msg = "Arquivo existente Encontrado, Deseja Subistituir?";
+                int j = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), "Sobre-Escrever", JOptionPane.OK_CANCEL_OPTION);
+                if (j == JOptionPane.OK_OPTION) {
+                    return gerarPdfAction(jFileChooser);
+                } else {
+                    return "Ação Cancelada";
+                }
+            } // else { return gerarPdfAction(jFileChooser); }
+        }
+        return gerarPdfAction(jFileChooser);
+    }
+
+    /**
+     * Realiza a ação de gerar o PDF, caso de erro, retorna uma mensagem
+     *
+     * @param jFileChooser JFileChooser
+     * @return String
+     */
+    private String gerarPdfAction(JFileChooser jFileChooser) {
+        try {
+            ConstHelpers.FLAG = 2;
+            ConstHelpers.SUB_FLAG = 4;
+            String dt1 = String.valueOf(LocalDate.now());
+            lista = daoM.consultar(dt1, dt1);
+//            atualizarStatusMovimento(lista);
             String caminhoEscolhido = Util.caminhoFileChooser(jFileChooser.getSelectedFile());
             PdfCaixaFinal pdf = new PdfCaixaFinal(lista, caminhoEscolhido);
-            msg = pdf.gerarPdf();
+            return pdf.gerarPdf();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return msg;
+        return "Erro ao gerar o PDF";
     }
 
     /**
      * Método para Fechar o Caixa atual;
+     * Colocando todos os movimentos como Não Atuais, impedindo a listagem anterior
      *
      * @param lista ArrayList
      */
@@ -484,43 +491,6 @@ public class ControllerCaixa {
     }
 
     /**
-     * Informar uma mensagem ao usuário sobre a disponibilidade de fechamento do caixa
-     */
-    private void informarFechamentoCaixa() {
-        LocalDate day = LocalDate.now();
-        LocalTime endTime = LocalTime.of(20, 0, 0);
-        LocalDateTime endOfDay = LocalDateTime.of(day, endTime);
-        LocalDateTime now = LocalDateTime.now();
-
-        if (now.getHour() >= endOfDay.getHour()) {
-            String msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
-            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    /**
-     * Timer que mantém a tabela e os Labels atualizados a cada 1 minuto
-     */
-    private void timerRefreshData() {
-        ActionListener event = e -> {
-            String concatD = ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " +
-                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
-            String concatC = ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " +
-                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
-            String concatT = ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " +
-                             Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
-
-            caixaView.getLblSaldoEmDinheiror().setText(concatD);
-            caixaView.getLblSaldoEmCarto().setText(concatC);
-            caixaView.getLblTotalCaixa().setText(concatT);
-
-            this.atualizarTabela();
-        };
-        Timer timer = new Timer(30000, event);
-        timer.start();
-    }
-
-    /**
      * Cria um JFileChooser e cria um PDF
      */
     public void gerarComprovantePorLinha() {
@@ -536,11 +506,18 @@ public class ControllerCaixa {
 
                     JFileChooser jfc = new JFileChooser();
                     int i = Util.abrirJFileChooser(caixaView, jfc);
-
                     if (i == JFileChooser.APPROVE_OPTION) {
-                        String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
-                        PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
-                        msg = pdf.gerarPdf();
+
+                        File file = new File(jfc.getSelectedFile().toString() + ".pdf");
+                        if (file.exists()) {
+                            msg = "Arquivo existente Encontrado, Deseja Subistituir?";
+                            int j = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), "Sobre-Escrever", JOptionPane.OK_CANCEL_OPTION);
+                            if (j == JOptionPane.OK_OPTION) {
+                                String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
+                                PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
+                                msg = pdf.gerarPdf();
+                            }
+                        }
                     } else {
                         msg = "<html><body>Operação Cancelada</body></html>";
                     }
@@ -557,6 +534,65 @@ public class ControllerCaixa {
 
         JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Informar uma mensagem ao usuário sobre a disponibilidade de fechamento do caixa
+     * com possibilidade dessa hora mudar, caso for maior que a hora atual
+     */
+    private void informarFechamentoCaixa() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate day = LocalDate.now();
+        LocalTime endTime = null;
+
+        if (ConstHelpers.HORA == 0) {
+            endTime = LocalTime.of(20, 0); // Default = 20:00h
+        } else if (ConstHelpers.HORA >= now.getHour()) {
+            endTime = LocalTime.of(ConstHelpers.HORA, ConstHelpers.MIN);
+        } else {
+            msg = "Por favor, Selecione um horario Acima do Atual!";
+        }
+
+        LocalDateTime endOfDay = LocalDateTime.of(day, endTime); // Fim do Dia
+
+        if (now.getHour() >= endOfDay.getHour()) {
+            msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
+        }
+
+        JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Timer que mantém a tabela e os Labels atualizados a cada X tempo
+     */
+    private void timerRefreshLabel() {
+        try {
+            ActionListener event = e -> {
+                String concatD = ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " +
+                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
+                String concatC = ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " +
+                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
+                String concatT = ConstCaixa.LBL_TEXT_CAIXA_TOTAL + " " +
+                                 Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
+
+                caixaView.getLblSaldoEmDinheiror().setText(concatD);
+                caixaView.getLblSaldoEmCarto().setText(concatC);
+                caixaView.getLblTotalCaixa().setText(concatT);
+            };
+            Timer timer = new Timer(1000, event);
+            timer.start();
+        } catch (Exception e) {
+            System.out.println(e.getCause());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    private void timerRefreshData() {
+        ActionListener event = e -> this.atualizarTabela();
+        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+        timer.start();
     }
 
 }

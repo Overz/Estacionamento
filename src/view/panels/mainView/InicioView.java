@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class InicioView extends JPanel {
 
@@ -43,7 +44,7 @@ public class InicioView extends JPanel {
 
     private void initialize() {
         ConstHelpers.FLAG = 0;
-        ConstHelpers.INTERNAL_MESSAGE = 0;
+        ConstHelpers.SUB_FLAG = 0;
 
         modificacao = new Modificacoes();
         control = new ControllerInicio(this);
@@ -245,10 +246,10 @@ public class InicioView extends JPanel {
 
         btnValidar.addActionListener(e -> {
             String ticket = txtTicket.getText().trim();
-            String tipoPgto = cbFormaPgto.getSelectedItem().toString();
-            control.validate(tipoPgto, ticket);
+            String tipoPgto = Objects.requireNonNull(cbFormaPgto.getSelectedItem()).toString();
+            control.realizarSaida(tipoPgto, ticket);
             control.atualizarTabela();
-            ConstHelpers.FLAG = 0;
+            ConstHelpers.FLAG = 2;
         });
 
         btnProcurar.addActionListener(e -> {

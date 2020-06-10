@@ -44,7 +44,7 @@ public class Seletor {
         boolean primeiro = true;
         qry += " where ";
 
-        if (ConstHelpers.INTERNAL_MESSAGE == 3) {
+        if (ConstHelpers.SUB_FLAG == 3) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " or ";
@@ -53,7 +53,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (ConstHelpers.INTERNAL_MESSAGE == 3) {
+        if (ConstHelpers.SUB_FLAG == 3) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " or ";
@@ -62,7 +62,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (ConstHelpers.INTERNAL_MESSAGE == 1) {
+        if (ConstHelpers.SUB_FLAG == 1) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " or ";
@@ -71,7 +71,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (ConstHelpers.INTERNAL_MESSAGE == 1) {
+        if (ConstHelpers.SUB_FLAG == 1) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " or ";
@@ -80,7 +80,7 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (ConstHelpers.INTERNAL_MESSAGE == 2) {
+        if (ConstHelpers.SUB_FLAG == 2) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " or ";
@@ -89,12 +89,14 @@ public class Seletor {
                 primeiro = false;
             }
         }
-        if (ConstHelpers.INTERNAL_MESSAGE == 4) {
+        if (ConstHelpers.SUB_FLAG == 4) {
             if (temFiltro) {
                 if (!primeiro) {
                     qry += " and ";
                 }
-                qry += " hr_entrada >= '" + dt1 + "' and  hr_saida <= '" + dt2 + "' ";
+                qry += " hr_entrada >= '" + dt1 + " 00:00:01' and " +
+                       " hr_saida <= '" + dt2 + " 23:59:59' " +
+                       " or hr_saida is null ";
                 primeiro = false;
             }
         }

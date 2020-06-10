@@ -21,13 +21,15 @@ import java.time.LocalTime;
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
+
+    private static final ClienteView CLIENTE_VIEW = new ClienteView();
+    private static final CadastroView CADASTRO_VIEW = new CadastroView();
     private static final DadosCadastroView DADOS_CADASTRO_VIEW = new DadosCadastroView();
     private static final EnderecoCadastroView ENDERECO_CADASTRO_VIEW = new EnderecoCadastroView();
     private static final PlanoCadastroView PLANO_CADASTRO_VIEW = new PlanoCadastroView();
-    private static final CadastroView CADASTRO_VIEW = new CadastroView();
+
     private static final InicioView INICIO_VIEW = new InicioView();
     private static final CaixaView CAIXA_VIEW = new CaixaView();
-    private static final ClienteView CLIENTE_VIEW = new ClienteView();
     private static final MovimentoView MOVIMENTO_VIEW = new MovimentoView();
     private static final LostTicketView LOST_TICKET_VIEW = new LostTicketView();
     private static JLayeredPane layeredPane;

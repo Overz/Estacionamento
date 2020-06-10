@@ -85,10 +85,17 @@ public class MovimentoVO {
 
     @Override
     public String toString() {
-        return " - MOVIMENTO: " +
-               " - ID: " + id +
-               " - DT_ENTRADA: " + hr_entrada.format(ConstHelpers.DTF) +
-               " - DT_SAIDA: " + hr_saida.format(ConstHelpers.DTF) +
-               " - MOVI_ATUAL: " + atual;
+        if (hr_saida == null) {
+            return " - MOVIMENTO: " +
+                   " - ID: " + id +
+                   " - DT_ENTRADA: " + hr_entrada.format(ConstHelpers.DTF) +
+                   " - MOVI_ATUAL: " + atual;
+        } else {
+            return " - MOVIMENTO: " +
+                   " - ID: " + id +
+                   " - DT_ENTRADA: " + hr_entrada.format(ConstHelpers.DTF) +
+                   " - DT_SAIDA: " + hr_saida.format(ConstHelpers.DTF) +
+                   " - MOVI_ATUAL: " + atual;
+        }
     }
 }

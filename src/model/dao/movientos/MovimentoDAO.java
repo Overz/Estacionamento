@@ -38,7 +38,6 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             movimentoVO.setPlano(planoVO);
 
             movimentoVO.setHr_entrada(result.getTimestamp("hr_entrada").toLocalDateTime());
-            movimentoVO.setHr_saida(result.getTimestamp("hr_saida").toLocalDateTime());
             movimentoVO.setAtual(result.getBoolean("atual"));
 
             return movimentoVO;
@@ -77,6 +76,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
                                "Msg: " + e.getMessage() + "\n" +
                                "Cause: " + e.getCause()
             );
+            e.printStackTrace();
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);

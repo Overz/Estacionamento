@@ -29,22 +29,16 @@ public class PdfComprovante {
 
     private static final String PASS = "";
     private static final String OWNER_PASS = "";
-    private Font mainFont, fontForAll;
     private Chunk mainChunk, secondChunk, thirdChunk;
     private Phrase mainFrase;
     private Paragraph mainPrgf, secondPrgf, prgfCodeBar;
     private Path path;
     private Image img;
-    private MovimentoVO m;
+    private final MovimentoVO m;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
         PdfHelpers.CAMINHO = caminho;
         this.m = movimento;
-        this.mainFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD, BaseColor.BLACK);
-        this.fontForAll = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD, BaseColor.BLACK);
-    }
-
-    public PdfComprovante() {
     }
 
     /**
@@ -116,12 +110,8 @@ public class PdfComprovante {
             }
 
             // Cria a Tabela para o PDF
-            tableData = this.addTable(2);
-            if (tableData != null) {
-                document.add(tableData);
-            } else {
-                msg += "Erro ao Criar a Tabela ao PDF<br>";
-            }
+            tableData = this.addTable();
+            document.add(tableData);
 
             document.close(); // Necessario fechar o documento para que os dados sejam salvos
 
@@ -140,7 +130,7 @@ public class PdfComprovante {
             msg += "Erro ao Salvar o Documento em: " + PdfHelpers.CAMINHO + "" + PdfHelpers.EXTENSAO + "<br>Documento se Encontra em Aberto!<br>";
         }
 
-        if (msg.equals("<html><body>")){
+        if (msg.equals("<html><body>")) {
             msg += "Pdf Gerado!";
         }
         return msg + "</body></html>";
@@ -155,9 +145,9 @@ public class PdfComprovante {
      */
     private Element addHeader(Chunk mainChunk, Chunk secondChunk, Paragraph mainPrgf) {
         mainChunk.append("Senac - Easy Way\n");
-        mainChunk.setFont(mainFont);
+        mainChunk.setFont(PdfHelpers.MAIN_FONT);
         secondChunk.append("Estacionamento\n\n");
-        secondChunk.setFont(fontForAll);
+        secondChunk.setFont(PdfHelpers.FONT4ALL);
         mainPrgf.add(mainChunk);
         mainPrgf.add(secondChunk);
         mainPrgf.setAlignment(Element.ALIGN_CENTER);
@@ -177,7 +167,7 @@ public class PdfComprovante {
                      "Ticket perdido: R$ 20.0\n\n";
         secondChunk.append(msg);
         mainFrase.add(secondChunk);
-        mainFrase.setFont(fontForAll);
+        mainFrase.setFont(PdfHelpers.FONT4ALL);
         secondPrgf.add(mainFrase);
         secondPrgf.setAlignment(Element.ALIGN_CENTER);
         return secondPrgf;
@@ -202,8 +192,8 @@ public class PdfComprovante {
      *
      * @return Element
      */
-    private Element addTable(final int colunas) {
-        PdfPTable table = new PdfPTable(colunas);
+    private Element addTable() {
+        PdfPTable table = new PdfPTable(2);
         try {
             this.addCustomRowsData(table);
 
@@ -333,11 +323,8 @@ public class PdfComprovante {
     private PdfPCell configCell(PdfPCell cell, int direcao) {
         cell.setBorderWidth(0);
         cell.setBorder(Rectangle.NO_BORDER);
-        if (direcao == 0) {
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        } else {
-            cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        }
+        cell.setHorizontalAlignment(direcao == 0 ? Element.ALIGN_LEFT : Element.ALIGN_CENTER);
+        cell.setHorizontalAlignment(direcao != 0 ? Element.ALIGN_RIGHT : Element.ALIGN_CENTER);
         return cell;
     }
 

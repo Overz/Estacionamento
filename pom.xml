@@ -99,6 +99,21 @@
             <version>1.5.0</version>
         </dependency>
 
+        <!--   Auto Gerado    -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>19.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--   Auto Gerado   -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

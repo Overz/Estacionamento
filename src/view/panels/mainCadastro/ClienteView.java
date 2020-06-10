@@ -171,9 +171,7 @@ public class ClienteView extends JPanel {
 
         btnAtualizar.addActionListener(e -> MainView.swithPanel(MainView.getCadastroView()));
 
-        btnExcluir.addActionListener(e -> {
-            control.removeSelectedRow();
-        });
+        btnExcluir.addActionListener(e -> control.removeSelectedRow());
 
         btnProcurar.addActionListener(e -> {
 

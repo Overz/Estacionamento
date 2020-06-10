@@ -47,12 +47,12 @@ public class DadosCadastroView extends JPanel {
     }
 
     public void setJLabels_JSeparator() {
-        JLabel lblNome = new JLabel("Nome *");
+        JLabel lblNome = new JLabel("<html><body>Nome <a style=color:red>*</a></body></html>");
         lblNome.setHorizontalAlignment(SwingConstants.CENTER);
         lblNome.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblNome, "cell 0 1 2 1,grow");
 
-        JLabel lblCpf = new JLabel("CPF *");
+        JLabel lblCpf = new JLabel("<html><body>CPF <a style=color:red>*</a></body></html>");
         lblCpf.setHorizontalAlignment(SwingConstants.CENTER);
         lblCpf.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblCpf, "cell 0 2 2 1,grow");
@@ -67,7 +67,7 @@ public class DadosCadastroView extends JPanel {
         lblEmail.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblEmail, "cell 0 5 2 1,grow");
 
-        JLabel lblTelefone = new JLabel("Fone *");
+        JLabel lblTelefone = new JLabel("<html><body>Fone <a style=color:red>*</a>");
         lblTelefone.setHorizontalAlignment(SwingConstants.CENTER);
         lblTelefone.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblTelefone, "cell 0 6 2 1,grow");

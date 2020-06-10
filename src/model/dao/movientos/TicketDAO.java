@@ -25,7 +25,6 @@ public class TicketDAO implements BaseDAO<TicketVO> {
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));
             ticketVO.setDataEntrada(result.getTimestamp("hr_entrada").toLocalDateTime());
-            ticketVO.setDataValidacao(result.getTimestamp("hr_validacao").toLocalDateTime());
             ticketVO.setStatus(result.getBoolean("statusTicket"));
             ticketVO.setValidado(result.getBoolean("validado"));
 

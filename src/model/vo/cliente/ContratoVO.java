@@ -85,11 +85,19 @@ public class ContratoVO {
 
     @Override
     public String toString() {
-        return " - ID: " + this.id +
-               " - Nº: " + this.numeroCartao +
-               " - Hora de Entrada: " + this.dtEntrada.format(ConstHelpers.DTF) +
-               " - Hora de Saída: " + this.dtSaida.format(ConstHelpers.DTF) +
-               " - Ativo?: " + this.ativo +
-               " - R$: " + this.valor;
+        if (dtSaida == null) {
+            return " - ID: " + this.id +
+                   " - Nº: " + this.numeroCartao +
+                   " - Hora de Entrada: " + this.dtEntrada.format(ConstHelpers.DTF) +
+                   " - Ativo?: " + this.ativo +
+                   " - R$: " + this.valor;
+        } else {
+            return " - ID: " + this.id +
+                   " - Nº: " + this.numeroCartao +
+                   " - Hora de Entrada: " + this.dtEntrada.format(ConstHelpers.DTF) +
+                   " - Hora de Saída: " + this.dtSaida.format(ConstHelpers.DTF) +
+                   " - Ativo?: " + this.ativo +
+                   " - R$: " + this.valor;
+        }
     }
 }

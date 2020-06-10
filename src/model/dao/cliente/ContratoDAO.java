@@ -21,7 +21,6 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             contratoVO.setId(result.getInt("id"));
             contratoVO.setNumeroCartao(result.getLong("n_cartao"));
             contratoVO.setDtEntrada(result.getTimestamp("dt_entrada").toLocalDateTime());
-            contratoVO.setDtSaida(result.getTimestamp("dt_validade").toLocalDateTime());
             contratoVO.setValor(result.getDouble("valor"));
             contratoVO.setAtivo(result.getBoolean("ativo"));
             contratoVO.setTipoPgto(result.getString("tipoPgto"));
