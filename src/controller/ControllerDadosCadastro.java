@@ -37,7 +37,6 @@ public class ControllerDadosCadastro {
      * Adiciona uma nova linha a tabela
      */
     public void addrow() {
-        linhas = new ArrayList<>();
         DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
         Object[] data = linhas.toArray();
         model.addRow(data);
@@ -95,4 +94,9 @@ public class ControllerDadosCadastro {
     public ArrayList<CarroVO> getFormListaCarro() {
         return lista;
     }
+
+	public Object removeRow() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -18,14 +18,13 @@ public class SubCadastroDadosView extends JPanel {
     private Modificacoes modificacoes;
     private JTextField txtEmail, txtNome, txtCPF, txtRG, txtTelefone;
     private JTable table;
-    private JButton btnAddRow;
+    private JButton btnAddRow, btnRemoveRow;
 
     public SubCadastroDadosView() {
 
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.WHITE);
-        this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]",
-                "[10px][grow][grow][grow][10px][grow][grow][10px][grow][10px][grow][10px][grow][grow][grow][grow][grow][grow]"));
+        this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", "[10px][grow][grow][grow][10px][grow][grow][10px][grow][10px][grow][10px][grow][grow][grow][grow][grow][grow]"));
 
         this.initialize();
     }
@@ -115,6 +114,11 @@ public class SubCadastroDadosView extends JPanel {
     }
 
     private void setButtons() {
+        
+    	btnRemoveRow = new JButton("Remover Carro");
+        btnRemoveRow.setFont(new Font("Dialog", Font.BOLD, 12));
+        add(btnRemoveRow, "cell 7 10 2 1,grow");
+        
         btnAddRow = new JButton("Adicionar Carro");
         btnAddRow.setFont(new Font("Arial", Font.BOLD, 12));
         add(btnAddRow, "cell 9 10 2 1,grow");
@@ -148,6 +152,7 @@ public class SubCadastroDadosView extends JPanel {
 
     private void addListeners() {
         btnAddRow.addActionListener(e -> control.addrow());
+        btnRemoveRow.addActionListener(e -> control.removeRow());
     }
 
     public ClienteVO returnForm() {
