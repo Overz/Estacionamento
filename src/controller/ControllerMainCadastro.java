@@ -214,4 +214,8 @@ public class ControllerMainCadastro {
     private PlanoVO getPlanoForm() {
         return planoCtrl.getPlanoForm();
     }
+
+	public void limparDados() {
+		
+	}
 }

@@ -27,6 +27,7 @@ public class CadastroClienteView extends JPanel {
     private JButton btnSalvar;
     private JButton btnPlano, btnDados, btnEndereco;
     private Boolean bool;
+    private JButton btnLimpar;
 
     public CadastroClienteView() {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -72,11 +73,16 @@ public class CadastroClienteView extends JPanel {
         btnPlano.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnPlano, "cell 5 0 2 1,grow");
         btnPlano.addActionListener(e -> bool = swithchPanel(MainView.getPlanoCadastroView()));
-
-        btnSalvar = new JButton("Salvar");
-        btnSalvar.setFont(new Font("Arial", Font.BOLD, 20));
-        btnSalvar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(btnSalvar, "cell 5 13 3 2,grow");
+        
+        btnLimpar = new JButton("<html><body><p style=text-align:center>Limpar Todos<br> os Dados</p></body></html>");
+        btnLimpar.setFont(new Font("Dialog", Font.BOLD, 20));
+        btnLimpar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        add(btnLimpar, "cell 4 13 3 2,grow");
+        
+                btnSalvar = new JButton("Salvar");
+                btnSalvar.setFont(new Font("Arial", Font.BOLD, 20));
+                btnSalvar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+                add(btnSalvar, "cell 7 13 4 2,grow");
 
     }
 
@@ -116,6 +122,10 @@ public class CadastroClienteView extends JPanel {
 
         btnSalvar.addActionListener(e -> {
             ctrl.salvar(1);
+        });
+        
+        btnLimpar.addActionListener(e -> {
+        	ctrl.limparDados();
         });
     }
 

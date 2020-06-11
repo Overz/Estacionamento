@@ -8,7 +8,6 @@ $$ TO-DO:
 
         ~ Botões:
             - Gerar um ticket aleatório: OK
-            - Imprimir linha selecionada:
             - Controlar Cancela de Entrada e Saída: OK
 
         ~ Tabela:
@@ -25,7 +24,7 @@ $$ TO-DO:
                 - Add valor ao caixa(Criar nova tela pop-up com campos): OK
                 - Retirar valor do caixa(Valor simples? ou Algo específico?): OK
             - Fechar o caixa do dia(Zerar os campos das telas: Inicio e Caixa):
-            - Imprimir Comprovante na Linha selecionada:
+            - Imprimir Comprovante na Linha selecionada: OK
 
         ~ Tabela:
             - Preencher a Tabela ao abrir a tela: OK
@@ -59,7 +58,7 @@ $$ TO-DO:
     # View Movimento:
         ~ Validações:
             - validar a Data selecionada para Trazer os resultados: OK
-            - Invalidar Data se existir somente uma data selecionada:
+            - Invalidar Data se existir somente uma data selecionada: OK
 
         ~ Tabela:
             - Preencher a Tabela: OK
