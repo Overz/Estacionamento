@@ -94,7 +94,7 @@ public class Util {
      * @param btns             Array[]
      */
     public static void mudarCorBotao(boolean visible, boolean defaultBackgroud, String strMainColor, String strRestColors,
-                                     Color mainColor, Color restColors, JButton... btns) throws NoSuchMethodException {
+                                     Color mainColor, Color restColors, JButton... btns) {
         try {
             for (int j = 0; j < btns.length; j++) {
                 JButton button = btns[j];
@@ -131,7 +131,11 @@ public class Util {
         } catch (Exception e) {
             System.out.println(e.getCause());
             System.out.println(e.getMessage());
-            System.out.println(e.getClass().getMethod("mudarCorBotao", Util.class, Color.class, String.class, Array.class));
+            try {
+                System.out.println(e.getClass().getMethod("mudarCorBotao", Util.class, Color.class, String.class, Array.class));
+            } catch (NoSuchMethodException noSuchMethodException) {
+                noSuchMethodException.printStackTrace();
+            }
             e.printStackTrace();
         }
     }

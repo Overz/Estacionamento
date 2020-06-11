@@ -1,11 +1,15 @@
-package view.panels.mainCadastro;
+package view.panels.cadastro;
 
-import com.sun.tools.javac.Main;
+import controller.ControllerListaClientesView;
+import controller.ControllerMainCadastro;
+import model.vo.cliente.ClienteVO;
+import model.vo.cliente.EnderecoVO;
+import model.vo.cliente.PlanoVO;
 import net.miginfocom.swing.MigLayout;
 import util.helpers.Util;
-import view.panels.mainCadastro.subCadastro.DadosCadastroView;
-import view.panels.mainCadastro.subCadastro.EnderecoCadastroView;
-import view.panels.mainCadastro.subCadastro.PlanoCadastroView;
+import view.panels.cadastro.subCadastro.SubCadastroDadosView;
+import view.panels.cadastro.subCadastro.SubCadastroEnderecoView;
+import view.panels.cadastro.subCadastro.SubCadastroPlanoView;
 import view.panels.mainView.MainView;
 
 import javax.swing.*;
@@ -14,29 +18,34 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CadastroView extends JPanel {
+public class CadastroClienteView extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
-    private JLayeredPane layeredPane;
+    private ControllerListaClientesView control;
+    private ControllerMainCadastro ctrl;
+    private final JLayeredPane layeredPane;
+    private JButton btnSalvar;
     private JButton btnPlano, btnDados, btnEndereco;
-    private static JButton btnSalvar;
     private Boolean bool;
 
-    public CadastroView() {
+    public CadastroClienteView() {
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBounds(100, 100, 1145, 908);
         this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[50px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px][35px][35px][10px]"));
+
+        layeredPane = new JLayeredPane();
+        layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
+        MainView.getDadosCadastroView().setBorder(null);
+        layeredPane.add(MainView.getDadosCadastroView(), "cell 0 0,grow");
+        add(layeredPane, "cell 1 1 14 11,grow");
 
         this.initialize();
     }
 
     public void initialize() {
 
-        layeredPane = new JLayeredPane();
-        layeredPane.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        layeredPane.setLayout(new MigLayout("", "[grow]", "[grow]"));
-        layeredPane.add(MainView.getDadosCadastroView(), "cell 0 0,grow");
-        add(layeredPane, "cell 1 1 14 11,grow");
+        control = new ControllerListaClientesView(this);
 
         this.setButtons();
 
@@ -72,10 +81,6 @@ public class CadastroView extends JPanel {
     }
 
     private void addListeners() {
-        btnSalvar.addActionListener(e -> {
-
-        });
-
         btnDados.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -108,6 +113,10 @@ public class CadastroView extends JPanel {
                 }
             }
         });
+
+        btnSalvar.addActionListener(e -> {
+            ctrl.salvar(1);
+        });
     }
 
     /**
@@ -126,11 +135,11 @@ public class CadastroView extends JPanel {
         layeredPane.repaint();
         layeredPane.revalidate();
 
-        if (panel instanceof DadosCadastroView) {
+        if (panel instanceof SubCadastroDadosView) {
             return true;
-        } else if (panel instanceof EnderecoCadastroView) {
+        } else if (panel instanceof SubCadastroEnderecoView) {
             return true;
-        } else if (panel instanceof PlanoCadastroView) {
+        } else if (panel instanceof SubCadastroPlanoView) {
             return true;
         }
         return null;

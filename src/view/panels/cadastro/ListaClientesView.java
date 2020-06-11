@@ -1,6 +1,6 @@
-package view.panels.mainCadastro;
+package view.panels.cadastro;
 
-import controller.ControllerCliente;
+import controller.ControllerListaClientesView;
 import net.miginfocom.swing.MigLayout;
 import util.helpers.Modificacoes;
 import util.helpers.Util;
@@ -11,19 +11,19 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class ClienteView extends JPanel {
+public class ListaClientesView extends JPanel {
 
     private static final long serialVersionUID = 3752138783055180091L;
-    private ControllerCliente control;
+    private ControllerListaClientesView control;
     private Modificacoes modificacao;
 
-    private JLabel lblSelecioneUmaLinha, lblModificacao;
+    private JLabel lblSelecioneUmaLinha;
     private JTextField txtProcurar;
     private JButton btnExcluir, btnAtualizar, btnCadastrar, btnProcurar;
     private JTable table;
     private JCheckBox cbConfirmaExclusao;
 
-    public ClienteView() {
+    public ListaClientesView() {
 
         this.setBounds(100, 100, 1028, 747);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -35,7 +35,7 @@ public class ClienteView extends JPanel {
 
     private void initialize() {
 
-        control = new ControllerCliente(this);
+        control = new ControllerListaClientesView(this);
         modificacao = new Modificacoes();
 
         this.setJLabels_JSeparator();
@@ -101,21 +101,21 @@ public class ClienteView extends JPanel {
 
         btnCadastrar = new JButton("Cadatrar");
         btnCadastrar.setBackground(Color.decode("#35D073"));
-        btnCadastrar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atualizacao-50.png")));
+        btnCadastrar.setIcon(new ImageIcon(ListaClientesView.class.getResource("/img/atualizacao-50.png")));
         btnCadastrar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnCadastrar.setFont(new Font("Arial", Font.BOLD, 20));
         add(btnCadastrar, "cell 2 1,grow");
 
         btnAtualizar = new JButton("Atualizar");
         btnAtualizar.setBackground(Color.WHITE);
-        btnAtualizar.setIcon(new ImageIcon(ClienteView.class.getResource("/img/atualizacao-50.png")));
+        btnAtualizar.setIcon(new ImageIcon(ListaClientesView.class.getResource("/img/atualizacao-50.png")));
         btnAtualizar.setFont(new Font("Arial", Font.BOLD, 20));
         btnAtualizar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnAtualizar.setEnabled(false);
         add(btnAtualizar, "cell 3 1,grow");
 
         btnExcluir = new JButton("Excluir");
-        btnExcluir.setIcon(new ImageIcon(ClienteView.class.getResource("/img/icons8-apagar-para-sempre-38.png")));
+        btnExcluir.setIcon(new ImageIcon(ListaClientesView.class.getResource("/img/icons8-apagar-para-sempre-38.png")));
         btnExcluir.setFont(new Font("Arial", Font.BOLD, 20));
         btnExcluir.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         btnExcluir.setBackground(Color.WHITE);
@@ -177,10 +177,6 @@ public class ClienteView extends JPanel {
 
 
         });
-    }
-
-    public JLabel getLblModificacao() {
-        return lblModificacao;
     }
 
     public JTextField getTxtProcurar() {

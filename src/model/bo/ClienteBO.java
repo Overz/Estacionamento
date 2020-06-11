@@ -21,19 +21,27 @@ public class ClienteBO {
     }
 
     public static boolean validarRG(ClienteVO c) {
-        return c.getRg() != null
-               && !c.getRg().trim().isEmpty()
-               && c.getRg().trim().length() > 0
-               && c.getRg().trim().length() <= 11
-               && c.getRg().trim().matches(ConstHelpers.REGEX_NUMEROS);
+        if (c.getRg() == null || c.getRg().trim().isEmpty()) {
+            return true;
+        } else {
+            return c.getRg() != null
+                   && !c.getRg().trim().isEmpty()
+                   && c.getRg().trim().length() > 0
+                   && c.getRg().trim().length() <= 11
+                   && c.getRg().trim().matches(ConstHelpers.REGEX_NUMEROS);
+        }
     }
 
     public static boolean validarEmail(ClienteVO c) {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        return c.getEmail() != null
-               && c.getEmail().trim().length() > 0
-               && c.getEmail().trim().length() < 255
-               && c.getEmail().matches(regex);
+        if (c.getEmail() == null || c.getEmail().trim().isEmpty()) {
+            return true;
+        } else {
+            return c.getEmail() != null
+                   && c.getEmail().trim().length() > 0
+                   && c.getEmail().trim().length() < 255
+                   && c.getEmail().matches(regex);
+        }
     }
 
     public static boolean validarTelefone(ClienteVO c) {

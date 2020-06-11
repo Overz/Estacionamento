@@ -1,6 +1,7 @@
-package view.panels.mainCadastro.subCadastro;
+package view.panels.cadastro.subCadastro;
 
-import controller.ControllerCadastro;
+import controller.ControllerDadosCadastro;
+import model.vo.cliente.ClienteVO;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.Colunas;
 import util.helpers.Modificacoes;
@@ -10,28 +11,29 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class DadosCadastroView extends JPanel {
+public class SubCadastroDadosView extends JPanel {
 
     private static final long serialVersionUID = 8795512428702538815L;
-    private ControllerCadastro control;
+    private ControllerDadosCadastro control;
     private Modificacoes modificacoes;
     private JTextField txtEmail, txtNome, txtCPF, txtRG, txtTelefone;
     private JTable table;
     private JButton btnAddRow;
 
-    public DadosCadastroView() {
+    public SubCadastroDadosView() {
 
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.WHITE);
-        this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", "[10px][grow][grow][grow][10px][grow][grow][10px][grow][10px][grow][10px][grow][grow][grow][grow][grow][grow]"));
+        this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]",
+                "[10px][grow][grow][grow][10px][grow][grow][10px][grow][10px][grow][10px][grow][grow][grow][grow][grow][grow]"));
 
         this.initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
 
         modificacoes = new Modificacoes();
-        control = new ControllerCadastro(this);
+        control = new ControllerDadosCadastro(this);
 
         setJLabels_JSeparator();
 
@@ -46,7 +48,7 @@ public class DadosCadastroView extends JPanel {
         addListeners();
     }
 
-    public void setJLabels_JSeparator() {
+    private void setJLabels_JSeparator() {
         JLabel lblNome = new JLabel("<html><body>Nome <a style=color:red>*</a></body></html>");
         lblNome.setHorizontalAlignment(SwingConstants.CENTER);
         lblNome.setFont(new Font("Arial", Font.BOLD, 14));
@@ -78,7 +80,7 @@ public class DadosCadastroView extends JPanel {
         this.add(lblAdicionarVeculos, "cell 0 10 4 1,grow");
     }
 
-    public void setInputFields() {
+    private void setInputFields() {
         txtNome = new JTextField();
         txtNome.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtNome.setFont(new Font("Arial", Font.BOLD, 14));
@@ -112,13 +114,13 @@ public class DadosCadastroView extends JPanel {
 
     }
 
-    public void setButtons() {
+    private void setButtons() {
         btnAddRow = new JButton("Adicionar Carro");
         btnAddRow.setFont(new Font("Arial", Font.BOLD, 12));
         add(btnAddRow, "cell 9 10 2 1,grow");
     }
 
-    public void setJTable() {
+    private void setJTable() {
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, "cell 0 12 12 6,grow");
 
@@ -146,13 +148,10 @@ public class DadosCadastroView extends JPanel {
 
     private void addListeners() {
         btnAddRow.addActionListener(e -> control.addrow());
-
-
-//        control.getResultadoForm();
     }
 
-    public ControllerCadastro getControl() {
-        return control;
+    public ClienteVO returnForm() {
+        return control.getFormCliente();
     }
 
     public Modificacoes getModificacoes() {

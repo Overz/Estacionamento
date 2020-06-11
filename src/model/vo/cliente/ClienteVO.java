@@ -27,6 +27,14 @@ public class ClienteVO {
         this.carro = carro;
     }
 
+    public ClienteVO(String nome, String cpf, String rg, String email, String telefone) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.rg = rg;
+        this.email = email;
+        this.telefone = telefone;
+    }
+
     public ClienteVO() {
         super();
     }

@@ -23,7 +23,7 @@ CREATE TABLE `dbestacionamento`.`modelo`
 (
     `id`        INT         NOT NULL AUTO_INCREMENT,
     `idMarca`   INT         NOT NULL,
-    `descricao` VARCHAR(45) NOT NULL,
+    `descricao` VARCHAR(100) NOT NULL,
     CONSTRAINT `pk_modelo` PRIMARY KEY (`id`),
     CONSTRAINT `fk_modelo_marca` FOREIGN KEY (`idMarca`) REFERENCES `dbestacionamento`.`marca` (`id`)
 ) ENGINE = InnoDB;

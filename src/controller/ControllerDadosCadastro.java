@@ -1,31 +1,36 @@
 package controller;
 
 import model.banco.BaseDAO;
-import model.dao.cliente.ClienteDAO;
+import model.dao.veiculos.CarroDAO;
 import model.vo.cliente.ClienteVO;
 import model.vo.veiculo.CarroVO;
 import util.constantes.ConstHelpers;
-import view.panels.mainCadastro.subCadastro.DadosCadastroView;
+import view.panels.cadastro.subCadastro.SubCadastroDadosView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ControllerCadastro {
+public class ControllerDadosCadastro {
 
-    private final DadosCadastroView cadastroView;
-    private final BaseDAO<ClienteVO> daoC;
+    private final SubCadastroDadosView cadastroView;
     private final ClienteVO cliente;
-    private final CarroVO carro;
+    private BaseDAO<CarroVO> daoCarro;
     private ArrayList<CarroVO> linhas;
+    private ArrayList<CarroVO> lista;
 
-    public ControllerCadastro(DadosCadastroView cadastroView) {
-        this.cadastroView = cadastroView;
+    public ControllerDadosCadastro(JPanel panel) {
+        this.cadastroView = (SubCadastroDadosView) panel;
         linhas = new ArrayList<>();
-        daoC = new ClienteDAO();
+        lista = new ArrayList<>();
         cliente = new ClienteVO();
-        carro = new CarroVO();
+        daoCarro = new CarroDAO();
+    }
+
+    // TODO Atualizar Tabela caso Haja Carros na tela de Atualização
+    public void atualizarTabela() {
+        lista = daoCarro.consultar();
     }
 
     /**
@@ -42,7 +47,7 @@ public class ControllerCadastro {
      * Cria um temporizador para setar os valores dos forumalarios
      * - Gambiarra
      */
-    public void getResultadoForm() {
+    public void getResultadoFormTeste() {
         ActionListener event = e -> {
             ConstHelpers.FLAG = 1;
             cliente.setNome(cadastroView.getTxtNome().getText());
@@ -68,5 +73,26 @@ public class ControllerCadastro {
         Timer timer = new Timer(300, event);
         timer.setRepeats(true);
         timer.start();
+    }
+
+    public ClienteVO getFormCliente() {
+        String nome = cadastroView.getTxtNome().getText();
+        String cpf = cadastroView.getTxtCPF().getText();
+        String rg = cadastroView.getTxtRG().getText();
+        String email = cadastroView.getTxtEmail().getText();
+        String fone = cadastroView.getTxtTelefone().getText();
+        boolean cbx = false;
+        return new ClienteVO(nome, cpf, rg, email, fone);
+    }
+
+    public CarroVO getFormCarro() {
+        for (CarroVO carro : lista) {
+            return carro;
+        }
+        return null;
+    }
+
+    public ArrayList<CarroVO> getFormListaCarro() {
+        return lista;
     }
 }

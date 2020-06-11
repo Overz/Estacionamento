@@ -28,7 +28,7 @@ public class InicioView extends JPanel {
     private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
             btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
     private JTextField txtTicket;
-    private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída, lblModificacao;
+    private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída;
     private JTextField txtProcurar;
 
     public InicioView() {
@@ -202,11 +202,8 @@ public class InicioView extends JPanel {
     }
 
     private void setComboBox() {
-        ArrayList<String> formaPgto = new ArrayList<>();
-        formaPgto.add(ConstInicio.PGTO_DINHEIRO);
-        formaPgto.add(ConstInicio.PGTO_CARTAO);
 
-        cbFormaPgto = new JComboBox<>(formaPgto.toArray());
+        cbFormaPgto = new JComboBox<>(ConstInicio.LISTA_FORMA_PGTO.toArray());
         cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 20));
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 1 8 2 1,grow");
@@ -313,8 +310,5 @@ public class InicioView extends JPanel {
         return lblCancelaSaída;
     }
 
-    public JLabel getLblModificacao() {
-        return lblModificacao;
-    }
 
 }

@@ -1,4 +1,4 @@
-package view.panels.mainCadastro.subCadastro;
+package view.panels.cadastro.subCadastro;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -6,12 +6,12 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class EnderecoCadastroView extends JPanel {
+public class SubCadastroEnderecoView extends JPanel {
 
     private static final long serialVersionUID = 6735598086664804404L;
     private JTextField txtRua, txtBairro, txtNumero, txtCidade;
 
-    public EnderecoCadastroView() {
+    public SubCadastroEnderecoView() {
 
         this.setBackground(Color.WHITE);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));

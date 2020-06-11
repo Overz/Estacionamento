@@ -17,6 +17,13 @@ public class EnderecoVO {
         this.cidade = cidade;
     }
 
+    public EnderecoVO(Integer numero, String rua, String bairro, String cidade) {
+        this.numero = numero;
+        this.rua = rua;
+        this.bairro = bairro;
+        this.cidade = cidade;
+    }
+
     public EnderecoVO() {
         super();
     }

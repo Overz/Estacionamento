@@ -428,7 +428,7 @@ public class ControllerInicio {
                 this.atualizarTabela();
                 break;
             case ConstInicio.PROCURA_CARRO:
-                if (CarroBO.validarCarro(valor)) {
+                if (CarroBO.validarPlaca(valor)) {
                     ConstHelpers.SUB_FLAG = 1;
                     lista = daoM.consultar(valor);
                 }

@@ -59,6 +59,13 @@ public class PlanoVO {
         this.contrato = contrato;
     }
 
+    public String toStringDiff() {
+        return " - PLANO: " +
+               " - ID: " + id +
+               " - TIPO_PLANO: " + tipo +
+               " - DESCRICAO: " + descircao;
+    }
+
     @Override
     public String toString() {
         return " - PLANO: " +

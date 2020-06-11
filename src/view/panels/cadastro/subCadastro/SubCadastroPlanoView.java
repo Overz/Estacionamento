@@ -1,18 +1,24 @@
-package view.panels.mainCadastro.subCadastro;
+package view.panels.cadastro.subCadastro;
 
+import model.banco.BaseDAO;
+import model.dao.cliente.PlanoDAO;
+import model.vo.cliente.PlanoVO;
 import net.miginfocom.swing.MigLayout;
+import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class PlanoCadastroView extends JPanel {
+public class SubCadastroPlanoView extends JPanel {
 
     private static final long serialVersionUID = -8178837282155450083L;
     private JComboBox<Object> cbPlano;
-    private JComboBox<String> cbFormaPgto;
+    private JComboBox cbFormaPgto;
 
-    public PlanoCadastroView() {
+    public SubCadastroPlanoView() {
 
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", "[grow][grow][grow][grow][grow][grow][grow][grow]"));
@@ -44,18 +50,28 @@ public class PlanoCadastroView extends JPanel {
     }
 
     public void setComboBox() {
+        ConstHelpers.FLAG = 1;
+        BaseDAO<PlanoVO> plano = new PlanoDAO();
+        ArrayList<PlanoVO> lista = plano.consultarTodos(); //TODO Verificar meio de consultar sem alter o result set
+        cbPlano = new JComboBox<>(new DefaultComboBoxModel<>(lista.toArray()));
 
-        cbPlano = new JComboBox<Object>();
         cbPlano.setFont(new Font("Arial", Font.BOLD, 16));
         cbPlano.setBorder(new LineBorder(Color.BLACK, 1, true));
         cbPlano.setBackground(Color.WHITE);
         add(cbPlano, "cell 2 3 4 1,grow");
 
-        cbFormaPgto = new JComboBox<String>();
+        cbFormaPgto = new JComboBox<>(ConstInicio.LISTA_FORMA_PGTO.toArray());
         cbFormaPgto.setFont(new Font("Arial", Font.BOLD, 16));
         cbFormaPgto.setBorder(new LineBorder(Color.BLACK, 1, true));
         cbFormaPgto.setBackground(Color.WHITE);
         add(cbFormaPgto, "cell 2 4 4 1,grow");
+    }
 
+    public JComboBox<Object> getCbPlano() {
+        return cbPlano;
+    }
+
+    public JComboBox<String> getCbFormaPgto() {
+        return cbFormaPgto;
     }
 }
