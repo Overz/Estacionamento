@@ -55,7 +55,7 @@ public class ControllerCaixa {
                     // TICKET
                     if (movimento.getTicket() != null) {
                         boolean validado = movimento.getTicket().getValidado();
-                        if (validado) {
+                        if (validado) { // Verifica se ja foi validado para preencher na tabela
                             LocalDateTime dtTicketEntrada = movimento.getTicket().getDataEntrada();
                             LocalDateTime dtTicketSaida = movimento.getTicket().getDataValidacao();
 
@@ -73,11 +73,11 @@ public class ControllerCaixa {
                     }
 
                     // CARTÃO
-                    if (movimento.getPlano() != null) {
-                        LocalDateTime dtContratoEntrada = movimento.getPlano().getContrato().getDtEntrada();
-
+                    if (movimento.getContrato() != null) {
+                        LocalDateTime dtContratoEntrada = movimento.getHr_entrada();
+                        LocalDateTime dtContratoSaida = movimento.getHr_saida();
                         // Mantém a tabela atualizada com Plano caso exista
-                        this.atualizarTabelaPlano(movimento, dtContratoEntrada, now, novaColuna);
+                        this.atualizarTabelaPlano(movimento, dtContratoEntrada, dtContratoSaida, now, novaColuna);
 
                         if (primeiro) {
                             primeiro = false;
@@ -87,7 +87,7 @@ public class ControllerCaixa {
                         System.out.println("Linha:" + i);
                         System.out.println("Plano:");
                         System.out.println(movimento.toString());
-                        System.out.println(movimento.getPlano().toString());
+                        System.out.println(movimento.getContrato().toString());
                         System.out.println();
                         model.addRow(novaColuna);
                     }
@@ -143,23 +143,24 @@ public class ControllerCaixa {
     /**
      * Mantém a tabela atualizada com Plano caso exista
      *
-     * @param movimento         MovimentoVO
-     * @param dtContratoEntrada LocalDateTime
-     * @param now               LocalDateTime
-     * @param novaLinha         Object[]
+     * @param movimento MovimentoVO
+     * @param entrada   LocalDateTime
+     * @param now       LocalDateTime
+     * @param novaLinha Object[]
      */
-    private void atualizarTabelaPlano(MovimentoVO movimento, LocalDateTime dtContratoEntrada, LocalDateTime now, Object[] novaLinha) {
-        LocalDateTime saida = movimento.getPlano().getContrato().getDtSaida();
+    private void atualizarTabelaPlano(MovimentoVO movimento, LocalDateTime entrada,
+                                      LocalDateTime saida, LocalDateTime now, Object[] novaLinha) {
+
         // Coluna 1 (Ticket/Cartao)
-        if (movimento.getPlano().getContrato().getNumeroCartao() > 0) {
-            novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
+        if (movimento.getContrato().getNumeroCartao() > 0) {
+            novaLinha[0] = movimento.getContrato().getNumeroCartao();
         }
 
         // Coluna 2 (Descricao)
-        novaLinha[1] = movimento.getPlano().getTipo();
+        novaLinha[1] = movimento.getContrato().getPlano().getTipo();
 
         // Coluna 3 (Hr Entrada)
-        if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
+        if (now.toLocalDate().equals(entrada.toLocalDate())) {
             novaLinha[2] = movimento.getHr_entrada().format(ConstHelpers.DTF);
         } else {
             novaLinha[2] = "";
@@ -173,10 +174,10 @@ public class ControllerCaixa {
         }
 
         // Coluna 5 (Pagamento)
-        novaLinha[4] = movimento.getPlano().getContrato().getTipoPgto();
+        novaLinha[4] = movimento.getContrato().getTipoPgto();
 
         // Coluna 6 (Valores);
-        novaLinha[5] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
+        novaLinha[5] = "R$: " + Util.formatarValor(movimento.getContrato().getValor());
     }
 
     /**
@@ -189,21 +190,21 @@ public class ControllerCaixa {
      * @param now               LocalDateTime
      * @param dtContratoEntrada LocalDateTime
      */
-    public void somarValoresTabela(LocalDateTime now, LocalDateTime dtContratoEntrada) {
+    private void somarValoresTabela(LocalDateTime now, LocalDateTime dtContratoEntrada) {
         try {
             boolean data = false;
             if (now.toLocalDate().equals(dtContratoEntrada.toLocalDate())) {
                 data = true;
             }
             for (MovimentoVO m : lista) {
-                if (m.getPlano() != null) {
-                    String plano = m.getPlano().getContrato().getTipoPgto();
+                if (m.getContrato() != null) {
+                    String plano = m.getContrato().getTipoPgto();
                     if (plano.equals("DINHEIRO") && data) {
-                        ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += m.getPlano().getContrato().getValor();
-                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += m.getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getContrato().getValor();
                     } else if (plano.equals("CARTÃO") && data) {
-                        ConstCaixa.LBL_VALOR_CAIXA_CARTAO += m.getPlano().getContrato().getValor();
-                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getPlano().getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_CARTAO += m.getContrato().getValor();
+                        ConstCaixa.LBL_VALOR_CAIXA_TOTAL += m.getContrato().getValor();
                     }
                 }
 
@@ -236,8 +237,8 @@ public class ControllerCaixa {
     }
 
     /**
-     * Mostra uma Mensagem de Sucesso ou de Erro caso ação realizada
-     * Adição ou Remoção
+     * Mostra um JOptionPane com valores de entrada
+     * Realiza Adição ou Remoção dependendo da Flag passada
      */
     public void showInputDialog() {
         boolean r;
@@ -253,21 +254,20 @@ public class ControllerCaixa {
         jopValueSaldo = JOptionPane.showInputDialog(caixaView, msg, title, JOptionPane.QUESTION_MESSAGE);
 
         try {
-            Double c = Double.valueOf(jopValueSaldo);
+            Double c = Double.valueOf(jopValueSaldo.replace(',', '.'));
 
             // Se add com sucesso, mostra uma Mensagem que adc com sucesso, se não, msg com erro
             if (ConstHelpers.FLAG == 1) {
                 r = this.addValor(jopValueComboBox, c);
                 this.msgAdicionar(r);
-            }
+            } else
+                // Se remover com sucesso, mostra uma Mensagem que removeu com sucesso, se não, msg com Erro
+                if (ConstHelpers.FLAG == 0) {
+                    r = this.removerValor(c);
+                    this.msgRemover(r);
+                }
 
-            // Se remover com sucesso, mostra uma Mensagem que removeu com sucesso, se não, msg com Erro
-            if (ConstHelpers.FLAG == 0) {
-                r = this.removerValor(c);
-                this.msgRemover(r);
-            }
-
-            this.totalizarCaixa();
+            this.controlarValorLabel();
 
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -287,24 +287,25 @@ public class ControllerCaixa {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
                     ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO += a;
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL += a;
                     bool = true;
                 } else {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmDinheiror().setText(ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + " " + ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO);
         }
         if (tipo.equals(ConstInicio.PGTO_CARTAO)) {
             for (Double a : values) {
                 if (CaixaBO.validarValorDigitado(a)) {
                     ConstCaixa.LBL_VALOR_CAIXA_CARTAO += a;
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL += a;
                     bool = true;
                 } else {
                     bool = false;
                 }
             }
-            caixaView.getLblSaldoEmCarto().setText(ConstCaixa.LBL_TEXT_CAIXA_CARTAO + " " + ConstCaixa.LBL_VALOR_CAIXA_CARTAO);
         }
+        this.controlarValorLabel();
         return bool;
     }
 
@@ -315,16 +316,22 @@ public class ControllerCaixa {
      * @return true/false
      */
     private boolean removerValor(Double... values) {
-        for (Double a : values) {
-            if (CaixaBO.validarValorDigitado(a)) {
-                if (ConstCaixa.LBL_VALOR_CAIXA_TOTAL > 0.0) {
-                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= a;
-//                    this.controlarValorLabel();
+        for (Double value : values) {
+            if (CaixaBO.validarValorDigitado(value)) {
+                if (ConstCaixa.LBL_VALOR_CAIXA_TOTAL >= value) {
+                    ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= value;
+                    this.controlarValorLabel();
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private void controlarValorLabel() {
+        caixaView.getLblSaldoEmDinheiror().setText(ConstCaixa.LBL_TEXT_CAIXA_DINHEIRO + Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO));
+        caixaView.getLblSaldoEmDinheiror().setText(ConstCaixa.LBL_TEXT_CAIXA_CARTAO + Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_CARTAO));
+        caixaView.getLblTotalCaixa().setText(ConstCaixa.LBL_TEXT_CAIXA_TOTAL + Util.formatarValor(ConstCaixa.LBL_VALOR_CAIXA_TOTAL));
     }
 
     /**
@@ -354,7 +361,7 @@ public class ControllerCaixa {
         if (r) {
             msg = "Remoção Realizada!";
         } else {
-            msg = "Erro ao Remover Valores<br>Menores que o Total!";
+            msg = "<html><body>Erro ao Remover Valores<br>Menores que o Total!</body></html>";
         }
         JOptionPane.showMessageDialog(caixaView,
                 Modificacoes.labelConfig(msg),
@@ -362,20 +369,21 @@ public class ControllerCaixa {
     }
 
     /**
-     * Calcula os valores e totaliza o Caixa em um Label;
+     * Calcula os valores e totaliza o Caixa em um Label
+     * Verifica o tipo de adição, soma com a quantidade de sua respectiva label e totaliza
      */
-    private void totalizarCaixa() {
+    private boolean totalizarCaixa() {
         double c = 0.0, d = 0.0;
         try {
             if (ConstHelpers.FLAG == 1) {
                 if (jopValueComboBox.equals(ConstInicio.PGTO_DINHEIRO)) {
                     c = Double.parseDouble(jopValueSaldo);
-                }
-                if (jopValueComboBox.equals(ConstInicio.PGTO_CARTAO)) {
+                } else if (jopValueComboBox.equals(ConstInicio.PGTO_CARTAO)) {
                     d = Double.parseDouble(jopValueSaldo);
                 }
                 ConstCaixa.LBL_VALOR_CAIXA_TOTAL += c;
                 ConstCaixa.LBL_VALOR_CAIXA_TOTAL += d;
+                return true;
             }
             if (ConstHelpers.FLAG == 0) {
                 if (jopValueComboBox.equals(ConstInicio.PGTO_DINHEIRO)) {
@@ -393,10 +401,12 @@ public class ControllerCaixa {
                     ConstCaixa.LBL_VALOR_CAIXA_TOTAL -= d;
                 }
             }
-            caixaView.getLblTotalCaixa().setText(ConstCaixa.LBL_TEXT_CAIXA_TOTAL + "" + ConstCaixa.LBL_VALOR_CAIXA_TOTAL);
+            this.controlarValorLabel();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -495,12 +505,12 @@ public class ControllerCaixa {
      */
     public void gerarComprovantePorLinha() {
 
-        title = "Criação do PDF";
-
         int row = caixaView.getTable().getSelectedRow();
         MovimentoVO movimentoVO = lista.get(row);
+        ConstHelpers.FLAG = 0;
+        movimentoVO = daoM.consultarPorId(movimentoVO.getId());
 
-        if (movimentoVO.getPlano() == null) {
+        if (movimentoVO.getContrato() == null) {
             if (movimentoVO.getTicket() != null) {
                 if (movimentoVO.getTicket().getValidado()) {
 
@@ -509,14 +519,15 @@ public class ControllerCaixa {
                     if (i == JFileChooser.APPROVE_OPTION) {
 
                         File file = new File(jfc.getSelectedFile().toString() + ".pdf");
-                        if (file.exists()) {
+                        boolean exist = file.exists();
+                        if (exist) {
                             msg = "Arquivo existente Encontrado, Deseja Subistituir?";
                             int j = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), "Sobre-Escrever", JOptionPane.OK_CANCEL_OPTION);
                             if (j == JOptionPane.OK_OPTION) {
-                                String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
-                                PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
-                                msg = pdf.gerarPdf();
+                                msg = gerarComprovanteAction(jfc, movimentoVO);
                             }
+                        } else {
+                            msg = gerarComprovanteAction(jfc, movimentoVO);
                         }
                     } else {
                         msg = "<html><body>Operação Cancelada</body></html>";
@@ -532,8 +543,15 @@ public class ControllerCaixa {
             msg = "Por favor, Selecione Somente TICKET!";
         }
 
+        title = "Criação do PDF";
         JOptionPane.showMessageDialog(caixaView, Modificacoes.labelConfig(msg),
                 title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private String gerarComprovanteAction(JFileChooser jfc, MovimentoVO movimentoVO) {
+        String caminhoEscolhido = Util.caminhoFileChooser(jfc.getSelectedFile());
+        PdfComprovante pdf = new PdfComprovante(caminhoEscolhido, movimentoVO);
+        return pdf.gerarPdf();
     }
 
     /**
@@ -547,7 +565,7 @@ public class ControllerCaixa {
         LocalDateTime endOfDay = LocalDateTime.of(day, endTime); // Fim do Dia
 
         if (now.getHour() >= endOfDay.getHour()) {
-            msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
+            String msg = "<html><body><p text-align:Center>Atenção!</p><br>Caixa Disponível para Fechamento!</body></html>";
             JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Caixa", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -569,6 +587,12 @@ public class ControllerCaixa {
                     caixaView.getLblSaldoEmDinheiror().setText(concatD);
                     caixaView.getLblSaldoEmCarto().setText(concatC);
                     caixaView.getLblTotalCaixa().setText(concatT);
+
+//                    System.out.println("TImer Refersh Label : Caixa View");
+//                    System.out.println(concatD);
+//                    System.out.println(concatC);
+//                    System.out.println(concatT);
+//                    System.out.println();
                 } catch (Exception e1) {
                     System.out.println(e1.getClass().getSimpleName());
                     try {

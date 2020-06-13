@@ -6,12 +6,12 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class SubCadastroEnderecoView extends JPanel {
+public class PanelzinhoCadastroEndereco extends JPanel {
 
     private static final long serialVersionUID = 6735598086664804404L;
     private JTextField txtRua, txtBairro, txtNumero, txtCidade;
 
-    public SubCadastroEnderecoView() {
+    public PanelzinhoCadastroEndereco() {
 
         this.setBackground(Color.WHITE);
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));

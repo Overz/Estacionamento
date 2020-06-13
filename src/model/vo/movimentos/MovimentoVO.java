@@ -1,6 +1,6 @@
 package model.vo.movimentos;
 
-import model.vo.cliente.PlanoVO;
+import model.vo.cliente.ContratoVO;
 import util.constantes.ConstHelpers;
 
 import java.time.LocalDateTime;
@@ -11,17 +11,17 @@ public class MovimentoVO {
     private LocalDateTime hr_entrada;
     private LocalDateTime hr_saida;
     private boolean atual;
-    private PlanoVO plano;
     private TicketVO ticket;
+    private ContratoVO contrato;
 
-    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, boolean atual, PlanoVO plano, TicketVO ticket) {
+    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, boolean atual, TicketVO ticket, ContratoVO contrato) {
         super();
         this.id = id;
         this.hr_entrada = hr_entrada;
         this.hr_saida = hr_saida;
         this.atual = atual;
-        this.plano = plano;
         this.ticket = ticket;
+        this.contrato = contrato;
     }
 
     public MovimentoVO(int id, LocalDateTime hr_entrada, boolean atual, TicketVO ticket) {
@@ -59,20 +59,20 @@ public class MovimentoVO {
         this.hr_saida = hr_saida;
     }
 
-    public PlanoVO getPlano() {
-        return plano;
-    }
-
-    public void setPlano(PlanoVO plano) {
-        this.plano = plano;
-    }
-
     public TicketVO getTicket() {
         return ticket;
     }
 
     public void setTicket(TicketVO ticket) {
         this.ticket = ticket;
+    }
+
+    public ContratoVO getContrato() {
+        return contrato;
+    }
+
+    public void setContrato(ContratoVO contrato) {
+        this.contrato = contrato;
     }
 
     public boolean isAtual() {

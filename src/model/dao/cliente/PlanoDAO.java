@@ -2,6 +2,7 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.seletor.SeletorCliente;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
@@ -28,17 +29,6 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
             planoVO.setId(result.getInt("id"));
             planoVO.setTipo(result.getNString("tipo"));
             planoVO.setDescircao(result.getString("descricao"));
-
-            int idContrato = result.getInt("idContrato");
-            ContratoDAO contratoDAO = new ContratoDAO();
-            ContratoVO contratoVO = contratoDAO.consultarPorId(idContrato);
-            planoVO.setContrato(contratoVO);
-
-            int idCliente = result.getInt("idcliente");
-            ClienteDAO clienteDAO = new ClienteDAO();
-            ClienteVO clienteVO = clienteDAO.consultarPorId(idCliente);
-            planoVO.setCliente(clienteVO);
-
             return planoVO;
         } catch (SQLException e) {
             String method = "CriarResultSet(ResultSet result)";
@@ -54,8 +44,7 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public ArrayList<PlanoVO> consultarTodos() {
-        String qry = ConstHelpers.FLAG == 0 ? "select * from plano;" : null;
-        qry = ConstHelpers.FLAG == 1 ? "select id, tipo, descricao from plano;" : "select * from plano;";
+        String qry = "select * from plano;";
 
         list = new ArrayList<>();
         conn = Banco.getConnection();
@@ -86,15 +75,32 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public <T> T consultar(String... values) {
-        String qry = "select * from plano where tipo=?, descricao=?;";
+        String qry = "";
+        if (ConstHelpers.FLAG == 0) {
+
+        } else if (ConstHelpers.FLAG == 1) {
+
+        } else {
+            qry = " select * from plano pla " +
+                  " left join contrato con on pla.idContrato = con.id " +
+                  " left join cliente cli on pla.idCliente = cli.id " +
+                  " left join carro car on cli.idCarro = car.id " +
+                  " left join modelo mdl on car.idModelo = mdl.id" +
+                  " left join marca mar on mdl.idMarca = mar.id ";
+        }
+
+        SeletorCliente seletor = new SeletorCliente();
+        seletor.setValor(values[0]);
+
+        if (seletor.temFiltro()) {
+            qry = seletor.criarFiltro(qry);
+        }
+
         list = new ArrayList<>();
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setString(1, values[0]);
-            stmt.setString(2, values[1]);
-
             result = stmt.executeQuery();
             while (result.next()) {
                 planoVO = criarResultSet(result);

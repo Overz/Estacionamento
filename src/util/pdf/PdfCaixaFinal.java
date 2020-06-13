@@ -114,7 +114,7 @@ public class PdfCaixaFinal extends Document {
             LocalDateTime saida = movimentoVO.getHr_saida();
             if (movimentoVO.getTicket() != null) {
                 this.addTableTicket(table, movimentoVO, entrada, saida);
-            } else if (movimentoVO.getPlano() != null) {
+            } else if (movimentoVO.getContrato() != null) {
                 this.addTableCliente(table, movimentoVO, entrada, saida);
             }
         }
@@ -159,11 +159,11 @@ public class PdfCaixaFinal extends Document {
      */
     private void addTableCliente(PdfPTable table, MovimentoVO movimentoVO, LocalDateTime entrada, LocalDateTime saida) {
         // Coluna 1 - Numero
-        table.addCell(String.valueOf(movimentoVO.getPlano().getContrato().getNumeroCartao()));
+        table.addCell(String.valueOf(movimentoVO.getContrato().getNumeroCartao()));
         // Coluna 2 - Descricao
         table.addCell("Cliente");
         // Coluna 3 - Valor
-        table.addCell(Util.formatarValor(movimentoVO.getPlano().getContrato().getValor()));
+        table.addCell(Util.formatarValor(movimentoVO.getContrato().getValor()));
         // Coluna 4 - Entrada
         table.addCell(entrada.format(ConstHelpers.DTF));
         // Coluna 5 - Saida
@@ -202,12 +202,12 @@ public class PdfCaixaFinal extends Document {
                         pago++;
                         totalValor += movimentoVO.getTicket().getValor();
                     }
-                } else if (movimentoVO.getPlano() != null) {
+                } else if (movimentoVO.getContrato() != null) {
                     LocalDateTime entrada = movimentoVO.getHr_entrada();
                     LocalDateTime now = LocalDateTime.now();
-                    if (entrada.toLocalDate().equals(now.toLocalDate()) && movimentoVO.getPlano().getContrato().getValor() != 0.0) {
+                    if (entrada.toLocalDate().equals(now.toLocalDate()) && movimentoVO.getContrato().getValor() != 0.0) {
                         pago++;
-                        totalValor += movimentoVO.getPlano().getContrato().getValor();
+                        totalValor += movimentoVO.getContrato().getValor();
                     }
                 }
             }

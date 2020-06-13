@@ -5,11 +5,11 @@ import util.constantes.ConstCaixa;
 import view.panels.CaixaView;
 import view.panels.LostTicketView;
 import view.panels.MovimentoView;
-import view.panels.cadastro.CadastroClienteView;
+import view.panels.cadastro.MainPanelCadastro;
 import view.panels.cadastro.ListaClientesView;
-import view.panels.cadastro.subCadastro.SubCadastroDadosView;
-import view.panels.cadastro.subCadastro.SubCadastroEnderecoView;
-import view.panels.cadastro.subCadastro.SubCadastroPlanoView;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,14 +18,14 @@ public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
 
-    private static final SubCadastroDadosView DADOS_CADASTRO_VIEW = new SubCadastroDadosView();
-    private static final SubCadastroEnderecoView ENDERECO_CADASTRO_VIEW = new SubCadastroEnderecoView();
-    private static final SubCadastroPlanoView PLANO_CADASTRO_VIEW = new SubCadastroPlanoView();
+    private static final PanelzinhoCadastroDados DADOS_CADASTRO_VIEW = new PanelzinhoCadastroDados();
+    private static final PanelzinhoCadastroEndereco ENDERECO_CADASTRO_VIEW = new PanelzinhoCadastroEndereco();
+    private static final PanelzinhoCadastroPlano PLANO_CADASTRO_VIEW = new PanelzinhoCadastroPlano();
 
     private static final InicioView INICIO_VIEW = new InicioView();
     private static final CaixaView CAIXA_VIEW = new CaixaView();
     private static final ListaClientesView CLIENTE_VIEW = new ListaClientesView();
-    private static final CadastroClienteView CADASTRO_VIEW = new CadastroClienteView();
+    private static final MainPanelCadastro CADASTRO_VIEW = new MainPanelCadastro();
     private static final MovimentoView MOVIMENTO_VIEW = new MovimentoView();
     private static final LostTicketView LOST_TICKET_VIEW = new LostTicketView();
     private static JLayeredPane layeredPane;
@@ -166,19 +166,19 @@ public class MainView extends JFrame {
 
     }
 
-    public static SubCadastroDadosView getDadosCadastroView() {
+    public static PanelzinhoCadastroDados getDadosCadastroView() {
         return DADOS_CADASTRO_VIEW;
     }
 
-    public static SubCadastroEnderecoView getEnderecoCadastroView() {
+    public static PanelzinhoCadastroEndereco getEnderecoCadastroView() {
         return ENDERECO_CADASTRO_VIEW;
     }
 
-    public static SubCadastroPlanoView getPlanoCadastroView() {
+    public static PanelzinhoCadastroPlano getPlanoCadastroView() {
         return PLANO_CADASTRO_VIEW;
     }
 
-    public static CadastroClienteView getCadastroView() {
+    public static MainPanelCadastro getCadastroView() {
         return CADASTRO_VIEW;
     }
 

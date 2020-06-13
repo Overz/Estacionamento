@@ -1,16 +1,16 @@
 package controller;
 
 import model.vo.cliente.PlanoVO;
-import view.panels.cadastro.subCadastro.SubCadastroPlanoView;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
 
-public class ControllerPlanoCadastro {
+public class ControllerCadastroPlano {
 
-    private final SubCadastroPlanoView planoView;
+    private final PanelzinhoCadastroPlano planoView;
 
-    public ControllerPlanoCadastro(JPanel panel) {
-        this.planoView = (SubCadastroPlanoView) panel;
+    public ControllerCadastroPlano(JPanel panel) {
+        this.planoView = (PanelzinhoCadastroPlano) panel;
     }
 
     public PlanoVO getPlanoForm() {

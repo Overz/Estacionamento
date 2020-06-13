@@ -1,5 +1,7 @@
 package util.helpers;
 
+import util.constantes.ConstHelpers;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -69,7 +71,7 @@ public class Util {
                         button.setBackground(Color.WHITE);
                         button.setEnabled(false);
                     };
-                    Timer timer = new Timer(30000, event);
+                    Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
                     timer.start();
                 }
             }

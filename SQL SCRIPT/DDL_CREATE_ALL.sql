@@ -21,11 +21,12 @@ CREATE TABLE `dbestacionamento`.`marca`
 
 CREATE TABLE `dbestacionamento`.`modelo`
 (
-    `id`        INT         NOT NULL AUTO_INCREMENT,
-    `idMarca`   INT         NOT NULL,
+    `id`        INT          NOT NULL AUTO_INCREMENT,
+    `idMarca`   INT          NOT NULL,
     `descricao` VARCHAR(100) NOT NULL,
     CONSTRAINT `pk_modelo` PRIMARY KEY (`id`),
     CONSTRAINT `fk_modelo_marca` FOREIGN KEY (`idMarca`) REFERENCES `dbestacionamento`.`marca` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE `dbestacionamento`.`carro`
@@ -36,6 +37,7 @@ CREATE TABLE `dbestacionamento`.`carro`
     `cor`      VARCHAR(45) NULL,
     CONSTRAINT `pk_carro` PRIMARY KEY (`id`),
     CONSTRAINT `fk_carro_modelo` FOREIGN KEY (`idModelo`) REFERENCES `dbestacionamento`.`modelo` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE `dbestacionamento`.`cliente`
@@ -49,56 +51,67 @@ CREATE TABLE `dbestacionamento`.`cliente`
     `email`      VARCHAR(255) NOT NULL,
     `telefone`   VARCHAR(45)  NOT NULL,
     CONSTRAINT `pk_cliente` PRIMARY KEY (`id`),
-    CONSTRAINT `fk_cliente_endereco` FOREIGN KEY (`idEndereco`) REFERENCES `dbestacionamento`.`endereco` (`id`),
+    CONSTRAINT `fk_cliente_endereco` FOREIGN KEY (`idEndereco`) REFERENCES `dbestacionamento`.`endereco` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `fk_cliente_carro` FOREIGN KEY (`idCarro`) REFERENCES `dbestacionamento`.`carro` (`id`)
-) ENGINE = InnoDB;
-
-CREATE TABLE `dbestacionamento`.`ticket`
-(
-    `id`           INT                        NOT NULL AUTO_INCREMENT,
-    `n_ticket`     LONG                       NOT NULL,
-    `valor`        DECIMAL(10, 5)             NULL,
-    `tipo`         ENUM ('DINHEIRO','CARTÃO') NOT NULL DEFAULT 'DINHEIRO',
-    `hr_entrada`   TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `hr_validacao` TIMESTAMP                  NULL,
-    `statusTicket` TINYINT(1)                 NOT NULL DEFAULT 1, #Ativo
-    `validado`     TINYINT(1)                 NOT NULL DEFAULT 0, #Não Validado
-    CONSTRAINT `pk_ticket` PRIMARY KEY (`id`)
-) ENGINE = InnoDB;
-
-CREATE TABLE `dbestacionamento`.`contrato`
-(
-    `id`          INT                         NOT NULL AUTO_INCREMENT,
-    `n_cartao`    LONG                        NOT NULL,
-    `dt_entrada`  DATETIME                    NOT NULL DEFAULT now(),
-    `dt_validade` DATETIME                    NULL,
-    `ativo`       TINYINT(1)                  NOT NULL DEFAULT 1, #Ativo durante o periodo do contrato
-    `valor`       DECIMAL(10, 5)              NOT NULL,
-    `tipoPgto`    ENUM ('DINHEIRO', 'CARTÃO') NOT NULL,
-    CONSTRAINT `pk_contrato` PRIMARY KEY (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 CREATE TABLE `dbestacionamento`.`plano`
 (
-    `id`         INT                                                              NOT NULL AUTO_INCREMENT,
-    `idContrato` INT                                                              NOT NULL,
-    `idCliente`  INT                                                              NOT NULL,
-    `tipo`       ENUM ('MENSAL 30 CORRIDO', 'SEMANAL', 'PRÉ-PAGO', 'ACUMULATIVO') NOT NULL,
-    `descricao`  VARCHAR(255)                                                     NOT NULL,
-    CONSTRAINT `pk_plano` PRIMARY KEY (`id`),
-    CONSTRAINT `fk_plano_contrato` FOREIGN KEY (`idContrato`) REFERENCES `dbestacionamento`.`contrato` (`id`),
-    CONSTRAINT `fk_plano_cliente` FOREIGN KEY (`idCliente`) REFERENCES `dbestacionamento`.`cliente` (`id`)
+    `id`        INT(11)                                                          NOT NULL AUTO_INCREMENT,
+    `tipo`      ENUM ('MENSAL 30 CORRIDO', 'SEMANAL', 'PRÉ-PAGO', 'ACUMULATIVO') NOT NULL,
+    `descricao` VARCHAR(255)                                                     NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `dbestacionamento`.`contrato`
+(
+    `id`          INT(11)                     NOT NULL AUTO_INCREMENT,
+    `idPlano`     INT(11)                     NOT NULL,
+    `idCliente`   INT(11)                     NOT NULL,
+    `n_cartao`    MEDIUMTEXT                  NOT NULL,
+    `dt_entrada`  DATETIME                    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `dt_validade` DATETIME                    NULL     DEFAULT NULL,
+    `ativo`       TINYINT(1)                  NOT NULL DEFAULT '1',
+    `valor`       DECIMAL(10, 5)              NOT NULL,
+    `tipoPgto`    ENUM ('DINHEIRO', 'CARTÃO') NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_contrato_plano1` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT `fk_contrato_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `dbestacionamento`.`cliente` (`id`)
+        ON DELETE NO ACTION
+        ON UPDATE NO ACTION
+
+) ENGINE = InnoDB;
+
+
+CREATE TABLE `dbestacionamento`.`ticket`
+(
+    `id`           INT(11)                     NOT NULL AUTO_INCREMENT,
+    `n_ticket`     MEDIUMTEXT                  NOT NULL,
+    `valor`        DECIMAL(10, 5)              NULL     DEFAULT NULL,
+    `tipo`         ENUM ('DINHEIRO', 'CARTÃO') NOT NULL DEFAULT 'DINHEIRO',
+    `hr_entrada`   TIMESTAMP                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `hr_validacao` TIMESTAMP                   NULL     DEFAULT NULL,
+    `statusTicket` TINYINT(1)                  NOT NULL DEFAULT '1',
+    `validado`     TINYINT(1)                  NOT NULL DEFAULT '0',
+    CONSTRAINT `pk_ticket` PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
 
 CREATE TABLE `dbestacionamento`.`movimento`
 (
     `id`         INT        NOT NULL AUTO_INCREMENT,
     `idTicket`   INT        NULL,
-    `idPlano`    INT        NULL,
+    `idContrato` INT        NULL,
     `hr_entrada` DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `hr_saida`   DATETIME   NULL,
-    `atual`      TINYINT(1) NOT NULL DEFAULT 1,
-    CONSTRAINT `pk_movimento` PRIMARY KEY (`id`),
-    CONSTRAINT `fk_movimento_ticket` FOREIGN KEY (`idTicket`) REFERENCES `dbestacionamento`.`ticket` (`id`),
-    CONSTRAINT `fk_movimento_plano` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`id`)
+    `hr_saida`   DATETIME   NULL     DEFAULT NULL,
+    `atual`      TINYINT(1) NOT NULL DEFAULT '1',
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_movimento_ticket` FOREIGN KEY (`idTicket`) REFERENCES `dbestacionamento`.`ticket` (`id`)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `fk_movimento_contrato1` FOREIGN KEY (`idContrato`) REFERENCES `dbestacionamento`.`contrato` (`id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB;

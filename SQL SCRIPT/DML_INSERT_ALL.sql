@@ -105,30 +105,30 @@ INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`,
 VALUES ('2', '2', '2', 'JOAO', '00000000030', '7891234', 'teste3@email.com', '48000000003');
 
 -- TICKET
-INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`, `hr_entrada`, `statusTicket`, `validado`)
-VALUES ('1', '0101010101', now(), '1', '0');
-INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`, `hr_entrada`, `statusTicket`, `validado`)
-VALUES ('2', '0202020202', now(), '1', '0');
-
--- CONTRATO
-INSERT INTO `dbestacionamento`.`contrato` (`id`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
-VALUES ('1', '10000000001', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
-INSERT INTO `dbestacionamento`.`contrato` (`id`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
-VALUES ('2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
+INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)
+VALUES ('1', '0101010101');
+INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)
+VALUES ('2', '0202020202');
 
 -- PLANO
-INSERT INTO `dbestacionamento`.`plano` (`id`, `idContrato`, `idCliente`, `tipo`, `descricao`)
-VALUES ('1', '1', '1', 'MENSAL 30 CORRIDO', 'R$ 200.00');
-INSERT INTO `dbestacionamento`.`plano` (`id`, `idContrato`, `idCliente`, `tipo`, `descricao`)
-VALUES ('2', '2', '2', 'PRÉ-PAGO', 'R$ 25.00');
+INSERT INTO `dbestacionamento`.`plano` (`id`, `tipo`, `descricao`)
+VALUES ('1', 'MENSAL 30 CORRIDO', 'R$ 200.00');
+INSERT INTO `dbestacionamento`.`plano` (`id`, `tipo`, `descricao`)
+VALUES ('2', 'PRÉ-PAGO', 'R$ 25.00');
+
+-- CONTRATO
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
+VALUES ('1', '1', '1', '10000000001', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
+INSERT INTO `dbestacionamento`.`contrato` (`id`,`idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
+VALUES ('2','3','2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
 
 -- MOVIMENTO
-INSERT INTO `dbestacionamento`.`movimento` (`id`, `idPlano`, `hr_entrada`, `atual`)
-VALUES ('1', '1', now(), '1');
-INSERT INTO `dbestacionamento`.`movimento` (`id`, `idPlano`, `hr_entrada`, `atual`)
-VALUES ('2', '2', now(), '1');
-INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`, `atual`)
-VALUES ('3', '1', now(), '1');
-INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`, `atual`)
-VALUES ('4', '2', now(), '1');
+INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
+VALUES ('1', '1', now());
+INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
+VALUES ('2', '2', now());
+INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)
+VALUES ('3', '1', now());
+INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)
+VALUES ('4', '2', now());
 

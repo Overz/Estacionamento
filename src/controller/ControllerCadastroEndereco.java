@@ -1,16 +1,16 @@
 package controller;
 
 import model.vo.cliente.EnderecoVO;
-import view.panels.cadastro.subCadastro.SubCadastroEnderecoView;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco;
 
 import javax.swing.*;
 
-public class ControllerEnderecoCadastro {
+public class ControllerCadastroEndereco {
 
-    private final SubCadastroEnderecoView enderecoView;
+    private final PanelzinhoCadastroEndereco enderecoView;
 
-    public ControllerEnderecoCadastro(JPanel panel) {
-        enderecoView = (SubCadastroEnderecoView) panel;
+    public ControllerCadastroEndereco(JPanel panel) {
+        enderecoView = (PanelzinhoCadastroEndereco) panel;
     }
 
     public EnderecoVO getResultadoForm() {

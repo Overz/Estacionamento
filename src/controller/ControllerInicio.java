@@ -71,7 +71,7 @@ public class ControllerInicio {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        // Percorre os empregados para adicionar linha a linha na tabela (JTable)
+        // Percorre os movimentos para adicionar linha a linha na tabela (JTable)
         for (MovimentoVO movimento : lista) {
             if (movimento.isAtual()) {
 
@@ -82,7 +82,7 @@ public class ControllerInicio {
                 }
 
                 //Plano
-                if (movimento.getPlano() != null) {
+                if (movimento.getContrato() != null) {
                     boolean temLinha = false;
                     this.atualizarTabelaPlano(movimento, novaColuna, now);
                     for (Object o : novaColuna) {
@@ -143,13 +143,13 @@ public class ControllerInicio {
 //        if (entrada.toLocalDate().equals(now.toLocalDate())) {
 
         // Coluna 1 (Ticket/Cartao)
-        novaColuna[0] = movimento.getPlano().getContrato().getNumeroCartao();
+        novaColuna[0] = movimento.getContrato().getNumeroCartao();
         // Coluna 2 (Carro)
-        novaColuna[1] = movimento.getPlano().getCliente().getCarro().getModelo().getDescricao();
+        novaColuna[1] = movimento.getContrato().getCliente().getCarro().getModelo().getDescricao();
         // Coluna 3 (Placa)
-        novaColuna[2] = movimento.getPlano().getCliente().getCarro().getPlaca();
+        novaColuna[2] = movimento.getContrato().getCliente().getCarro().getPlaca();
         // Coluna 4 (Cliente)
-        novaColuna[3] = movimento.getPlano().getCliente().getNome();
+        novaColuna[3] = movimento.getContrato().getCliente().getNome();
         // Coluna 5 (Dt Entrada)
         novaColuna[4] = entrada.format(ConstHelpers.DTF);
 //        }
@@ -190,14 +190,16 @@ public class ControllerInicio {
             MovimentoVO m = lista.get(row);
             DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
             model.removeRow(row);
+            lista.remove(row);
 
             if (daoM.excluirPorID(m.getId())) {
                 msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
+                this.atualizarTabela();
             } else {
                 msg = "ERRO AO REALIZAR EXCLUSÃO!";
             }
             JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title,
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE);
             System.out.println(m.toString());
         } else {
             msg = "Escolha uma Linha para Remover!";
@@ -546,7 +548,7 @@ public class ControllerInicio {
     /**
      * Timer que mantém a tabela atualizada a cada X tempo
      */
-    private void timerRefreshData() {
+    private synchronized void timerRefreshData() {
         ActionListener event = e -> this.atualizarTabela();
         Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();

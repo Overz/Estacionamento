@@ -1,7 +1,8 @@
 package view.panels.cadastro;
 
-import controller.ControllerListaClientesView;
+import controller.ControllerListaClientes;
 import net.miginfocom.swing.MigLayout;
+import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
 import util.helpers.Util;
 import view.panels.mainView.MainView;
@@ -10,11 +11,13 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class ListaClientesView extends JPanel {
 
     private static final long serialVersionUID = 3752138783055180091L;
-    private ControllerListaClientesView control;
+    private ControllerListaClientes control;
     private Modificacoes modificacao;
 
     private JLabel lblSelecioneUmaLinha;
@@ -35,7 +38,8 @@ public class ListaClientesView extends JPanel {
 
     private void initialize() {
 
-        control = new ControllerListaClientesView(this);
+        ConstHelpers.FLAG = 1;
+        control = new ControllerListaClientes(this);
         modificacao = new Modificacoes();
 
         this.setJLabels_JSeparator();
@@ -151,6 +155,14 @@ public class ListaClientesView extends JPanel {
 
     private void addListeners() {
 
+        txtProcurar.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                txtProcurar.setText("");
+                txtProcurar.setForeground(Color.BLACK);
+            }
+        });
+
         Util.habilitarOpcoes(table, btnAtualizar, "#FF8C00", 2);
 
         cbConfirmaExclusao.addActionListener(e -> {
@@ -173,10 +185,7 @@ public class ListaClientesView extends JPanel {
 
         btnExcluir.addActionListener(e -> control.removeSelectedRow());
 
-        btnProcurar.addActionListener(e -> {
-
-
-        });
+        btnProcurar.addActionListener(e -> control.consultar());
     }
 
     public JTextField getTxtProcurar() {

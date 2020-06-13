@@ -4,7 +4,7 @@ import util.constantes.ConstHelpers;
 
 import java.time.LocalDate;
 
-public class Seletor {
+public class SeletorInicio {
 
     private String valor;
     private LocalDate dt1;

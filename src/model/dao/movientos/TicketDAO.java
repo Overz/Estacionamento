@@ -3,9 +3,12 @@ package model.dao.movientos;
 import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.vo.movimentos.TicketVO;
+import org.jetbrains.annotations.Nullable;
 import util.constantes.ConstHelpers;
 
+import javax.validation.constraints.Null;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TicketDAO implements BaseDAO<TicketVO> {
@@ -25,6 +28,11 @@ public class TicketDAO implements BaseDAO<TicketVO> {
             ticketVO.setValor(result.getDouble("valor"));
             ticketVO.setTipo(result.getString("tipo"));
             ticketVO.setDataEntrada(result.getTimestamp("hr_entrada").toLocalDateTime());
+            @Nullable @Deprecated
+            Timestamp dtValidacao = result.getTimestamp("hr_validacao");
+            if (dtValidacao != null) {
+                ticketVO.setDataValidacao(dtValidacao.toLocalDateTime());
+            }
             ticketVO.setStatus(result.getBoolean("statusTicket"));
             ticketVO.setValidado(result.getBoolean("validado"));
 
@@ -104,7 +112,6 @@ public class TicketDAO implements BaseDAO<TicketVO> {
         }
         return null;
     } // OK
-
 
     @Override
     public TicketVO cadastrar(TicketVO newObject, String... values) {

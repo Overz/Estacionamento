@@ -2,8 +2,10 @@ package model.dao.movientos;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.dao.cliente.ContratoDAO;
 import model.dao.cliente.PlanoDAO;
-import model.seletor.Seletor;
+import model.seletor.SeletorInicio;
+import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
@@ -32,12 +34,16 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             TicketVO ticketVO = ticketDAO.consultarPorId(idT);
             movimentoVO.setTicket(ticketVO);
 
-            int idP = result.getInt("idplano");
-            PlanoDAO planoDAO = new PlanoDAO();
-            PlanoVO planoVO = planoDAO.consultarPorId(idP);
-            movimentoVO.setPlano(planoVO);
+            int idC = result.getInt("idcontrato");
+            ContratoDAO contratoDAO = new ContratoDAO();
+            ContratoVO contratoVO = contratoDAO.consultarPorId(idC);
+            movimentoVO.setContrato(contratoVO);
 
             movimentoVO.setHr_entrada(result.getTimestamp("hr_entrada").toLocalDateTime());
+            Timestamp hrSaida = result.getTimestamp("hr_saida");
+            if (hrSaida != null) {
+                movimentoVO.setHr_saida(hrSaida.toLocalDateTime());
+            }
             movimentoVO.setAtual(result.getBoolean("atual"));
 
             return movimentoVO;
@@ -89,33 +95,37 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public ArrayList<MovimentoVO> consultar(String... values) {
         String qry = "";
-        Seletor seletor = new Seletor();
+        SeletorInicio seletorInicio = new SeletorInicio();
         if (ConstHelpers.FLAG == 0) {
             qry = "select * from movimento movi " +
-                  "left join plano p on movi.idPlano = p.id " +
-                  "left join ticket t on movi.idTicket = t.id " +
-                  "left join contrato con on p.idContrato = con.id " +
-                  "left join cliente cli on p.idCliente = cli.id " +
-                  "left join carro car on cli.idCarro = car.id " +
-                  "left join modelo modl on car.idModelo = modl.id";
+                  " left join contrato con on movi.idContrato = con.id " +
+                  " left join ticket t on movi.idTicket = t.id " +
+                  " left join cliente cli on con.idCliente = cli.id " +
+                  " left join plano p on con.idPlano = p.id " +
+                  " left join carro car on cli.idCarro = car.id " +
+                  " left join modelo modl on car.idModelo = modl.id ";
 
-            seletor.setValor(values[0].toUpperCase());
-            if (seletor.temFiltro()) {
-                qry = seletor.criarFiltro(qry);
+            seletorInicio.setValor(values[0].toUpperCase());
+            if (seletorInicio.temFiltro()) {
+                qry = seletorInicio.criarFiltro(qry);
             }
         } else if (ConstHelpers.FLAG == 1) {
-            qry = "select * from movimento movi inner join ticket t on movi.idTicket = t.id " +
-                  "where t.n_ticket like '%" + values[0] + "%' ";
+            qry = "select * from movimento movi" +
+                  "  left join ticket t on movi.idTicket = t.id " +
+                  "  left join contrato con on movi.idContrato = con.id " +
+                  "  left join cliente cli on con.idCliente = cli.id = con.id " +
+                  " where t.n_ticket like '%" + values[0] + "%' " +
+                  " or con.n_cartao like '%" + values[0] + "%' ;";
         } else if (ConstHelpers.FLAG == 2) {
             qry = "select * from movimento ";
 
             LocalDate ld1 = LocalDate.parse(values[0]);
             LocalDate ld2 = LocalDate.parse(values[1]);
-            seletor.setDt1(ld1);
-            seletor.setDt2(ld2);
+            seletorInicio.setDt1(ld1);
+            seletorInicio.setDt2(ld2);
 
-            if (seletor.temData()) {
-                qry = seletor.criarFiltro(qry);
+            if (seletorInicio.temData()) {
+                qry = seletorInicio.criarFiltro(qry);
             }
         }
 
@@ -230,13 +240,14 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean alterar(MovimentoVO object) {
-        String qry = "update movimento set hr_entrada=?, hr_saida=?;";
+        String qry = "update movimento set hr_entrada=?, hr_saida=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setTimestamp(1, Timestamp.valueOf(object.getHr_entrada()));
             stmt.setTimestamp(2, Timestamp.valueOf(object.getHr_saida()));
+            stmt.setInt(3, object.getId());
 
             if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
@@ -259,7 +270,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "delete from movimento where id=?;";
+        String qry = ConstHelpers.FLAG == 1 ? "delete from movimento where id=?;" : "detele from movimento";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

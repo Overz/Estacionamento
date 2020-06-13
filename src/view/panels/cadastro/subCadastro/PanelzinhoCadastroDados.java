@@ -1,6 +1,6 @@
 package view.panels.cadastro.subCadastro;
 
-import controller.ControllerDadosCadastro;
+import controller.ControllerCadastroDados;
 import model.vo.cliente.ClienteVO;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.Colunas;
@@ -11,16 +11,16 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class SubCadastroDadosView extends JPanel {
+public class PanelzinhoCadastroDados extends JPanel {
 
     private static final long serialVersionUID = 8795512428702538815L;
-    private ControllerDadosCadastro control;
+    private ControllerCadastroDados control;
     private Modificacoes modificacoes;
     private JTextField txtEmail, txtNome, txtCPF, txtRG, txtTelefone;
     private JTable table;
     private JButton btnAddRow, btnRemoveRow;
 
-    public SubCadastroDadosView() {
+    public PanelzinhoCadastroDados() {
 
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBackground(Color.WHITE);
@@ -32,7 +32,7 @@ public class SubCadastroDadosView extends JPanel {
     private void initialize() {
 
         modificacoes = new Modificacoes();
-        control = new ControllerDadosCadastro(this);
+        control = new ControllerCadastroDados(this);
 
         setJLabels_JSeparator();
 
@@ -114,11 +114,10 @@ public class SubCadastroDadosView extends JPanel {
     }
 
     private void setButtons() {
-        
-    	btnRemoveRow = new JButton("Remover Carro");
+        btnRemoveRow = new JButton("Remover Carro");
         btnRemoveRow.setFont(new Font("Dialog", Font.BOLD, 12));
         add(btnRemoveRow, "cell 7 10 2 1,grow");
-        
+
         btnAddRow = new JButton("Adicionar Carro");
         btnAddRow.setFont(new Font("Arial", Font.BOLD, 12));
         add(btnAddRow, "cell 9 10 2 1,grow");

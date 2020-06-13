@@ -2,7 +2,9 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
+import model.vo.cliente.PlanoVO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,9 +23,23 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             contratoVO.setId(result.getInt("id"));
             contratoVO.setNumeroCartao(result.getLong("n_cartao"));
             contratoVO.setDtEntrada(result.getTimestamp("dt_entrada").toLocalDateTime());
+            Timestamp dtValidade = result.getTimestamp("dt_validade");
+            if (dtValidade != null) {
+                contratoVO.setDtSaida(dtValidade.toLocalDateTime());
+            }
             contratoVO.setValor(result.getDouble("valor"));
             contratoVO.setAtivo(result.getBoolean("ativo"));
             contratoVO.setTipoPgto(result.getString("tipoPgto"));
+
+            int idP = result.getInt("idPlano");
+            PlanoDAO planoDAO = new PlanoDAO();
+            PlanoVO planoVO = planoDAO.consultarPorId(idP);
+            contratoVO.setPlano(planoVO);
+
+            int idC = result.getInt("idCliente");
+            ClienteDAO clienteDAO = new ClienteDAO();
+            ClienteVO clienteVO = clienteDAO.consultarPorId(idC);
+            contratoVO.setCliente(clienteVO);
 
             return contratoVO;
         } catch (SQLException e) {

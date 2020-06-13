@@ -12,13 +12,13 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class SubCadastroPlanoView extends JPanel {
+public class PanelzinhoCadastroPlano extends JPanel {
 
     private static final long serialVersionUID = -8178837282155450083L;
     private JComboBox<Object> cbPlano;
     private JComboBox cbFormaPgto;
 
-    public SubCadastroPlanoView() {
+    public PanelzinhoCadastroPlano() {
 
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setLayout(new MigLayout("", "[grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow]", "[grow][grow][grow][grow][grow][grow][grow][grow]"));
@@ -52,7 +52,7 @@ public class SubCadastroPlanoView extends JPanel {
     public void setComboBox() {
         ConstHelpers.FLAG = 1;
         BaseDAO<PlanoVO> plano = new PlanoDAO();
-        ArrayList<PlanoVO> lista = plano.consultarTodos(); //TODO Verificar meio de consultar sem alter o result set
+        ArrayList<PlanoVO> lista = plano.consultarTodos(); //TODO.html Verificar meio de consultar sem alter o result set
         cbPlano = new JComboBox<>(new DefaultComboBoxModel<>(lista.toArray()));
 
         cbPlano.setFont(new Font("Arial", Font.BOLD, 16));

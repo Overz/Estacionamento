@@ -26,10 +26,9 @@ public class InicioView extends JPanel {
     private JComboBox cbFormaPgto, cbxProcurar;
     private JTable table;
     private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
-            btnImprimirComprovanteTabela, btnRemover, btnAbrirEntrada, btnAbrirSaida;
-    private JTextField txtTicket;
+            btnRemover, btnAbrirEntrada, btnAbrirSaida;
+    private JTextField txtTicket, txtProcurar;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída;
-    private JTextField txtProcurar;
 
     public InicioView() {
 
@@ -270,26 +269,6 @@ public class InicioView extends JPanel {
         return table;
     }
 
-    public Modificacoes getModificacao() {
-        return modificacao;
-    }
-
-    public JComboBox getCbFormaPgto() {
-        return cbFormaPgto;
-    }
-
-    public JButton getBtnAbrirEntrada() {
-        return btnAbrirEntrada;
-    }
-
-    public JButton getBtnAbrirSaida() {
-        return btnAbrirSaida;
-    }
-
-    public JButton getBtnImprimirComprovanteTabela() {
-        return btnImprimirComprovanteTabela;
-    }
-
     public JTextField getTxtTicket() {
         return txtTicket;
     }
@@ -301,14 +280,5 @@ public class InicioView extends JPanel {
     public JLabel getLblTotalDeVeiculos() {
         return lblTotalDeVeiculos;
     }
-
-    public JLabel getLblCancelaEntrada() {
-        return lblCancelaEntrada;
-    }
-
-    public JLabel getLblCancelaSaída() {
-        return lblCancelaSaída;
-    }
-
 
 }

@@ -36,7 +36,7 @@ public class ControllerMovimento {
         Object[] novaLinha = new Object[7];
         for (MovimentoVO movimento : lista) {
 
-            if (movimento.getPlano() != null) {
+            if (movimento.getContrato() != null) {
 
                 // Atualiza o Objeto Plano na tabela
                 this.atualizarTabelaPlano(movimento, novaLinha);
@@ -67,12 +67,15 @@ public class ControllerMovimento {
         novaLinha[1] = "";
         novaLinha[2] = "";
         novaLinha[3] = "";
+
         if (movimento.getTicket().getValor() > 0.0) {
             novaLinha[4] = "R$: " + Util.formatarValor(movimento.getTicket().getValor());
         } else {
             novaLinha[4] = "AGUARDANDO";
         }
+
         novaLinha[5] = entrada.format(ConstHelpers.DTF);
+
         if (saida == null) {
             novaLinha[6] = "AGUARDANDO";
         } else {
@@ -89,11 +92,11 @@ public class ControllerMovimento {
     private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaLinha) {
         LocalDateTime entrada = movimento.getHr_entrada();
         LocalDateTime saida = movimento.getHr_saida();
-        novaLinha[0] = movimento.getPlano().getContrato().getNumeroCartao();
-        novaLinha[1] = movimento.getPlano().getCliente().getNome();
-        novaLinha[2] = movimento.getPlano().getTipo();
-        novaLinha[3] = movimento.getPlano().getCliente().getCarro().getPlaca();
-        novaLinha[4] = "R$: " + Util.formatarValor(movimento.getPlano().getContrato().getValor());
+        novaLinha[0] = movimento.getContrato().getNumeroCartao();
+        novaLinha[1] = movimento.getContrato().getCliente().getNome();
+        novaLinha[2] = movimento.getContrato().getPlano().getTipo();
+        novaLinha[3] = movimento.getContrato().getCliente().getCarro().getPlaca();
+        novaLinha[4] = "R$: " + Util.formatarValor(movimento.getContrato().getValor());
         novaLinha[5] = entrada.format(ConstHelpers.DTF);
         if (saida == null) {
             novaLinha[6] = "AGUARDANDO";

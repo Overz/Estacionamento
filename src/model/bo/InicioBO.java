@@ -8,7 +8,7 @@ public class InicioBO {
         for (String value : values) {
             a = value != null
                 && !value.trim().isEmpty()
-                && value.length() > 3
+                && value.length() > 0
                 && value.trim().matches(ConstHelpers.REGEX_NUMEROS);
         }
         return a;

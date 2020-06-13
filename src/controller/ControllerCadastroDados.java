@@ -5,30 +5,31 @@ import model.dao.veiculos.CarroDAO;
 import model.vo.cliente.ClienteVO;
 import model.vo.veiculo.CarroVO;
 import util.constantes.ConstHelpers;
-import view.panels.cadastro.subCadastro.SubCadastroDadosView;
+import util.helpers.Modificacoes;
+import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ControllerDadosCadastro {
+public class ControllerCadastroDados {
 
-    private final SubCadastroDadosView cadastroView;
+    private final PanelzinhoCadastroDados cadastroView;
     private final ClienteVO cliente;
     private BaseDAO<CarroVO> daoCarro;
     private ArrayList<CarroVO> linhas;
     private ArrayList<CarroVO> lista;
 
-    public ControllerDadosCadastro(JPanel panel) {
-        this.cadastroView = (SubCadastroDadosView) panel;
+    public ControllerCadastroDados(JPanel panel) {
+        this.cadastroView = (PanelzinhoCadastroDados) panel;
         linhas = new ArrayList<>();
         lista = new ArrayList<>();
         cliente = new ClienteVO();
         daoCarro = new CarroDAO();
     }
 
-    // TODO Atualizar Tabela caso Haja Carros na tela de Atualização
+    // TODO.html Atualizar Tabela caso Haja Carros na tela de Atualização
     public void atualizarTabela() {
         lista = daoCarro.consultar();
     }
@@ -38,7 +39,7 @@ public class ControllerDadosCadastro {
      */
     public void addrow() {
         DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
-        Object[] data = linhas.toArray();
+        Object[] data = new Object[1];
         model.addRow(data);
     }
 
@@ -95,8 +96,56 @@ public class ControllerDadosCadastro {
         return lista;
     }
 
-	public Object removeRow() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void limparForm() {
+        try {
+            cadastroView.getTxtNome().setText("");
+            cadastroView.getTxtCPF().setText("");
+            cadastroView.getTxtRG().setText("");
+            cadastroView.getTxtEmail().setText("");
+            cadastroView.getTxtTelefone().setText("");
+        } catch (Exception e) {
+            try {
+                System.out.println(e.getClass().getSimpleName());
+                System.out.println(e.getClass().getMethod("limparForm",
+                        PanelzinhoCadastroDados.class, ControllerCadastroDados.class));
+                System.out.println(e.getMessage());
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    public void removeRow() {
+        try {
+            int row = cadastroView.getTable().getSelectedRow();
+            if (row >= 0) {
+                DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
+                model.removeRow(row);
+
+                if (ConstHelpers.FLAG == -1) {
+                    CarroVO carro = linhas.get(row);
+
+                    if (daoCarro.excluirPorID(carro.getId())) {
+                        JOptionPane.showMessageDialog(cadastroView, Modificacoes.labelConfig("EXCLUSÂO REALIZADA"),
+                                "Exclusão", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(cadastroView,
+                        Modificacoes.labelConfig("Por favor, Selecione uma Linha"),
+                        "Exclusão", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getClass().getSimpleName());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o Proximo ComboBox da tabela pelo tipo escolhido no ComboBox anterior
+     */
+    private void atualizarComboBoxPorTipo() {
+
+    }
 }

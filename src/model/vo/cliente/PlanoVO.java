@@ -5,15 +5,11 @@ public class PlanoVO {
     private int id;
     private String tipo;
     private String descircao;
-    private ClienteVO cliente;
-    private ContratoVO contrato;
 
-    public PlanoVO(int id, String tipo, String descircao, ClienteVO cliente, ContratoVO contrato) {
+    public PlanoVO(int id, String tipo, String descircao) {
         this.id = id;
         this.tipo = tipo;
         this.descircao = descircao;
-        this.cliente = cliente;
-        this.contrato = contrato;
     }
 
     public PlanoVO() {
@@ -43,22 +39,6 @@ public class PlanoVO {
         this.descircao = descircao;
     }
 
-    public ClienteVO getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(ClienteVO cliente) {
-        this.cliente = cliente;
-    }
-
-    public ContratoVO getContrato() {
-        return contrato;
-    }
-
-    public void setContrato(ContratoVO contrato) {
-        this.contrato = contrato;
-    }
-
     public String toStringDiff() {
         return " - PLANO: " +
                " - ID: " + id +
@@ -71,8 +51,6 @@ public class PlanoVO {
         return " - PLANO: " +
                " - ID: " + id +
                " - TIPO_PLANO: " + tipo +
-               " - DESCRICAO: " + descircao + "\n" +
-               " - CLIENTE: " + cliente.toString() + "\n" +
-               " - CONTRATO: " + contrato.toString();
+               " - DESCRICAO: " + descircao;
     }
 }
