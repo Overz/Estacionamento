@@ -2,9 +2,11 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
+import model.seletor.SeletorCliente;
 import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
+import util.constantes.ConstHelpers;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -87,6 +89,44 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public <T> T consultar(String... values) {
+        String qry = " select * from contrato con " +
+                     " left join plano p on con.idPlano = p.id " +
+                     " left join cliente cli on con.idCliente = cli.id " +
+                     " left join carro car on cli.idCarro = car.id " +
+                     " left join modelo mdl on car.idModelo = mdl.id " +
+                     " left join marca mar on mdl.idMarca = mar.id ";
+
+        SeletorCliente seletor = new SeletorCliente();
+        seletor.setValor(values[0]);
+
+        if (seletor.temFiltro()) {
+            qry = seletor.criarFiltro(qry);
+        }
+
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            result = stmt.executeQuery();
+            while (result.next()) {
+                contratoVO = criarResultSet(result);
+                list.add(contratoVO);
+            }
+            return (T) list;
+        } catch (SQLException e) {
+            String method = "Consultar()";
+            System.out.println("\n" +
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
     }
 

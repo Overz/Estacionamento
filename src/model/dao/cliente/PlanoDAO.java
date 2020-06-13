@@ -75,51 +75,6 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public <T> T consultar(String... values) {
-        String qry = "";
-        if (ConstHelpers.FLAG == 0) {
-
-        } else if (ConstHelpers.FLAG == 1) {
-
-        } else {
-            qry = " select * from plano pla " +
-                  " left join contrato con on pla.idContrato = con.id " +
-                  " left join cliente cli on pla.idCliente = cli.id " +
-                  " left join carro car on cli.idCarro = car.id " +
-                  " left join modelo mdl on car.idModelo = mdl.id" +
-                  " left join marca mar on mdl.idMarca = mar.id ";
-        }
-
-        SeletorCliente seletor = new SeletorCliente();
-        seletor.setValor(values[0]);
-
-        if (seletor.temFiltro()) {
-            qry = seletor.criarFiltro(qry);
-        }
-
-        list = new ArrayList<>();
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
-
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                planoVO = criarResultSet(result);
-                list.add(planoVO);
-            }
-            return (T) list;
-        } catch (SQLException e) {
-            String method = "Consultar()";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
         return null;
     }
 
