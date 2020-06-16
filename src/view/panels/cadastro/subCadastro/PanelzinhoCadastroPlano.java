@@ -1,5 +1,6 @@
 package view.panels.cadastro.subCadastro;
 
+import controller.ControllerCadastroPlano;
 import model.banco.BaseDAO;
 import model.dao.cliente.PlanoDAO;
 import model.vo.cliente.PlanoVO;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 public class PanelzinhoCadastroPlano extends JPanel {
 
     private static final long serialVersionUID = -8178837282155450083L;
+    private ControllerCadastroPlano control;
     private JComboBox<Object> cbPlano;
     private JComboBox cbFormaPgto;
 
@@ -27,6 +29,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
     }
 
     public void initialize() {
+        control = new ControllerCadastroPlano(this);
 
         setJLabels_JSeparator();
 
@@ -50,11 +53,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
     }
 
     public void setComboBox() {
-        ConstHelpers.FLAG = 1;
-        BaseDAO<PlanoVO> plano = new PlanoDAO();
-        ArrayList<PlanoVO> lista = plano.consultarTodos(); //TODO.html Verificar meio de consultar sem alter o result set
-        cbPlano = new JComboBox<>(new DefaultComboBoxModel<>(lista.toArray()));
-
+        cbPlano = new JComboBox(control.preencherCbx());
         cbPlano.setFont(new Font("Arial", Font.BOLD, 16));
         cbPlano.setBorder(new LineBorder(Color.BLACK, 1, true));
         cbPlano.setBackground(Color.WHITE);

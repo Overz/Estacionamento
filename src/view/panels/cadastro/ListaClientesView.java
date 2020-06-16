@@ -20,7 +20,7 @@ public class ListaClientesView extends JPanel {
     private ControllerListaClientes control;
     private Modificacoes modificacao;
 
-    private JLabel lblSelecioneUmaLinha;
+    private JLabel lblSelecioneUmaLinha, lblTotalDeClientes;
     private JTextField txtProcurar;
     private JButton btnExcluir, btnAtualizar, btnCadastrar, btnProcurar;
     private JTable table;
@@ -76,16 +76,16 @@ public class ListaClientesView extends JPanel {
         lblSelecionar.setFont(new Font("Arial", Font.BOLD, 16));
         add(lblSelecionar, "flowx,cell 1 1,alignx left,growy");
 
-        JLabel lblTotalDeClientes = new JLabel("Total de Clientes Cadastrados:");
-        lblTotalDeClientes.setBackground(Color.WHITE);
-        lblTotalDeClientes.setFont(new Font("Arial", Font.BOLD, 14));
-        add(lblTotalDeClientes, "cell 1 4,grow");
-
         lblSelecioneUmaLinha = new JLabel("Selecione Uma Linha por Vez");
         lblSelecioneUmaLinha.setHorizontalAlignment(SwingConstants.LEFT);
         lblSelecioneUmaLinha.setFont(new Font("Arial", Font.BOLD, 12));
         lblSelecioneUmaLinha.setEnabled(false);
         add(lblSelecioneUmaLinha, "cell 2 4,growx,aligny top");
+
+        lblTotalDeClientes = new JLabel("Total de Clientes Cadastrados:");
+        lblTotalDeClientes.setBackground(Color.WHITE);
+        lblTotalDeClientes.setFont(new Font("Arial", Font.BOLD, 14));
+        add(lblTotalDeClientes, "cell 1 5,grow");
 
     }
 
@@ -188,6 +188,10 @@ public class ListaClientesView extends JPanel {
         btnProcurar.addActionListener(e -> control.consultar());
     }
 
+    public JLabel getLblTotalDeClientes() {
+        return lblTotalDeClientes;
+    }
+
     public JTextField getTxtProcurar() {
         return txtProcurar;
     }
@@ -219,4 +223,5 @@ public class ListaClientesView extends JPanel {
     public Modificacoes getModificacao() {
         return modificacao;
     }
+
 }

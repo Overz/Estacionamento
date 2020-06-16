@@ -467,7 +467,7 @@ public class ControllerCaixa {
             ConstHelpers.SUB_FLAG = 4;
             String dt1 = String.valueOf(LocalDate.now());
             lista = daoM.consultar(dt1, dt1);
-//            atualizarStatusMovimento(lista);
+//            atualizarStatusMovimento(lista); TODO Mudar no final
             String caminhoEscolhido = Util.caminhoFileChooser(jFileChooser.getSelectedFile());
             PdfCaixaFinal pdf = new PdfCaixaFinal(lista, caminhoEscolhido);
             return pdf.gerarPdf();
@@ -519,8 +519,7 @@ public class ControllerCaixa {
                     if (i == JFileChooser.APPROVE_OPTION) {
 
                         File file = new File(jfc.getSelectedFile().toString() + ".pdf");
-                        boolean exist = file.exists();
-                        if (exist) {
+                        if (file.exists()) {
                             msg = "Arquivo existente Encontrado, Deseja Subistituir?";
                             int j = JOptionPane.showConfirmDialog(caixaView, Modificacoes.labelConfig(msg), "Sobre-Escrever", JOptionPane.OK_CANCEL_OPTION);
                             if (j == JOptionPane.OK_OPTION) {

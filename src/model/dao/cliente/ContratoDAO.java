@@ -18,6 +18,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
     private ResultSet result = null;
     private ArrayList<ContratoVO> list = null;
     private ContratoVO contratoVO = null;
+    int resultado = 0;
 
     public ContratoVO criarResultSet(ResultSet result) {
         contratoVO = new ContratoVO();
@@ -228,14 +229,38 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = "delete from contrato where id=?;";
+        String qry;
+        if (ConstHelpers.FLAG == 1) {
+            qry = "delete con, cli, car, e " +
+                  "from contrato con inner join cliente cli on con.idCliente = cli.id " +
+                  "inner join carro car on cli.idCarro = car.id " +
+                  "inner join endereco e on cli.idEndereco = e.id " +
+                  "where e.id = cli.id and car.id = cli.id " +
+                  "and cli.id = con.id and con.id = ?;";
+        }
+        else if (ConstHelpers.FLAG == 2){
+            qry = "delete movi, con, cli, car, e " +
+                  "from movimento movi inner join contrato con on movi.idContrato = con.id " +
+                  "inner join cliente cli on con.idCliente = cli.id " +
+                  "inner join carro car on cli.idCarro = car.id " +
+                  "inner join endereco e on cli.idEndereco = e.id " +
+                  "where e.id = cli.id and car.id = cli.id " +
+                  "and cli.id = con.id and con.id = movi.id " +
+                  "and movi.id = ?;";
+        } else {
+            qry = "delete * from contrato where id=?";
+        }
+
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setInt(1, id);
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            resultado = stmt.executeUpdate();
+            if (resultado == Banco.CODIGO_RETORNO_SUCESSO) {
+                return true;
+            } else if (resultado == 4 || resultado == 5) {
                 return true;
             }
         } catch (SQLException e) {
@@ -244,12 +269,22 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                                "Class: " + getClass().getSimpleName() + "\n" +
                                "Method: " + method + "\n" +
                                "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
+                               "Cause: " + e.getCause() + "\n"
             );
+
+            if (e.getMessage().contains("fk_movimento_contrato")){
+                ConstHelpers.FLAG = 2;
+                if (resultado < 4 && resultado != Banco.CODIGO_RETORNO_SUCESSO) {
+                    excluirPorID(id);
+                }
+            }
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
+            if (resultado >= 4){
+                return true;
+            }
         }
         return false;
     } // OK

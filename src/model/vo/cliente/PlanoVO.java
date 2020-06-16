@@ -1,5 +1,7 @@
 package model.vo.cliente;
 
+import util.helpers.Util;
+
 public class PlanoVO {
 
     private int id;
@@ -48,9 +50,6 @@ public class PlanoVO {
 
     @Override
     public String toString() {
-        return " - PLANO: " +
-               " - ID: " + id +
-               " - TIPO_PLANO: " + tipo +
-               " - DESCRICAO: " + descircao;
+        return "TIPO: " + tipo + " - " + descircao;
     }
 }

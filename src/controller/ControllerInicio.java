@@ -83,8 +83,8 @@ public class ControllerInicio {
 
                 //Plano
                 if (movimento.getContrato() != null) {
-                    boolean temLinha = false;
                     this.atualizarTabelaPlano(movimento, novaColuna, now);
+                    boolean temLinha = false;
                     for (Object o : novaColuna) {
                         if (o != null) {
                             temLinha = true;

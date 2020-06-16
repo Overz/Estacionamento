@@ -89,50 +89,6 @@ public class Modificacoes {
     }
 
     /**
-     * Método para criar um ComboBox dentro da JTable
-     *
-     * @param table       tabela
-     * @param sportColumn escolher a coluna
-     */
-//	 Fiddle with the Sport column's cell editors/renderers.
-    public void mostrarComboBoxJTable_ModeloVO(JTable table, TableColumn sportColumn) {
-//		 Set up the editor for the sport cells.
-        BaseDAO<ModeloVO> bDAO = new ModeloDAO();
-        ArrayList<ModeloVO> list = bDAO.consultarTodos();
-        JComboBox<ModeloVO> cbModelo = new JComboBox<ModeloVO>();
-        cbModelo.setModel(new DefaultComboBoxModel(list.toArray()));
-
-        sportColumn.setCellEditor(new DefaultCellEditor(cbModelo));
-
-//		 Set up tool tips for the sport cells.
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
-        sportColumn.setCellRenderer(renderer);
-    }
-
-    /**
-     * Método para criar um ComboBox dentro da JTable
-     *
-     * @param table       tabela
-     * @param sportColumn escolher a coluna
-     */
-//	 Fiddle with the Sport column's cell editors/renderers.
-    public void mostrarComboBoxJTabel_MarcaVO(JTable table, TableColumn sportColumn) {
-//		 Set up the editor for the sport cells.
-        BaseDAO<MarcaVO> bDAO = new MarcaDAO();
-        ArrayList<MarcaVO> list = bDAO.consultarTodos();
-        JComboBox<MarcaVO> cbMarca = new JComboBox<MarcaVO>();
-        cbMarca.setModel(new DefaultComboBoxModel(list.toArray()));
-
-        sportColumn.setCellEditor(new DefaultCellEditor(cbMarca));
-
-//		 Set up tool tips for the sport cells.
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
-        sportColumn.setCellRenderer(renderer);
-    }
-
-    /**
      * Método para reenderizar a JTable e criar uma mascara com campo formatado em
      * uma coluna especifica
      *

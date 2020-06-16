@@ -12,6 +12,7 @@ import view.panels.MovimentoView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,23 +34,22 @@ public class ControllerMovimento {
 
         DefaultTableModel model = (DefaultTableModel) movimentoView.getTable().getModel();
 
+        LocalDateTime now = LocalDateTime.now();
         Object[] novaLinha = new Object[7];
         for (MovimentoVO movimento : lista) {
 
             if (movimento.getContrato() != null) {
 
                 // Atualiza o Objeto Plano na tabela
-                this.atualizarTabelaPlano(movimento, novaLinha);
-
-                model.addRow(novaLinha);
+                this.atualizarTabelaPlano(movimento, novaLinha, now, model);
+//                model.addRow(novaLinha);
             }
 
             if (movimento.getTicket() != null) {
 
                 // Atualiza o Objeto Ticket na tabela
-                this.atualizarTabelaTicket(movimento, novaLinha);
-
-                model.addRow(novaLinha);
+                this.atualizarTabelaTicket(movimento, novaLinha, now, model);
+//                model.addRow(novaLinha);
             }
         }
     }
@@ -59,10 +59,13 @@ public class ControllerMovimento {
      *
      * @param movimento MovimentoVO
      * @param novaLinha Object[]
+     * @param model     DefaultTableModel
      */
-    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaLinha) {
+    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaLinha, LocalDateTime now, DefaultTableModel model) {
         LocalDateTime entrada = movimento.getHr_entrada();
         LocalDateTime saida = movimento.getHr_saida();
+
+//        if (now.toLocalDate().equals(entrada.toLocalDate())) {
         novaLinha[0] = movimento.getTicket().getNumero();
         novaLinha[1] = "";
         novaLinha[2] = "";
@@ -81,6 +84,8 @@ public class ControllerMovimento {
         } else {
             novaLinha[6] = saida.format(ConstHelpers.DTF);
         }
+        model.addRow(novaLinha);
+//        }
     }
 
     /**
@@ -88,10 +93,13 @@ public class ControllerMovimento {
      *
      * @param movimento MovimentoVO
      * @param novaLinha Object[]
+     * @param model     DefaultTableModel
      */
-    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaLinha) {
+    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaLinha, LocalDateTime now, DefaultTableModel model) {
         LocalDateTime entrada = movimento.getHr_entrada();
         LocalDateTime saida = movimento.getHr_saida();
+
+//        if (now.toLocalDate().equals(entrada.toLocalDate())) {
         novaLinha[0] = movimento.getContrato().getNumeroCartao();
         novaLinha[1] = movimento.getContrato().getCliente().getNome();
         novaLinha[2] = movimento.getContrato().getPlano().getTipo();
@@ -103,6 +111,8 @@ public class ControllerMovimento {
         } else {
             novaLinha[6] = saida.format(ConstHelpers.DTF);
         }
+        model.addRow(novaLinha);
+//        }
     }
 
     public void limparTabela() {
@@ -129,7 +139,13 @@ public class ControllerMovimento {
         ConstHelpers.SUB_FLAG = 4;
         LocalDate dt = LocalDate.now();
         String hj = String.valueOf(dt);
-        lista = daoM.consultar(hj, hj);
+        lista = daoM.consultar(hj, hj); // TODO Arrumar a consulta Query que esta "or hora is null", para um meio que preencha o final do dia
         this.atualizarTabela();
+    }
+
+    private void timerClearData() {
+        ActionListener event = e -> limparTabela();
+        Timer timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
+        timer.start();
     }
 }

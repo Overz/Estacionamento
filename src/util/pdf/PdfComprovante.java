@@ -5,13 +5,14 @@ import com.itextpdf.text.pdf.*;
 import model.vo.movimentos.MovimentoVO;
 import util.helpers.Util;
 
+import static util.pdf.PdfHelpers.*;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
 
 /**
  * Esta classe usa uma API chamada IText para criar um PDF, mas também pode ser usado PDFBox
@@ -37,7 +38,7 @@ public class PdfComprovante {
     private final MovimentoVO m;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
-        PdfHelpers.CAMINHO = caminho;
+        CAMINHO = caminho;
         this.m = movimento;
     }
 
@@ -62,6 +63,7 @@ public class PdfComprovante {
      * Método estão sendo utilziados Tag's HTML nas mensagens de retorno,
      * pois está sendo retornado para um Label, e utilizado em um JOptionPane,
      * quebra de Linha em HTML com a tag "br" é necessario com essa configuração
+     * </p>
      *
      * @return String
      */
@@ -145,9 +147,9 @@ public class PdfComprovante {
      */
     private Element addHeader(Chunk mainChunk, Chunk secondChunk, Paragraph mainPrgf) {
         mainChunk.append("Senac - Easy Way\n");
-        mainChunk.setFont(PdfHelpers.MAIN_FONT);
+        mainChunk.setFont(MAIN_FONT);
         secondChunk.append("Estacionamento\n\n");
-        secondChunk.setFont(PdfHelpers.FONT4ALL);
+        secondChunk.setFont(FONT4ALL);
         mainPrgf.add(mainChunk);
         mainPrgf.add(secondChunk);
         mainPrgf.setAlignment(Element.ALIGN_CENTER);
@@ -167,7 +169,7 @@ public class PdfComprovante {
                      "Ticket perdido: R$ 20.0\n\n";
         secondChunk.append(msg);
         mainFrase.add(secondChunk);
-        mainFrase.setFont(PdfHelpers.FONT4ALL);
+        mainFrase.setFont(FONT4ALL);
         secondPrgf.add(mainFrase);
         secondPrgf.setAlignment(Element.ALIGN_CENTER);
         return secondPrgf;

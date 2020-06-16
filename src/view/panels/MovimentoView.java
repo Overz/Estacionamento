@@ -53,7 +53,7 @@ public class MovimentoView extends JPanel {
 
         control.limparTabela();
 
-        control.consultarDiaAtual();
+//        control.consultarDiaAtual();
 
     }
 

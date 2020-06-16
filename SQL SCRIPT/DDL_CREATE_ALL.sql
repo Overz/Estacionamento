@@ -86,7 +86,6 @@ CREATE TABLE `dbestacionamento`.`contrato`
 
 ) ENGINE = InnoDB;
 
-
 CREATE TABLE `dbestacionamento`.`ticket`
 (
     `id`           INT(11)                     NOT NULL AUTO_INCREMENT,
@@ -100,7 +99,6 @@ CREATE TABLE `dbestacionamento`.`ticket`
     CONSTRAINT `pk_ticket` PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-
 CREATE TABLE `dbestacionamento`.`movimento`
 (
     `id`         INT        NOT NULL AUTO_INCREMENT,
@@ -112,6 +110,20 @@ CREATE TABLE `dbestacionamento`.`movimento`
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_movimento_ticket` FOREIGN KEY (`idTicket`) REFERENCES `dbestacionamento`.`ticket` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `fk_movimento_contrato1` FOREIGN KEY (`idContrato`) REFERENCES `dbestacionamento`.`contrato` (`id`)
+    CONSTRAINT `fk_movimento_contrato` FOREIGN KEY (`idContrato`) REFERENCES `dbestacionamento`.`contrato` (`id`)
         ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+# https://stackoverflow.com/questions/1131116/pdf-to-byte-array-and-vice-versa/1131178#1131178
+# https://stackoverflow.com/questions/19970964/how-to-save-generated-pdf-files-to-mysql-database-using-java
+CREATE TABLE `dbestacionamento`.`ticketlost`
+(
+    `id`        INT          NOT NULL AUTO_INCREMENT,
+    `nome`      VARCHAR(255) NOT NULL,
+    `cpf`       VARCHAR(45)  NOT NULL,
+    `placa`     VARCHAR(45)  NOT NULL,
+    `renavam`   VARCHAR(45)  NOT NULL,
+    `tipoPgo`   ENUM ('DINHEIRO', 'CARTÃO'),
+    `documento` LONGBLOB     NOT NULL,
+    CONSTRAINT `pk_idTicketLost` PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;

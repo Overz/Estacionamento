@@ -1,10 +1,14 @@
 package controller;
 
 import model.banco.BaseDAO;
+import model.dao.cliente.ClienteDAO;
 import model.dao.cliente.ContratoDAO;
+import model.dao.cliente.EnderecoDAO;
 import model.dao.cliente.PlanoDAO;
 import model.dao.movientos.MovimentoDAO;
+import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
+import model.vo.cliente.EnderecoVO;
 import model.vo.cliente.PlanoVO;
 import model.vo.movimentos.MovimentoVO;
 import util.constantes.Colunas;
@@ -15,21 +19,24 @@ import view.panels.cadastro.ListaClientesView;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ControllerListaClientes {
     private final ListaClientesView listaClientesView;
 
     private final BaseDAO<ContratoVO> daoCon;
-    private final BaseDAO<MovimentoVO> daoM;
+    //    private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<ContratoVO> list;
     private String msg;
 
     public ControllerListaClientes(ListaClientesView panel) {
         this.listaClientesView = panel;
         daoCon = new ContratoDAO();
-        daoM = new MovimentoDAO();
+//        daoM = new MovimentoDAO();
         list = new ArrayList<>();
+        this.timerRefreshData();
     }
 
     public void atualizarTabela() {
@@ -53,6 +60,7 @@ public class ControllerListaClientes {
             model.addRow(novaLinha);
         }
 
+        somarClientes();
         this.ajustarFocusTxtProcurar();
     }
 
@@ -64,6 +72,10 @@ public class ControllerListaClientes {
         return "TESTE";
     }
 
+    private void somarClientes() {
+        listaClientesView.getLblTotalDeClientes().setText("Total de Clientes Cadastrados: " + list.size());
+    }
+
     public void removeSelectedRow() {
 
         int icone = JOptionPane.INFORMATION_MESSAGE;
@@ -71,13 +83,10 @@ public class ControllerListaClientes {
         if (row >= 0) {
 
             ContratoVO contrato = list.get(row);
-            DefaultTableModel model = (DefaultTableModel) listaClientesView.getTable().getModel();
 
             ConstHelpers.FLAG = 1;
-            if (daoM.excluirPorID(contrato.getId())) {
-                daoCon.excluirPorID(contrato.getId());
-
-                atualizarTabela();
+            if (daoCon.excluirPorID(contrato.getId())) {
+                ConstHelpers.FLAG = 1;
                 msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
 
                 System.out.println("Exclusão de Cliente:" + contrato.toString());
@@ -86,13 +95,11 @@ public class ControllerListaClientes {
                 msg = "ERRO AO REALIZAR EXCLUSÃO!";
                 icone = JOptionPane.ERROR_MESSAGE;
             }
-
             this.atualizarTabela();
         } else {
             msg = "<html><body>Por favor, Selecione uma Linha Novamente!<br><br>" +
                   "A Tabela foi Atualizada!</body></html>";
         }
-
         JOptionPane.showMessageDialog(listaClientesView, Modificacoes.labelConfig(msg), "EXCLUSÂO",
                 icone);
     }
@@ -102,7 +109,12 @@ public class ControllerListaClientes {
      */
     public void consultar() {
         String text = listaClientesView.getTxtProcurar().getText();
-        list = daoCon.consultar(text.toUpperCase());
+        if (text.equals("Procurar...") || text.isEmpty()) {
+            ConstHelpers.FLAG = 1;
+        } else {
+            ConstHelpers.FLAG = -1;
+            list = daoCon.consultar(text.toUpperCase());
+        }
         if (list != null) {
             atualizarTabela();
             msg = "Consulta Realizada!";
@@ -121,4 +133,12 @@ public class ControllerListaClientes {
         listaClientesView.getTxtProcurar().setForeground(Color.BLACK);
     }
 
+    private synchronized void timerRefreshData() {
+        ActionListener event = e -> {
+            ConstHelpers.FLAG = 1;
+            this.atualizarTabela();
+        };
+        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+        timer.start();
+    }
 }

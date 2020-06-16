@@ -135,8 +135,8 @@ public class PanelzinhoCadastroDados extends JPanel {
         table = new JTable(new DefaultTableModel(data, Colunas.COLUNAS_CADASTRO_CLIENTE));
 
         table = modificacoes.tableLookAndFiel(table);
-        modificacoes.mostrarComboBoxJTabel_MarcaVO(table, table.getColumnModel().getColumn(1));
-        modificacoes.mostrarComboBoxJTable_ModeloVO(table, table.getColumnModel().getColumn(2));
+        control.addComboBoxTable_ModeloVO();
+        control.addComboBoxTable_MarcaVO();
         modificacoes.maskFormJTable(table, table.getColumnModel().getColumn(0));
         scrollPane.setViewportView(table);
     }

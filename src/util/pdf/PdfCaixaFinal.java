@@ -5,8 +5,10 @@ import com.itextpdf.text.pdf.*;
 import model.vo.movimentos.MovimentoVO;
 import util.constantes.ConstHelpers;
 import util.helpers.Util;
+import static util.pdf.PdfHelpers.*;
 
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -32,7 +34,7 @@ public class PdfCaixaFinal extends Document {
         try {
 
             this.setMargins(20, 20, 20, 20);
-            PdfWriter.getInstance(this, new FileOutputStream(PdfHelpers.CAMINHO + PdfHelpers.EXTENSAO));
+            PdfWriter.getInstance(this, new FileOutputStream(CAMINHO + EXTENSAO));
             this.open();
             this.addMetaData();
             this.add(addHeader());
