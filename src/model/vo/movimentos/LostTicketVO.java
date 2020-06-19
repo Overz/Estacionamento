@@ -1,5 +1,7 @@
 package model.vo.movimentos;
 
+import java.io.InputStream;
+
 public class LostTicketVO {
 
     private int id;
@@ -7,16 +9,19 @@ public class LostTicketVO {
     private String cpf;
     private String placa;
     private String renavam;
-    private int formaPgto;
+    private String formaPgto;
+    private double valorCobrado;
+    private byte[] documento;
 
-    public LostTicketVO(int id, String nome, String cpf, String placa, String renavam, int formaPgto) {
+
+    public LostTicketVO(String nome, String cpf, String placa, String renavam, String formaPgto, double valorCobrado) {
         super();
-        this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.placa = placa;
         this.renavam = renavam;
         this.formaPgto = formaPgto;
+        this.valorCobrado = valorCobrado;
     }
 
     public LostTicketVO() {
@@ -63,11 +68,11 @@ public class LostTicketVO {
         this.renavam = renavam;
     }
 
-    public int getFormaPgto() {
+    public String getFormaPgto() {
         return formaPgto;
     }
 
-    public void setFormaPgto(int formaPgto) {
+    public void setFormaPgto(String formaPgto) {
         this.formaPgto = formaPgto;
     }
 
@@ -75,10 +80,26 @@ public class LostTicketVO {
     @Override
     public String toString() {
         return "Nome:" + nome +
-               " -  CPF: " + this.cpf +
+               " - CPF: " + this.cpf +
                " - placa: " + this.placa +
                " - renavam: " + this.renavam +
                " - formaPgto: " + this.formaPgto;
+    }
+
+    public double getValorCobrado() {
+        return valorCobrado;
+    }
+
+    public void setValorCobrado(double valorCobrado) {
+        this.valorCobrado = valorCobrado;
+    }
+
+    public byte[] getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(byte[] documento) {
+        this.documento = documento;
     }
 
 }

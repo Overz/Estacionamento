@@ -122,21 +122,27 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public ClienteVO cadastrar(ClienteVO newObject, String... values) {
-        String qry = "insert into cliente (nome, cpf, rg, email, telefone) values (?,?,?,?,?);";
+        String qry = "insert into cliente (idEndereco, idCarro, nome, cpf, rg, email, telefone)" +
+                     " values (?,?,?,?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setString(1, newObject.getNome().toUpperCase());
-            stmt.setString(2, newObject.getCpf().toUpperCase());
-            stmt.setString(3, newObject.getRg().toUpperCase());
-            stmt.setString(4, newObject.getEmail().toUpperCase());
-            stmt.setString(5, newObject.getTelefone().toUpperCase());
+            stmt.setInt(1, newObject.getEndereco().getId());
+            stmt.setInt(2, newObject.getCarro().getId());
+            stmt.setString(3, newObject.getNome().toUpperCase());
+            stmt.setString(4, newObject.getCpf().toUpperCase());
+            stmt.setString(5, newObject.getRg().toUpperCase());
+            stmt.setString(6, newObject.getEmail().toUpperCase());
+            stmt.setString(7, newObject.getTelefone().toUpperCase());
 
+            int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
+            if (result != null && result.next()) {
+                if (i == Banco.CODIGO_RETORNO_SUCESSO) {
+                    int id = result.getInt(1);
+                    newObject.setId(id);
+                }
             }
             return newObject;
         } catch (SQLException e) {

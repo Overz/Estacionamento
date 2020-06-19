@@ -115,18 +115,22 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public CarroVO cadastrar(CarroVO newObject, String... values) {
-        String qry = "insert into carro (placa, cor) values (?,?);";
+        String qry = "insert into carro (idModelo, placa, cor) values (?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setString(1, newObject.getPlaca());
+            stmt.setInt(1, newObject.getModelo().getId());
             stmt.setString(2, newObject.getPlaca());
+            stmt.setString(3, newObject.getCor());
 
+            int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
-            while (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
+            if (result != null && result.next()) {
+                if (i == Banco.CODIGO_RETORNO_SUCESSO) {
+                    int id = result.getInt(1);
+                    newObject.setId(id);
+                }
             }
             return newObject;
         } catch (SQLException e) {

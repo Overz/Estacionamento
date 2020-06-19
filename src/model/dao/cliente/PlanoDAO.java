@@ -117,10 +117,13 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
             stmt.setString(1, newObject.getTipo());
             stmt.setString(2, newObject.getDescircao());
 
+            int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
+            if (result != null && result.next()) {
+                if (i == Banco.CODIGO_RETORNO_SUCESSO) {
+                    int id = result.getInt(1);
+                    newObject.setId(id);
+                }
             }
             return newObject;
         } catch (SQLException e) {

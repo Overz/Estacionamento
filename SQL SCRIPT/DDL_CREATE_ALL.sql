@@ -4,7 +4,7 @@ USE dbestacionamento;
 
 CREATE TABLE `dbestacionamento`.`endereco`
 (
-    `id`     INT          NOT NULL,
+    `id`     INT          NOT NULL AUTO_INCREMENT,
     `numero` INT          NULL,
     `rua`    VARCHAR(255) NULL,
     `bairro` VARCHAR(100) NULL,
@@ -67,35 +67,33 @@ CREATE TABLE `dbestacionamento`.`plano`
 
 CREATE TABLE `dbestacionamento`.`contrato`
 (
-    `id`          INT(11)                     NOT NULL AUTO_INCREMENT,
-    `idPlano`     INT(11)                     NOT NULL,
-    `idCliente`   INT(11)                     NOT NULL,
-    `n_cartao`    MEDIUMTEXT                  NOT NULL,
-    `dt_entrada`  DATETIME                    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `dt_validade` DATETIME                    NULL     DEFAULT NULL,
-    `ativo`       TINYINT(1)                  NOT NULL DEFAULT '1',
-    `valor`       DECIMAL(10, 5)              NOT NULL,
-    `tipoPgto`    ENUM ('DINHEIRO', 'CARTÃO') NOT NULL,
+    `id`          INT(11)        NOT NULL AUTO_INCREMENT,
+    `idPlano`     INT(11)        NOT NULL,
+    `idCliente`   INT(11)        NOT NULL,
+    `n_cartao`    MEDIUMTEXT     NOT NULL,
+    `dt_entrada`  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `dt_validade` DATETIME       NULL     DEFAULT NULL,
+    `ativo`       TINYINT(1)     NOT NULL DEFAULT '1',
+    `valor`       DECIMAL(10, 5) NOT NULL,
+    `tipoPgto`    VARCHAR(45)    NOT NULL DEFAULT 'DINHEIRO',
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_contrato_plano1` FOREIGN KEY (`idPlano`) REFERENCES `dbestacionamento`.`plano` (`id`)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION,
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT `fk_contrato_cliente1` FOREIGN KEY (`idCliente`) REFERENCES `dbestacionamento`.`cliente` (`id`)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 
 ) ENGINE = InnoDB;
 
 CREATE TABLE `dbestacionamento`.`ticket`
 (
-    `id`           INT(11)                     NOT NULL AUTO_INCREMENT,
-    `n_ticket`     MEDIUMTEXT                  NOT NULL,
-    `valor`        DECIMAL(10, 5)              NULL     DEFAULT NULL,
-    `tipo`         ENUM ('DINHEIRO', 'CARTÃO') NOT NULL DEFAULT 'DINHEIRO',
-    `hr_entrada`   TIMESTAMP                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `hr_validacao` TIMESTAMP                   NULL     DEFAULT NULL,
-    `statusTicket` TINYINT(1)                  NOT NULL DEFAULT '1',
-    `validado`     TINYINT(1)                  NOT NULL DEFAULT '0',
+    `id`           INT(11)        NOT NULL AUTO_INCREMENT,
+    `n_ticket`     MEDIUMTEXT     NOT NULL,
+    `valor`        DECIMAL(10, 5) NULL     DEFAULT NULL,
+    `tipo`         VARCHAR(45)    NOT NULL DEFAULT 'DINHEIRO',
+    `hr_entrada`   TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `hr_validacao` TIMESTAMP      NULL     DEFAULT NULL,
+    `statusTicket` TINYINT(1)     NOT NULL DEFAULT '1',
+    `validado`     TINYINT(1)     NOT NULL DEFAULT '0',
     CONSTRAINT `pk_ticket` PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 

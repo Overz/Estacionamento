@@ -1,27 +1,69 @@
 package controller;
 
-import model.banco.BaseDAO;
-import model.dao.cliente.PlanoDAO;
+import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
 import util.constantes.ConstHelpers;
+import util.helpers.Util;
+import util.pdf.PdfHelpers;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.awt.event.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 public class ControllerCadastroPlano {
 
     private final PanelzinhoCadastroPlano planoView;
 
-    public ControllerCadastroPlano(JPanel panel) {
-        this.planoView = (PanelzinhoCadastroPlano) panel;
+    public ControllerCadastroPlano(PanelzinhoCadastroPlano panel) {
+        this.planoView = panel;
+        this.atualizarHoraTela();
     }
 
     public PlanoVO getPlanoForm() {
         return (PlanoVO) planoView.getCbPlano().getSelectedItem();
     }
 
+    /**
+     * Retorna os dados do Contrato + Plano
+     *
+     * @return new ContratoVO
+     */
+    public ContratoVO getContratoForm() {
+        try {
+            String strCartao = planoView.getTxtCartao().getText();
+            long cartao = 0;
+            if (!strCartao.isEmpty()) {
+                cartao = Long.parseLong(strCartao);
+            }
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime validade = calcularValidade();
+            boolean bloqueado = planoView.getChckbxBloquear().isSelected();
+            boolean ativo = false;
+            if (!bloqueado) {
+                ativo = true;
+            }
+            PlanoVO p = getPlanoForm();
+            double valor = 0.0;
+            if (p.getId() == 1) {
+                valor = 200.0;
+            } else if (p.getId() == 2) {
+                valor = 25.0;
+            }
+            return new ContratoVO(cartao, now, validade, ativo, valor, p.getTipo(), p);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Limpa o formulario da tela
+     */
     public void limparForm() {
         try {
             planoView.getCbFormaPgto().setSelectedIndex(-1);
@@ -38,10 +80,44 @@ public class ControllerCadastroPlano {
         }
     }
 
+    /**
+     * Timer para o horario da tela, se manter atualizado
+     */
+    private void atualizarHoraTela() {
+        ActionListener event = e -> {
+            planoView.getLblHora().setText(LocalDateTime.now().format(ConstHelpers.DTF));
+        };
+        Timer timer = new Timer(500, event);
+        timer.start();
+    }
+
+    /**
+     * Adiciona 1 Mes de Validade ao Contrato do usuario
+     */
+    public LocalDateTime calcularValidade() {
+        LocalDateTime now = LocalDateTime.now();
+        Month month = now.getMonth().plus(1);
+        LocalDate nextMonth = LocalDate.of(now.getYear(), month, now.getDayOfMonth());
+        LocalDateTime dt = LocalDateTime.of(nextMonth, now.toLocalTime());
+        planoView.getLblMesValidade().setText(dt.format(ConstHelpers.DTF));
+        return dt;
+    }
+
     public DefaultComboBoxModel preencherCbx() {
-        ConstHelpers.FLAG = 1;
-        BaseDAO<PlanoVO> plano = new PlanoDAO();
-        ArrayList<PlanoVO> lista = plano.consultarTodos();
-        return new DefaultComboBoxModel(lista.toArray());
+        return new DefaultComboBoxModel(Util.atualizarListaModelo().toArray());
+    }
+
+    /**
+     * New MouseListener
+     *
+     * @return MouseListener
+     */
+    public MouseListener addComboBoxListener() {
+        return new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                calcularValidade();
+            }
+        };
     }
 }

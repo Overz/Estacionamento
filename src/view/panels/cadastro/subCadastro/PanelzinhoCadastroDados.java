@@ -1,6 +1,7 @@
 package view.panels.cadastro.subCadastro;
 
 import controller.ControllerCadastroDados;
+import controller.ControllerMainCadastro;
 import model.vo.cliente.ClienteVO;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.Colunas;
@@ -19,6 +20,7 @@ public class PanelzinhoCadastroDados extends JPanel {
     private JTextField txtEmail, txtNome, txtCPF, txtRG, txtTelefone;
     private JTable table;
     private JButton btnAddRow, btnRemoveRow;
+    private JCheckBox chckbxBloquear;
 
     public PanelzinhoCadastroDados() {
 
@@ -68,7 +70,7 @@ public class PanelzinhoCadastroDados extends JPanel {
         lblEmail.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblEmail, "cell 0 5 2 1,grow");
 
-        JLabel lblTelefone = new JLabel("<html><body>Fone <a style=color:red>*</a>");
+        JLabel lblTelefone = new JLabel("<html><body>Fone <a style=color:red>*</a></body></html>");
         lblTelefone.setHorizontalAlignment(SwingConstants.CENTER);
         lblTelefone.setFont(new Font("Arial", Font.BOLD, 14));
         this.add(lblTelefone, "cell 0 6 2 1,grow");
@@ -135,14 +137,13 @@ public class PanelzinhoCadastroDados extends JPanel {
         table = new JTable(new DefaultTableModel(data, Colunas.COLUNAS_CADASTRO_CLIENTE));
 
         table = modificacoes.tableLookAndFiel(table);
-        control.addComboBoxTable_ModeloVO();
-        control.addComboBoxTable_MarcaVO();
+        control.addComboBoxJTable();
         modificacoes.maskFormJTable(table, table.getColumnModel().getColumn(0));
         scrollPane.setViewportView(table);
     }
 
     private void setCheckBox() {
-        JCheckBox chckbxBloquear = new JCheckBox("Bloquear?");
+        chckbxBloquear = new JCheckBox("Bloquear?");
         chckbxBloquear.setBackground(Color.WHITE);
         chckbxBloquear.setHorizontalAlignment(SwingConstants.CENTER);
         chckbxBloquear.setFont(new Font("Arial", Font.BOLD, 14));
@@ -180,6 +181,10 @@ public class PanelzinhoCadastroDados extends JPanel {
 
     public JTextField getTxtTelefone() {
         return txtTelefone;
+    }
+
+    public JCheckBox getChckbxBloquear() {
+        return chckbxBloquear;
     }
 
     public JTable getTable() {

@@ -16,8 +16,8 @@ public class ContratoVO {
     private PlanoVO planoVO;
     private ClienteVO clienteVO;
 
-    public ContratoVO(int id, long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida, boolean ativo, double valor, String tipoPgto, PlanoVO planoVO, ClienteVO clienteVO) {
-        this.id = id;
+    public ContratoVO(long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida,
+                      boolean ativo, double valor, String tipoPgto, PlanoVO planoVO, ClienteVO clienteVO) {
         this.numeroCartao = numeroCartao;
         this.dtEntrada = dtEntrada;
         this.dtSaida = dtSaida;
@@ -26,6 +26,17 @@ public class ContratoVO {
         this.tipoPgto = tipoPgto;
         this.planoVO = planoVO;
         this.clienteVO = clienteVO;
+    }
+
+    public ContratoVO(long numeroCartao, LocalDateTime dtEntrada, LocalDateTime dtSaida,
+                      boolean ativo, double valor, String tipoPgto, PlanoVO planoVO) {
+        this.numeroCartao = numeroCartao;
+        this.dtEntrada = dtEntrada;
+        this.dtSaida = dtSaida;
+        this.ativo = ativo;
+        this.valor = valor;
+        this.tipoPgto = tipoPgto;
+        this.planoVO = planoVO;
     }
 
     public ContratoVO() {

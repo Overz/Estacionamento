@@ -1,5 +1,8 @@
 package util.helpers;
 
+import model.banco.BaseDAO;
+import model.dao.cliente.PlanoDAO;
+import model.vo.cliente.PlanoVO;
 import util.constantes.ConstHelpers;
 
 import javax.swing.*;
@@ -10,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -166,6 +170,12 @@ public class Util {
      */
     public static String caminhoFileChooser(File file) {
         return file.getAbsolutePath();
+    }
+
+    public static ArrayList<PlanoVO> atualizarListaModelo() {
+        ConstHelpers.FLAG = 1;
+        BaseDAO<PlanoVO> plano = new PlanoDAO();
+        return plano.consultarTodos();
     }
 
     // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'

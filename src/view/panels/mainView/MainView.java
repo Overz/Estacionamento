@@ -25,7 +25,7 @@ public class MainView extends JFrame {
     private static final InicioView INICIO_VIEW = new InicioView();
     private static final CaixaView CAIXA_VIEW = new CaixaView();
     private static final ListaClientesView CLIENTE_VIEW = new ListaClientesView();
-    private static final MainPanelCadastro CADASTRO_VIEW = new MainPanelCadastro();
+    private static final MainPanelCadastro CADASTRO_VIEW = new MainPanelCadastro(0);
     private static final MovimentoView MOVIMENTO_VIEW = new MovimentoView();
     private static final LostTicketView LOST_TICKET_VIEW = new LostTicketView();
     private static JLayeredPane layeredPane;

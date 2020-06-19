@@ -181,7 +181,11 @@ public class ListaClientesView extends JPanel {
 
         btnCadastrar.addActionListener(e -> MainView.swithPanel(MainView.getCadastroView()));
 
-        btnAtualizar.addActionListener(e -> MainView.swithPanel(MainView.getCadastroView()));
+        btnAtualizar.addActionListener(e -> {
+            control.gambiarra();
+            MainView.getCadastroView().setTipoCadastro(1);
+            MainView.swithPanel(MainView.getCadastroView());
+        });
 
         btnExcluir.addActionListener(e -> control.removeSelectedRow());
 

@@ -116,10 +116,13 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
             stmt.setString(3, newObject.getBairro());
             stmt.setString(4, newObject.getCidade());
 
+            int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
+            if (result != null && result.next()) {
+                if (i == Banco.CODIGO_RETORNO_SUCESSO) {
+                    int id = result.getInt(1);
+                    newObject.setId(id);
+                }
             }
             return newObject;
         } catch (SQLException e) {

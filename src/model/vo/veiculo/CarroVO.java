@@ -8,7 +8,7 @@ public class CarroVO {
     //	Objects
     private ModeloVO modelo;
 
-    public CarroVO(int id, String placa, String cor, ModeloVO modelo) {
+    public CarroVO(String placa, String cor, ModeloVO modelo) {
         super();
         this.id = id;
         this.placa = placa;

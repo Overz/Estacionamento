@@ -3,8 +3,8 @@ package controller;
 import model.banco.BaseDAO;
 import model.bo.CarroBO;
 import model.bo.ClienteBO;
+import model.bo.ContratoBO;
 import model.bo.EnderecoBO;
-import model.bo.PlanoBO;
 import model.dao.cliente.ClienteDAO;
 import model.dao.cliente.ContratoDAO;
 import model.dao.cliente.EnderecoDAO;
@@ -15,31 +15,51 @@ import model.vo.cliente.ContratoVO;
 import model.vo.cliente.EnderecoVO;
 import model.vo.cliente.PlanoVO;
 import model.vo.veiculo.CarroVO;
+import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
+import view.panels.cadastro.ListaClientesView;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
+import view.panels.mainView.MainView;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.awt.*;
 
 public class ControllerMainCadastro {
 
+    private ListaClientesView clientesView;
+    private PanelzinhoCadastroPlano planoView;
+    private PanelzinhoCadastroEndereco enderecoView;
+    private PanelzinhoCadastroDados dadosView;
+    private ControllerListaClientes clientesCtrl;
     private ControllerCadastroDados dadosCtrl;
     private ControllerCadastroEndereco enderecoCtrl;
     private ControllerCadastroPlano planoCtrl;
     private BaseDAO<CarroVO> daoCarro;
-    private String msg = "<html><body>";
+    private BaseDAO<ClienteVO> daoCliente;
+    private BaseDAO<EnderecoVO> daoEndereco;
+    private BaseDAO<ContratoVO> daoContrato;
+    private BaseDAO<PlanoVO> daoPlano;
+    private String msg;
 
     public ControllerMainCadastro(JPanel panel) {
-        if (panel instanceof PanelzinhoCadastroPlano) {
-            planoCtrl = new ControllerCadastroPlano(panel);
-        }
-        if (panel instanceof PanelzinhoCadastroEndereco) {
-            enderecoCtrl = new ControllerCadastroEndereco(panel);
-        }
-        if (panel instanceof PanelzinhoCadastroDados) {
-            dadosCtrl = new ControllerCadastroDados(panel);
+        try {
+            if (panel instanceof PanelzinhoCadastroPlano) {
+                this.planoView = (PanelzinhoCadastroPlano) panel;
+                planoCtrl = new ControllerCadastroPlano(planoView);
+            }
+            if (panel instanceof PanelzinhoCadastroEndereco) {
+                enderecoView = (PanelzinhoCadastroEndereco) panel;
+                enderecoCtrl = new ControllerCadastroEndereco(enderecoView);
+            }
+            if (panel instanceof PanelzinhoCadastroDados) {
+                dadosView = (PanelzinhoCadastroDados) panel;
+                dadosCtrl = new ControllerCadastroDados(dadosView);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -47,74 +67,78 @@ public class ControllerMainCadastro {
      * <p>Verifica o Tipo de Inserção:</p>
      * <p>Cadastro: 0</p>
      * <p>Atualização: 1</p>
+     * <p>
+     * Se for cadastro, tenta cadastrar.
+     * Se for alteração, tenta alterar
      *
-     * @param tipo int
+     * @param tipoCadastro int
      */
-    public void salvar(int tipo) {
+    public void salvar(int tipoCadastro) {
         try {
+            msg = "";
             daoCarro = new CarroDAO();
-            BaseDAO<ClienteVO> daoCliente = new ClienteDAO();
-            BaseDAO<EnderecoVO> daoEndereco = new EnderecoDAO();
-            BaseDAO<ContratoVO> daoContrato = new ContratoDAO();
-            BaseDAO<PlanoVO> daoPlano = new PlanoDAO();
+            daoCliente = new ClienteDAO();
+            daoEndereco = new EnderecoDAO();
+            daoContrato = new ContratoDAO();
+            daoPlano = new PlanoDAO();
 
-            ContratoVO con = getContratoForm();
             PlanoVO p = getPlanoForm();
-            ClienteVO c = getClienteForm();
             CarroVO car = getCarroForm();
+            ClienteVO c = getClienteForm();
             EnderecoVO e = getEnderecoForm();
+            ContratoVO con = getContratoForm();
 
-            if (tipo == 0) {
-                Exception exception = null;
+            if (tipoCadastro == 0) {
+                // Cadastrar
                 if (corredorPolones(con, car, c, e)) {
+                    bigJOptionPane(msg);
                     try {
-                        e = daoEndereco.cadastrar(e);
-                        car = daoCarro.cadastrar(car);
+                        if (cadastrarCliente(con, car, c, e, p)) {
 
-                        c.setEndereco(e);
-                        c.setCarro(car);
-                        c = daoCliente.cadastrar(c);
-
-                        p = daoPlano.cadastrar(p);
-
-                        con = daoContrato.cadastrar(con);
-                        con.setCliente(c);
-                        con.setPlano(p);
-                    } catch (Exception e1) {
-                        exception = e1;
-                        e1.printStackTrace();
-                    }
-
-                    if (exception == null) {
-                        msg = "Cliente Cadastrado!<br><br>" + con.toString()
-                              + "<br>" + p.toStringDiff()
-                              + "<br>" + con.getCliente().toString();
+                            msg = "Cliente Cadastrado!";
+                        } else {
+                            msg = "Erro ao Cadastrar Cliente!";
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                     }
                 }
-            } else if (corredorPolones(con, car, c, e)) {
-                boolean v = daoCarro.alterar(car);
-                boolean x = daoCliente.alterar(c);
-                boolean w = daoEndereco.alterar(e);
-                boolean y = daoPlano.alterar(p);
-                boolean z = daoContrato.alterar(con);
-
-                if (v && x && w && y && z) {
-                    msg = "Cliente Atualizado!";
-                }
+                // Alterar
             } else {
-                msg += "Ação Cancelada</body></html>";
+                if (corredorPolones(con, car, c, e)) {
+                    boolean v = daoCarro.alterar(car);
+                    boolean x = daoCliente.alterar(c);
+                    boolean w = daoEndereco.alterar(e);
+                    boolean y = daoPlano.alterar(p);
+                    boolean z = daoContrato.alterar(con);
+
+                    if (v && x && w && y && z) {
+                        msg = "Cliente Atualizado!";
+                    }
+                } else {
+                    bigJOptionPane(msg);
+                }
             }
 
-            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg),
-                    "Validação", JOptionPane.ERROR_MESSAGE);
+            atualizarListaClientes();
+            System.out.println(msg + "\n");
+            if (msg != null && !msg.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
+                        JOptionPane.PLAIN_MESSAGE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private ContratoVO getContratoForm() {
-        //TODO fazer
-        return null;
+    /**
+     * Atualiza a tabela de Clientes em ListaClientesView a cada alteração
+     */
+    private void atualizarListaClientes() {
+        ConstHelpers.FLAG = 1;
+        clientesView = MainView.getClienteView();
+        clientesCtrl = new ControllerListaClientes(clientesView);
+        clientesCtrl.atualizarTabela();
     }
 
     /**
@@ -127,72 +151,73 @@ public class ControllerMainCadastro {
      * @return true/false
      */
     private boolean corredorPolones(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e) {
-        boolean bool = false;
+        boolean bool = true;
 
         try {
             // Cliente
             if (!ClienteBO.validarNomeCliente(c)) {
-                msg += "Por favor, Digite o NOME Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o NOME Corretamente\n-NOME: Sem Caracteres Especiais\n\n";
+                bool = false;
             }
             if (!ClienteBO.validarCPFcliente(c)) {
-                msg += "Por favor, Digite o CPF Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o CPF Corretamente\n-CPF: 11 Caracteres\n\n";
+                bool = false;
             }
             if (!ClienteBO.validarTelefone(c)) {
-                msg += "Por favor, Digite o TELEFONE Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o TELEFONE Corretamente\n-TELEFONE: Somente Numeros\n\n";
+                bool = false;
             }
             if (!ClienteBO.validarEmail(c)) {
-                msg += "Por favor, Digite o EMAIL Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o EMAIL Corretamente\n-EMAIL: Deve ser um Email Real\n\n";
+                bool = false;
             }
             if (!ClienteBO.validarRG(c)) {
-                msg += "Por favor, Digite o RG Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o RG Corretamente\n-RG: Somenete Numeros\n\n";
+                bool = false;
             }
 
             // Carro
             if (!CarroBO.validarPlaca(car)) {
-                msg += "Por favor, Digite a PLACA Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite a PLACA Corretamente\n-PLACA: >= 0 ou <= 7 Contendo Letras e Numeros\n\n";
+                bool = false;
             }
             if (!CarroBO.validarMarca(car)) {
-                msg += "Por favor, Escolha a MARCA<br> ";
-                bool = true;
+                msg += "- Por favor, Escolha a MARCA\n\n";
+                bool = false;
             }
             if (!CarroBO.validarModelo(car)) {
-                msg += "Por favor Escolha o MODELO<br>";
-                bool = true;
+                msg += "- Por favor, Escolha o MODELO\n\n";
+                bool = false;
             }
-            if (!CarroBO.validarDescricao(car)) {
-                msg += "Por favor, Digite a DESCRIÇÃO Corretamente<br>";
-                bool = true;
+            if (!CarroBO.validarCor(car)) {
+                msg += "- Por favor, Escolha a COR\n\n";
+                bool = false;
             }
 
             // Endereco
             if (!EnderecoBO.validarRua(e)) {
-                msg += "Por favor, Digite a RUA Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite a RUA Corretamente\n-RUA: Somente Palavras\n\n";
+                bool = false;
             }
             if (!EnderecoBO.validarNumero(e)) {
-                msg += "Por favor, Digite o NUMERO Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o NUMERO Corretamente\n-NUMERO: Somente Numeros\n\n";
+                bool = false;
             }
             if (!EnderecoBO.validarBairro(e)) {
-                msg += "Por favor, Digite o BAIRRO Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite o BAIRRO Corretamente\n-BAIRRO: Somente Palavras\n\n";
+                bool = false;
             }
             if (!EnderecoBO.validarCidade(e)) {
-                msg += "Por favor, Digite a CIDADE Corretamente<br>";
-                bool = true;
+                msg += "- Por favor, Digite a CIDADE Corretamente\n-CIDADE: Somenete Palavras\n\n";
+                bool = false;
             }
 
             // Plano
-//            if (!PlanoBO.validarDadosPlano(con)) {
-//                bool = true;
-//                msg += "Por favor, Escolha o PLANO Corretamente<br>";
-//            }
+            if (!ContratoBO.validarNumeroCartao(con)) {
+                msg += "- Por favor, Digite o Número do Cartão Corretamente\n\n";
+                bool = false;
+            }
+            System.out.println("Corredor: " + msg);
         } catch (Exception e1) {
             System.out.println(e1.getClass().getSimpleName());
             System.out.println(e1.getMessage());
@@ -201,12 +226,20 @@ public class ControllerMainCadastro {
         return bool;
     }
 
+    private ContratoVO getContratoForm() {
+        planoView = MainView.getPlanoCadastroView();
+        planoCtrl = new ControllerCadastroPlano(planoView);
+        return planoCtrl.getContratoForm();
+    }
+
     /**
      * Pega os valores na tela Sub Endereco
      *
      * @return EnderecoVO
      */
     private EnderecoVO getEnderecoForm() {
+        enderecoView = MainView.getEnderecoCadastroView();
+        enderecoCtrl = new ControllerCadastroEndereco(enderecoView);
         return enderecoCtrl.getResultadoForm();
     }
 
@@ -216,17 +249,9 @@ public class ControllerMainCadastro {
      * @return CarroVO
      */
     private CarroVO getCarroForm() {
-        ArrayList<CarroVO> carros = dadosCtrl.getFormListaCarro();
-        if (carros.size() > 1) {
-            msg = "Deseja Cadastrar mais de um Carro?";
-            int i = JOptionPane.showConfirmDialog(null, Modificacoes.labelConfig(msg),
-                    "Cadastro", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (i == JOptionPane.OK_OPTION) {
-                CarroVO carro = dadosCtrl.getFormCarro();
-                return daoCarro.cadastrar(carro);
-            }
-        }
-        return null;
+        dadosView = MainView.getDadosCadastroView();
+        dadosCtrl = new ControllerCadastroDados(dadosView);
+        return dadosCtrl.getFormCarro();
     }
 
     /**
@@ -235,6 +260,8 @@ public class ControllerMainCadastro {
      * @return ClienteVO
      */
     private ClienteVO getClienteForm() {
+        dadosView = MainView.getDadosCadastroView();
+        dadosCtrl = new ControllerCadastroDados(dadosView);
         return dadosCtrl.getFormCliente();
     }
 
@@ -244,6 +271,8 @@ public class ControllerMainCadastro {
      * @return PlanoVO
      */
     private PlanoVO getPlanoForm() {
+        planoView = MainView.getPlanoCadastroView();
+        planoCtrl = new ControllerCadastroPlano(planoView);
         return planoCtrl.getPlanoForm();
     }
 
@@ -254,5 +283,45 @@ public class ControllerMainCadastro {
         dadosCtrl.limparForm();
         enderecoCtrl.limparForm();
         planoCtrl.limparForm();
+    }
+
+    private boolean cadastrarCliente(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e, PlanoVO p) {
+        e = daoEndereco.cadastrar(e);
+        car = daoCarro.cadastrar(car);
+
+        c.setEndereco(e);
+        c.setCarro(car);
+        c = daoCliente.cadastrar(c);
+
+        con.setCliente(c);
+        con.setPlano(p);
+        con = daoContrato.cadastrar(con);
+
+        int idE = e.getId();
+        int idCar = car.getId();
+        int idCli = c.getId();
+        int idCon = con.getId();
+
+        boolean result = false;
+        if (idE > 0 && idCli > 0 && idCar > 0 && idCon > 0) {
+            if (idE == idCli && idCli == idCar && idCli == idCon) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private void bigJOptionPane(String msg) {
+        JTextArea textArea = new JTextArea(msg);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setFont(new Font("Dialog", Font.BOLD, 16));
+        textArea.setEditable(false);
+        scrollPane.setPreferredSize(new Dimension(500, 500));
+        if (msg != null && !msg.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, scrollPane, "Validação",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
     }
 }

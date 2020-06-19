@@ -22,7 +22,11 @@ public class ControllerCadastroEndereco {
     public EnderecoVO getResultadoForm() {
         try {
             String rua = enderecoView.getTxtRua().getText();
-            int numero = Integer.parseInt(enderecoView.getTxtNumero().getText());
+            String strNumero = enderecoView.getTxtNumero().getText();
+            int numero = 0 ;
+            if (!strNumero.isEmpty()){
+                numero = Integer.parseInt(strNumero);
+            }
             String bairro = enderecoView.getTxtBairro().getText();
             String cidade = enderecoView.getTxtCidade().getText();
             return new EnderecoVO(numero, rua, bairro, cidade);

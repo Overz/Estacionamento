@@ -1,42 +1,30 @@
 package controller;
 
 import model.banco.BaseDAO;
-import model.dao.cliente.ClienteDAO;
 import model.dao.cliente.ContratoDAO;
-import model.dao.cliente.EnderecoDAO;
-import model.dao.cliente.PlanoDAO;
-import model.dao.movientos.MovimentoDAO;
-import model.vo.cliente.ClienteVO;
 import model.vo.cliente.ContratoVO;
-import model.vo.cliente.EnderecoVO;
-import model.vo.cliente.PlanoVO;
-import model.vo.movimentos.MovimentoVO;
 import util.constantes.Colunas;
 import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
 import view.panels.cadastro.ListaClientesView;
+import view.panels.mainView.MainView;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ControllerListaClientes {
     private final ListaClientesView listaClientesView;
 
     private final BaseDAO<ContratoVO> daoCon;
-    //    private final BaseDAO<MovimentoVO> daoM;
     private ArrayList<ContratoVO> list;
     private String msg;
 
     public ControllerListaClientes(ListaClientesView panel) {
         this.listaClientesView = panel;
         daoCon = new ContratoDAO();
-//        daoM = new MovimentoDAO();
         list = new ArrayList<>();
-        this.timerRefreshData();
     }
 
     public void atualizarTabela() {
@@ -133,12 +121,20 @@ public class ControllerListaClientes {
         listaClientesView.getTxtProcurar().setForeground(Color.BLACK);
     }
 
-    private synchronized void timerRefreshData() {
-        ActionListener event = e -> {
-            ConstHelpers.FLAG = 1;
-            this.atualizarTabela();
-        };
-        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
-        timer.start();
+    /**
+     * limpa os dados das telas de cadastro ao clicar no botão atualizar
+     */
+    public void gambiarra() {
+        MainView.getDadosCadastroView().getTxtRG().setText("");
+        MainView.getDadosCadastroView().getTxtNome().setText("");
+        MainView.getDadosCadastroView().getTxtTelefone().setText("");
+        MainView.getDadosCadastroView().getTxtEmail().setText("");
+        MainView.getDadosCadastroView().getTxtCPF().setText("");
+        MainView.getEnderecoCadastroView().getTxtRua().setText("");
+        MainView.getEnderecoCadastroView().getTxtNumero().setText("");
+        MainView.getEnderecoCadastroView().getTxtCidade().setText("");
+        MainView.getEnderecoCadastroView().getTxtBairro().setText("");
+        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(-1);
+        MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
     }
 }

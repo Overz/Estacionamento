@@ -162,20 +162,26 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public ContratoVO cadastrar(ContratoVO newObject, String... values) {
-        String qry = "insert into contrato (n_cartao, dt_entrada, dt_saida, ativo, valor) values (?,?,?,?,?);";
+        String qry = "insert into contrato (idPLano, idCliente, n_cartao, dt_validade, ativo, valor, tipoPgto)" +
+                     " values (?,?,?,?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
         try {
-            stmt.setLong(1, newObject.getNumeroCartao());
-            stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDtEntrada()));
-            stmt.setTimestamp(3, Timestamp.valueOf(newObject.getDtSaida()));
-            stmt.setBoolean(4, newObject.isAtivo());
-            stmt.setDouble(5, newObject.getValor());
+            stmt.setLong(1, newObject.getPlano().getId());
+            stmt.setLong(2, newObject.getCliente().getId());
+            stmt.setLong(3, newObject.getNumeroCartao());
+            stmt.setTimestamp(4, Timestamp.valueOf(newObject.getDtSaida()));
+            stmt.setBoolean(5, newObject.isAtivo());
+            stmt.setDouble(6, newObject.getValor());
+            stmt.setString(7, newObject.getTipoPgto().toUpperCase()) ;
 
+            int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
-            while (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
+            if (result != null && result.next()) {
+                if (i == Banco.CODIGO_RETORNO_SUCESSO) {
+                    int id = result.getInt(1);
+                    newObject.setId(id);
+                }
             }
             return newObject;
         } catch (SQLException e) {
@@ -237,8 +243,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                   "inner join endereco e on cli.idEndereco = e.id " +
                   "where e.id = cli.id and car.id = cli.id " +
                   "and cli.id = con.id and con.id = ?;";
-        }
-        else if (ConstHelpers.FLAG == 2){
+        } else if (ConstHelpers.FLAG == 2) {
             qry = "delete movi, con, cli, car, e " +
                   "from movimento movi inner join contrato con on movi.idContrato = con.id " +
                   "inner join cliente cli on con.idCliente = cli.id " +
@@ -272,7 +277,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                                "Cause: " + e.getCause() + "\n"
             );
 
-            if (e.getMessage().contains("fk_movimento_contrato")){
+            if (e.getMessage().contains("fk_movimento_contrato")) {
                 ConstHelpers.FLAG = 2;
                 if (resultado < 4 && resultado != Banco.CODIGO_RETORNO_SUCESSO) {
                     excluirPorID(id);
@@ -282,7 +287,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
-            if (resultado >= 4){
+            if (resultado >= 4) {
                 return true;
             }
         }

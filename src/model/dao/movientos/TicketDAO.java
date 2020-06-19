@@ -132,6 +132,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDataEntrada()));
                 stmt.setBoolean(3, newObject.getStatus());
                 stmt.setBoolean(4, newObject.getValidado());
+                //TODO Insert enum value
 
                 stmt.execute();
 

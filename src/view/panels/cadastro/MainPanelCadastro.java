@@ -17,14 +17,16 @@ import java.awt.event.MouseEvent;
 public class MainPanelCadastro extends JPanel {
 
     private static final long serialVersionUID = -7538521065547926504L;
-    private ControllerMainCadastro ctrl;
+    private static ControllerMainCadastro mainCtrl;
     private final JLayeredPane layeredPane;
     private JButton btnSalvar;
     private JButton btnPlano, btnDados, btnEndereco;
     private Boolean bool;
     private JButton btnLimpar;
+    private int tipoCadastro; // Se é cadastro, ou atualização, utilziado nos métodos do controller
 
-    public MainPanelCadastro() {
+    public MainPanelCadastro(int tipoCadastro) {
+        this.tipoCadastro = tipoCadastro;
         this.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         this.setBounds(100, 100, 1145, 908);
         this.setLayout(new MigLayout("", "[10px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px]", "[50px][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][grow][10px][35px][35px][10px]"));
@@ -39,9 +41,9 @@ public class MainPanelCadastro extends JPanel {
         this.initialize();
     }
 
-    public void initialize() {
+    private void initialize() {
 
-        ctrl = new ControllerMainCadastro(this);
+        mainCtrl = new ControllerMainCadastro(this);
 
         this.setButtons();
 
@@ -49,7 +51,7 @@ public class MainPanelCadastro extends JPanel {
 
     }
 
-    public void setButtons() {
+    private void setButtons() {
 
         btnDados = new JButton("Dados");
         btnDados.setFont(new Font("Arial", Font.BOLD, 20));
@@ -116,12 +118,12 @@ public class MainPanelCadastro extends JPanel {
         });
 
         btnSalvar.addActionListener(e -> {
-            ctrl.salvar(1);
+            MainView.getDadosCadastroView().getTable().clearSelection();
+            mainCtrl.salvar(tipoCadastro);
+//            mainCtrl.limparDados();
         });
 
-        btnLimpar.addActionListener(e -> {
-            ctrl.limparDados();
-        });
+        btnLimpar.addActionListener(e -> mainCtrl.limparDados());
     }
 
     /**
@@ -148,5 +150,13 @@ public class MainPanelCadastro extends JPanel {
             return true;
         }
         return null;
+    }
+
+    public int getTipoCadastro() {
+        return tipoCadastro;
+    }
+
+    public void setTipoCadastro(int tipoCadastro) {
+        this.tipoCadastro = tipoCadastro;
     }
 }

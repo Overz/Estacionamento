@@ -5,10 +5,13 @@ import model.dao.veiculos.CarroDAO;
 import model.dao.veiculos.MarcaDAO;
 import model.dao.veiculos.ModeloDAO;
 import model.vo.cliente.ClienteVO;
+import model.vo.cliente.ContratoVO;
 import model.vo.veiculo.CarroVO;
 import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
+import util.constantes.Colunas;
 import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
 import util.helpers.Modificacoes;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 
@@ -16,27 +19,45 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ControllerCadastroDados {
 
     private final PanelzinhoCadastroDados cadastroView;
-    private final ClienteVO cliente;
     private final BaseDAO<CarroVO> daoCarro;
     private ArrayList<CarroVO> linhas;
     private ArrayList<CarroVO> lista;
+    private int id;
 
     public ControllerCadastroDados(JPanel panel) {
         this.cadastroView = (PanelzinhoCadastroDados) panel;
         linhas = new ArrayList<>();
         lista = new ArrayList<>();
-        cliente = new ClienteVO();
         daoCarro = new CarroDAO();
     }
 
-    // TODO.html Atualizar Tabela caso Haja Carros na tela de Atualização
     public void atualizarTabela() {
-        lista = daoCarro.consultar();
+        limparTabela();
+
+        if (ConstHelpers.FLAG == 1) {
+            lista = daoCarro.consultar(String.valueOf(id));
+        }
+
+        DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
+
+        Object[] novaLinha = new Object[4];
+        for (CarroVO carro : lista) {
+
+            novaLinha[0] = carro.getPlaca();
+            novaLinha[1] = carro.getModelo().getMarca();
+            novaLinha[2] = carro.getModelo();
+            novaLinha[3] = carro.getCor();
+
+            model.addRow(novaLinha);
+        }
+    }
+
+    private void limparTabela() {
+        cadastroView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_CLIENTE));
     }
 
     /**
@@ -49,39 +70,8 @@ public class ControllerCadastroDados {
     }
 
     /**
-     * Cria um temporizador para setar os valores dos forumalarios
-     * - Gambiarra
-     */
-    public void getResultadoFormTeste() {
-        ActionListener event = e -> {
-            ConstHelpers.FLAG = 1;
-            cliente.setNome(cadastroView.getTxtNome().getText());
-            cliente.setCpf(cadastroView.getTxtCPF().getText());
-            cliente.setRg(cadastroView.getTxtRG().getText());
-            cliente.setEmail(cadastroView.getTxtEmail().getText());
-            cliente.setTelefone(cadastroView.getTxtTelefone().getText());
-
-            int selectedRow = cadastroView.getTable().getSelectedRow();
-            int selectedColumn = cadastroView.getTable().getSelectedColumn();
-            CarroVO carroSelecionado =
-                    (CarroVO) cadastroView.getTable().getValueAt(selectedRow, selectedColumn);
-
-//            TableModel model = cadastroView.getTable().getModel();
-//            int rows = model.getRowCount();
-//            int columns = model.getColumnCount();
-//            Object[] values = new Object[columns];
-//
-//            for (int i = 0; i < columns; i++) {
-//                values[i] = model.getValueAt(selectedRow, i);
-//            }
-        };
-        Timer timer = new Timer(300, event);
-        timer.setRepeats(true);
-        timer.start();
-    }
-
-    /**
      * Pega o formulario dos dados do Cliente na tela
+     *
      * @return ClienteVO
      */
     public ClienteVO getFormCliente() {
@@ -91,9 +81,8 @@ public class ControllerCadastroDados {
             String rg = cadastroView.getTxtRG().getText();
             String email = cadastroView.getTxtEmail().getText();
             String fone = cadastroView.getTxtTelefone().getText();
-            boolean cbx = false;
             return new ClienteVO(nome, cpf, rg, email, fone);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -102,21 +91,26 @@ public class ControllerCadastroDados {
 
     /**
      * Pega a lista de Carros da tabela
+     *
      * @return CarroVO
      */
     public CarroVO getFormCarro() {
-        for (CarroVO carro : lista) {
-            return carro;
+        int colum = cadastroView.getTable().getColumnCount();
+        DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
+        for (int i = 0; i < colum; i++) {
+            String placa = (String) model.getValueAt(i, 0);
+            MarcaVO marca = (MarcaVO) model.getValueAt(i, 1);
+            ModeloVO modelo = (ModeloVO) model.getValueAt(i, 2);
+            String cor = (String) model.getValueAt(i, 3);
+            if (marca != null) {
+                modelo.setMarca(marca);
+            }
+            if (placa != null && !placa.trim().isEmpty()) {
+                placa = placa.replace('?', ' ').trim();
+            }
+            return new CarroVO(placa, cor, modelo);
         }
         return null;
-    }
-
-    /**
-     * Pega as linhas da tabela
-     * @return ArrayList<CarroVO>
-     */
-    public ArrayList<CarroVO> getFormListaCarro() {
-        return lista;
     }
 
     /**
@@ -141,6 +135,9 @@ public class ControllerCadastroDados {
         }
     }
 
+    /**
+     * Remove a linha selecionada na tabela de carros do cliente
+     */
     public void removeRow() {
         try {
             int row = cadastroView.getTable().getSelectedRow();
@@ -171,10 +168,10 @@ public class ControllerCadastroDados {
     /**
      * Método para criar um ComboBox dentro da JTable
      */
-    public void addComboBoxTable_MarcaVO() {
+    private void addComboBoxTable_MarcaVO() {
         JTable table = cadastroView.getTable();
         TableColumn tableColumn = table.getColumnModel().getColumn(1);
-        tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(preencherCbxMarca())));
+        tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(preencherCbx_Marca())));
 
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
@@ -184,14 +181,53 @@ public class ControllerCadastroDados {
     /**
      * Método para criar um ComboBox dentro da Tabela
      */
-    public void addComboBoxTable_ModeloVO() {
+    private void addComboBoxTable_ModeloVO() {
         JTable table = cadastroView.getTable();
         TableColumn tableColumn = table.getColumnModel().getColumn(2);
-        tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(preencherCbxModelo())));
+        JComboBox cbx = new JComboBox(preencherCbx_Modelo());
+        tableColumn.setCellEditor(new DefaultCellEditor(cbx));
 
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
         tableColumn.setCellRenderer(renderer);
+    }
+
+    private void addComboBoxTable_Cores() {
+        JTable table = cadastroView.getTable();
+        TableColumn tableColumn = table.getColumnModel().getColumn(3);
+        JComboBox cbx = new JComboBox(preencherCbx_Cores());
+        cbx.setSelectedIndex(0);
+        tableColumn.setCellEditor(new DefaultCellEditor(cbx));
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
+        tableColumn.setCellRenderer(renderer);
+    }
+
+    public void addComboBoxJTable() {
+        addComboBoxTable_MarcaVO();
+        addComboBoxTable_ModeloVO();
+        addComboBoxTable_Cores();
+    }
+
+    private DefaultComboBoxModel<String> preencherCbx_Cores() {
+        ArrayList<String> cores = new ArrayList<>();
+        cores.add(ConstInicio.VAZIO);
+        cores.add("AMARELO");
+        cores.add("AZUL");
+        cores.add("BRANCO");
+        cores.add("BEGE");
+        cores.add("CINZA");
+        cores.add("CROMADO");
+        cores.add("LARANJA");
+        cores.add("MARROM");
+        cores.add("PRATA");
+        cores.add("PRETO");
+        cores.add("ROSA");
+        cores.add("ROXO");
+        cores.add("VERMELHO");
+        cores.add("VINHO");
+        return new DefaultComboBoxModel(cores.toArray());
     }
 
     /**
@@ -199,7 +235,7 @@ public class ControllerCadastroDados {
      *
      * @return new DefaultComboBoxModel
      */
-    private DefaultComboBoxModel<MarcaVO> preencherCbxMarca() {
+    private DefaultComboBoxModel<MarcaVO> preencherCbx_Marca() {
         BaseDAO<MarcaVO> bDAO = new MarcaDAO();
         ArrayList<MarcaVO> list = bDAO.consultarTodos();
         return new DefaultComboBoxModel(list.toArray());
@@ -210,16 +246,10 @@ public class ControllerCadastroDados {
      *
      * @return new DefaultComboBoxModel
      */
-    private DefaultComboBoxModel<ModeloVO> preencherCbxModelo() {
+    private DefaultComboBoxModel<ModeloVO> preencherCbx_Modelo() {
         BaseDAO<ModeloVO> bDAO = new ModeloDAO();
         ArrayList<ModeloVO> list = bDAO.consultarTodos();
         return new DefaultComboBoxModel(list.toArray());
     }
 
-    /**
-     * Atualiza o Proximo ComboBox da tabela pelo tipo escolhido no ComboBox anterior
-     */
-    private ArrayList<?> atualizarComboBoxPorTipo(JComboBox cbx) {
-        return null; // TODO realizar consulta por tipo do combobox
-    }
 }

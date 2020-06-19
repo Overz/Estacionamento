@@ -2,30 +2,57 @@ package model.bo;
 
 import model.vo.veiculo.CarroVO;
 import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
 
 public class CarroBO {
     public static boolean validarPlaca(CarroVO carro) {
-        return carro != null
-               && !carro.getPlaca().trim().isEmpty()
-               && carro.getPlaca().trim().length() > 0
-               && carro.getPlaca().trim().length() <= 7
-               && carro.getPlaca().trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
+        try {
+            if (carro != null) {
+                return !carro.getPlaca().trim().isEmpty()
+                       && !carro.getPlaca().equals(ConstInicio.VAZIO);
+//               && !carro.getPlaca().trim().isEmpty()
+//               && carro.getPlaca().trim().length() > 0
+//               && carro.getPlaca().trim().length() <= 10
+//               && carro.getPlaca().replace('?', ' ').trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 
     public static boolean validarPlaca(String carro) {
-        return carro != null
-               && !carro.trim().isEmpty()
-               && carro.trim().length() > 0
-               && carro.trim().length() <= 7
-               && carro.trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
+        try {
+            if (carro != null) {
+                return !carro.trim().isEmpty()
+                       && carro.trim().length() > 0
+                       && carro.trim().length() <= 7
+                       && carro.trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 
     public static boolean validarCor(CarroVO carro) {
-        return carro != null
-               && !carro.getCor().trim().isEmpty()
-               && carro.getCor().trim().length() > 0
-               && carro.getCor().trim().length() <= 45
-               && carro.getCor().trim().matches(ConstHelpers.REGEX_PALAVRAS);
+        try {
+            if (carro != null) {
+                return !carro.getCor().trim().isEmpty();
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 
     public static boolean validarDescricao(CarroVO carro) {
@@ -37,11 +64,31 @@ public class CarroBO {
     }
 
     public static boolean validarMarca(CarroVO car) {
-        return car.getModelo().getMarca() != null || !car.getModelo().getMarca().getMarca().trim().isEmpty();
+        try {
+            if (car != null) {
+                return car.getModelo().getMarca() != null || !car.getModelo().getMarca().getMarca().trim().isEmpty();
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 
-    public static boolean validarModelo(CarroVO car) {
-        return car.getModelo() != null || !car.getModelo().getDescricao().trim().isEmpty();
+    public static boolean validarModelo(CarroVO carro) {
+        try {
+            if (carro != null) {
+                return carro.getModelo() != null || !carro.getModelo().getDescricao().trim().isEmpty();
+            }
+        } catch (Exception e) {
+            if (e != null) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
     }
 }
 
