@@ -44,7 +44,6 @@ public class PanelzinhoCadastroPlano extends JPanel {
 
         setCheckbox();
 
-        addListeners();
     }
 
     private void setJLabels_JSeparator() {
@@ -85,7 +84,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
         lblValidade.setBackground(Color.WHITE);
         add(lblValidade, "cell 0 6 2 1,grow");
 
-        lblHora = new JLabel();
+        lblHora = new JLabel(control.calcularValidade().format(ConstHelpers.DTF));
         lblHora.setHorizontalAlignment(SwingConstants.LEFT);
         lblHora.setFont(new Font("Dialog", Font.BOLD, 16));
         add(lblHora, "cell 2 5 5 1,grow");
@@ -125,11 +124,6 @@ public class PanelzinhoCadastroPlano extends JPanel {
         txtCartao.setColumns(10);
         txtCartao.setBorder(new LineBorder(Color.BLACK, 1, true));
         add(txtCartao, "cell 2 3 5 1,grow");
-    }
-
-    private void addListeners() {
-        cbPlano.addMouseListener(control.addComboBoxListener());
-
     }
 
     public JComboBox<Object> getCbPlano() {

@@ -43,12 +43,12 @@ public class ControllerListaClientes {
             novaLinha[0] = contrato.getCliente().getId();
             novaLinha[1] = contrato.getCliente().getNome();
             novaLinha[2] = contrato.getPlano().getTipo();
-            novaLinha[3] = calcularVencimento();
+            novaLinha[3] = contrato.getDtSaida().format(ConstHelpers.DTF);
 
             model.addRow(novaLinha);
         }
 
-        somarClientes();
+        contarClientes();
         this.ajustarFocusTxtProcurar();
     }
 
@@ -56,11 +56,7 @@ public class ControllerListaClientes {
         listaClientesView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_CLIENTE));
     }
 
-    private String calcularVencimento() {
-        return "TESTE";
-    }
-
-    private void somarClientes() {
+    private void contarClientes() {
         listaClientesView.getLblTotalDeClientes().setText("Total de Clientes Cadastrados: " + list.size());
     }
 
@@ -68,15 +64,23 @@ public class ControllerListaClientes {
 
         int icone = JOptionPane.INFORMATION_MESSAGE;
         int row = listaClientesView.getTable().getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) listaClientesView.getTable().getModel();
         if (row >= 0) {
 
             ContratoVO contrato = list.get(row);
 
             ConstHelpers.FLAG = 1;
-            if (daoCon.excluirPorID(contrato.getId())) {
+            boolean a = daoCon.excluirPorID(contrato.getId());
+            if (!a) {
+                System.out.println("Segunda Tentativa de Excluir Cliente");
+                ConstHelpers.FLAG = 2;
+                a = daoCon.excluirPorID(contrato.getId());
+            }
+            if (a) {
                 ConstHelpers.FLAG = 1;
                 msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
-
+                list.remove(row);
+                model.removeRow(row);
                 System.out.println("Exclusão de Cliente:" + contrato.toString());
                 System.out.println();
             } else {
@@ -121,20 +125,15 @@ public class ControllerListaClientes {
         listaClientesView.getTxtProcurar().setForeground(Color.BLACK);
     }
 
-    /**
-     * limpa os dados das telas de cadastro ao clicar no botão atualizar
-     */
-    public void gambiarra() {
-        MainView.getDadosCadastroView().getTxtRG().setText("");
-        MainView.getDadosCadastroView().getTxtNome().setText("");
-        MainView.getDadosCadastroView().getTxtTelefone().setText("");
-        MainView.getDadosCadastroView().getTxtEmail().setText("");
-        MainView.getDadosCadastroView().getTxtCPF().setText("");
-        MainView.getEnderecoCadastroView().getTxtRua().setText("");
-        MainView.getEnderecoCadastroView().getTxtNumero().setText("");
-        MainView.getEnderecoCadastroView().getTxtCidade().setText("");
-        MainView.getEnderecoCadastroView().getTxtBairro().setText("");
-        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(-1);
-        MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
+    public void getSelectedRowObject() {
+        try {
+            JTable table = listaClientesView.getTable();
+            int row = table.getSelectedRow();
+            ContratoVO c = list.get(row);
+            ControllerMainCadastro ctrl = new ControllerMainCadastro(MainView.getDadosCadastroView());
+            ctrl.preencherObjetos(c);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

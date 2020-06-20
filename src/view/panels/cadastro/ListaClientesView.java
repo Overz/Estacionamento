@@ -1,6 +1,7 @@
 package view.panels.cadastro;
 
 import controller.ControllerListaClientes;
+import controller.ControllerMainCadastro;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
@@ -179,10 +180,14 @@ public class ListaClientesView extends JPanel {
 
         });
 
-        btnCadastrar.addActionListener(e -> MainView.swithPanel(MainView.getCadastroView()));
+        btnCadastrar.addActionListener(e -> {
+            MainView.gambiarra();
+            MainView.swithPanel(MainView.getCadastroView());
+        });
 
         btnAtualizar.addActionListener(e -> {
-            control.gambiarra();
+            MainView.gambiarra();
+            control.getSelectedRowObject();
             MainView.getCadastroView().setTipoCadastro(1);
             MainView.swithPanel(MainView.getCadastroView());
         });

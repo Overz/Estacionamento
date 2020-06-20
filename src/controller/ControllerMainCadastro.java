@@ -94,7 +94,6 @@ public class ControllerMainCadastro {
                     bigJOptionPane(msg);
                     try {
                         if (cadastrarCliente(con, car, c, e, p)) {
-
                             msg = "Cliente Cadastrado!";
                         } else {
                             msg = "Erro ao Cadastrar Cliente!";
@@ -122,7 +121,10 @@ public class ControllerMainCadastro {
 
             atualizarListaClientes();
             System.out.println(msg + "\n");
-            if (msg != null && !msg.trim().isEmpty()) {
+            if (msg != null && !msg.trim().isEmpty() && !msg.contains("NOME")
+                && !msg.contains("CPF") && !msg.contains("TELEFONE") && !msg.contains("PLACA")
+                && !msg.contains("MARCA") && !msg.contains("MODELO") && !msg.contains("COR")
+                && !msg.contains("RUA") && !msg.contains("BAIRRO") && !msg.contains("CIDADE")) {
                 JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
                         JOptionPane.PLAIN_MESSAGE);
             }
@@ -277,14 +279,15 @@ public class ControllerMainCadastro {
     }
 
     /**
-     * Limpa todos os formularios de cadastro das Sub telas
+     * Cadastra um novo cliente ao banco de dados;
+     *
+     * @param con ContratoVO
+     * @param car CarroVO
+     * @param c   ClienteVO
+     * @param e   EnderecoVO
+     * @param p   PlanoVO
+     * @return true/false
      */
-    public void limparDados() {
-        dadosCtrl.limparForm();
-        enderecoCtrl.limparForm();
-        planoCtrl.limparForm();
-    }
-
     private boolean cadastrarCliente(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e, PlanoVO p) {
         e = daoEndereco.cadastrar(e);
         car = daoCarro.cadastrar(car);
@@ -311,6 +314,11 @@ public class ControllerMainCadastro {
         return result;
     }
 
+    /**
+     * Mostra um JOptionPane Grande caso inconscistencia de Dados na tela;
+     *
+     * @param msg String
+     */
     private void bigJOptionPane(String msg) {
         JTextArea textArea = new JTextArea(msg);
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -322,6 +330,58 @@ public class ControllerMainCadastro {
         if (msg != null && !msg.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, scrollPane, "Validação",
                     JOptionPane.PLAIN_MESSAGE);
+        }
+    }
+
+    /**
+     * Preenche os valores na tela quando clicar no botão atualizar;
+     *
+     * @param contrato ContratoVO
+     */
+    public void preencherObjetos(ContratoVO contrato) {
+        try {
+            dadosView = MainView.getDadosCadastroView();
+            ClienteVO cliente = contrato.getCliente();
+            dadosView.getTxtNome().setText(cliente.getNome());
+            dadosView.getTxtCPF().setText(cliente.getCpf());
+            dadosView.getTxtEmail().setText(cliente.getEmail());
+            dadosView.getTxtRG().setText(cliente.getRg());
+            dadosView.getTxtTelefone().setText(cliente.getTelefone());
+
+            enderecoView = MainView.getEnderecoCadastroView();
+            EnderecoVO endereco = cliente.getEndereco();
+            enderecoView.getTxtBairro().setText(endereco.getBairro());
+            enderecoView.getTxtCidade().setText(endereco.getCidade());
+            enderecoView.getTxtNumero().setText(String.valueOf(endereco.getNumero()));
+            enderecoView.getTxtRua().setText(endereco.getRua());
+
+            planoView = MainView.getPlanoCadastroView();
+            PlanoVO plano = contrato.getPlano();
+            planoView.getLblMesValidade().setText(contrato.getDtSaida().format(ConstHelpers.DTF));
+            planoView.getCbPlano().setSelectedItem(plano);
+            planoView.getCbFormaPgto().setSelectedItem(contrato.getTipoPgto());
+            planoView.getTxtCartao().setText(String.valueOf(contrato.getNumeroCartao()));
+
+            preencherTabelaCarros(cliente.getCarro());
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void preencherTabelaCarros(CarroVO carro) {
+        try {
+            JTable table = new JTable();
+            for (int i = 0; i < table.getRowCount(); i++) {
+                table.setValueAt(carro.getPlaca(), i, 0);
+                table.setValueAt(carro.getModelo().getMarca(), i, 1);
+                table.setValueAt(carro.getModelo(), i, 2);
+                table.setValueAt(carro.getCor(), i, 3);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

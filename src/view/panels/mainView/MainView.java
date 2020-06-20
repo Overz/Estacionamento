@@ -12,6 +12,7 @@ import view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class MainView extends JFrame {
@@ -57,6 +58,36 @@ public class MainView extends JFrame {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * limpa os dados das telas de cadastro ao clicar no botão atualizar
+     */
+    public static void gambiarra() {
+        MainView.getDadosCadastroView().getTxtRG().setText("");
+        MainView.getDadosCadastroView().getTxtNome().setText("");
+        MainView.getDadosCadastroView().getTxtTelefone().setText("");
+        MainView.getDadosCadastroView().getTxtEmail().setText("");
+        MainView.getDadosCadastroView().getTxtCPF().setText("");
+        MainView.getEnderecoCadastroView().getTxtRua().setText("");
+        MainView.getEnderecoCadastroView().getTxtNumero().setText("");
+        MainView.getEnderecoCadastroView().getTxtCidade().setText("");
+        MainView.getEnderecoCadastroView().getTxtBairro().setText("");
+        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(-1);
+        MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
+        MainView.getPlanoCadastroView().getTxtCartao().setText("");
+        MainView.getPlanoCadastroView().getLblMesValidade().setText("");
+        limparTabelaCarros_DadosView();
+    }
+
+    private static void limparTabelaCarros_DadosView() {
+        JTable table = new JTable(new DefaultTableModel()) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        MainView.getDadosCadastroView().setTable(table);
     }
 
     private static void manterDadosImportantes() {

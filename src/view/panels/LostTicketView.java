@@ -45,7 +45,7 @@ public class LostTicketView extends JPanel {
     }
 
     public void setJLabels_JSeparator() {
-        JLabel lblRegistroDeTicket = new JLabel("Registro de Ticket Perdido");
+        JLabel lblRegistroDeTicket = new JLabel("Registro de Ticket/Cartão Perdido");
         lblRegistroDeTicket.setHorizontalAlignment(SwingConstants.CENTER);
         lblRegistroDeTicket.setFont(new Font("Arial", Font.BOLD, 30));
         lblRegistroDeTicket.setBackground(Color.WHITE);

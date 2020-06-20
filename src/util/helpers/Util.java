@@ -6,6 +6,8 @@ import model.vo.cliente.PlanoVO;
 import util.constantes.ConstHelpers;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -176,6 +179,26 @@ public class Util {
         ConstHelpers.FLAG = 1;
         BaseDAO<PlanoVO> plano = new PlanoDAO();
         return plano.consultarTodos();
+    }
+
+    /**
+     * Método para reenderizar a JTable e criar uma mascara com campo formatado em
+     * uma coluna especifica
+     *
+     * @param sportColumn: TableColumn
+     */
+    public static void maskFormJTable(TableColumn sportColumn) {
+
+        JFormattedTextField placa = new JFormattedTextField();
+        MaskFormatter mascara;
+        try {
+            mascara = new MaskFormatter("HHHHHHH");
+            mascara.setPlaceholderCharacter('?');
+            mascara.install(placa);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        sportColumn.setCellEditor(new DefaultCellEditor(placa));
     }
 
     // Os Calculos Abaixo foram feitos de DUAS MANEIRAS, TimeUnit, e Representações a 'mão'

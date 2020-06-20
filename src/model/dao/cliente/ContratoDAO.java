@@ -173,7 +173,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             stmt.setTimestamp(4, Timestamp.valueOf(newObject.getDtSaida()));
             stmt.setBoolean(5, newObject.isAtivo());
             stmt.setDouble(6, newObject.getValor());
-            stmt.setString(7, newObject.getTipoPgto().toUpperCase()) ;
+            stmt.setString(7, newObject.getTipoPgto().toUpperCase());
 
             int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
@@ -276,20 +276,10 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                                "Msg: " + e.getMessage() + "\n" +
                                "Cause: " + e.getCause() + "\n"
             );
-
-            if (e.getMessage().contains("fk_movimento_contrato")) {
-                ConstHelpers.FLAG = 2;
-                if (resultado < 4 && resultado != Banco.CODIGO_RETORNO_SUCESSO) {
-                    excluirPorID(id);
-                }
-            }
         } finally {
             Banco.closeResultSet(result);
             Banco.closePreparedStatement(stmt);
             Banco.closeConnection(conn);
-            if (resultado >= 4) {
-                return true;
-            }
         }
         return false;
     } // OK

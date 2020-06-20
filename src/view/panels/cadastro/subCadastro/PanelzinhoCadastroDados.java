@@ -6,6 +6,7 @@ import model.vo.cliente.ClienteVO;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.Colunas;
 import util.helpers.Modificacoes;
+import util.helpers.Util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -138,7 +139,7 @@ public class PanelzinhoCadastroDados extends JPanel {
 
         table = modificacoes.tableLookAndFiel(table);
         control.addComboBoxJTable();
-        modificacoes.maskFormJTable(table, table.getColumnModel().getColumn(0));
+        Util.maskFormJTable(table.getColumnModel().getColumn(0));
         scrollPane.setViewportView(table);
     }
 
@@ -191,4 +192,7 @@ public class PanelzinhoCadastroDados extends JPanel {
         return table;
     }
 
+    public void setTable(JTable table) {
+        this.table = table;
+    }
 }

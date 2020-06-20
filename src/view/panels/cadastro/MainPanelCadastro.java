@@ -19,10 +19,8 @@ public class MainPanelCadastro extends JPanel {
     private static final long serialVersionUID = -7538521065547926504L;
     private static ControllerMainCadastro mainCtrl;
     private final JLayeredPane layeredPane;
-    private JButton btnSalvar;
-    private JButton btnPlano, btnDados, btnEndereco;
+    private JButton btnSalvar, btnLimpar, btnPlano, btnDados, btnEndereco;
     private Boolean bool;
-    private JButton btnLimpar;
     private int tipoCadastro; // Se é cadastro, ou atualização, utilziado nos métodos do controller
 
     public MainPanelCadastro(int tipoCadastro) {
@@ -120,10 +118,10 @@ public class MainPanelCadastro extends JPanel {
         btnSalvar.addActionListener(e -> {
             MainView.getDadosCadastroView().getTable().clearSelection();
             mainCtrl.salvar(tipoCadastro);
-//            mainCtrl.limparDados();
+            MainView.gambiarra();
         });
 
-        btnLimpar.addActionListener(e -> mainCtrl.limparDados());
+        btnLimpar.addActionListener(e -> MainView.gambiarra());
     }
 
     /**

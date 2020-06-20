@@ -89,28 +89,6 @@ public class Modificacoes {
     }
 
     /**
-     * Método para reenderizar a JTable e criar uma mascara com campo formatado em
-     * uma coluna especifica
-     *
-     * @param table        JTable
-     * @param sportColumn: TableColumn
-     */
-    public void maskFormJTable(JTable table, TableColumn sportColumn) {
-
-        JFormattedTextField placa = new JFormattedTextField();
-        MaskFormatter mascara;
-        try {
-            mascara = new MaskFormatter("HHHHHHHHHH");
-            mascara.setPlaceholderCharacter('?');
-            mascara.install(placa);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        sportColumn.setCellEditor(new DefaultCellEditor(placa));
-
-    }
-
-    /**
      * Criação de uma mascara para o campo de acordo com a instancia, e um place holder(Palavras que somem ao
      * digitar)
      *

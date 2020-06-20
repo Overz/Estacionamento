@@ -98,26 +98,11 @@ public class ControllerCadastroPlano {
         LocalDateTime now = LocalDateTime.now();
         Month month = now.getMonth().plus(1);
         LocalDate nextMonth = LocalDate.of(now.getYear(), month, now.getDayOfMonth());
-        LocalDateTime dt = LocalDateTime.of(nextMonth, now.toLocalTime());
-        planoView.getLblMesValidade().setText(dt.format(ConstHelpers.DTF));
-        return dt;
+        return LocalDateTime.of(nextMonth, now.toLocalTime());
     }
 
     public DefaultComboBoxModel preencherCbx() {
         return new DefaultComboBoxModel(Util.atualizarListaModelo().toArray());
     }
 
-    /**
-     * New MouseListener
-     *
-     * @return MouseListener
-     */
-    public MouseListener addComboBoxListener() {
-        return new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                calcularValidade();
-            }
-        };
-    }
 }
