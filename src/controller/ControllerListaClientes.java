@@ -27,6 +27,9 @@ public class ControllerListaClientes {
         list = new ArrayList<>();
     }
 
+    /**
+     * Preenche a tabela da Lista de Clientes na tela
+     */
     public void atualizarTabela() {
 
         limparTabela();

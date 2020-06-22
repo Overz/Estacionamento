@@ -24,7 +24,9 @@ import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 import view.panels.mainView.MainView;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ControllerMainCadastro {
 
@@ -41,6 +43,9 @@ public class ControllerMainCadastro {
     private BaseDAO<EnderecoVO> daoEndereco;
     private BaseDAO<ContratoVO> daoContrato;
     private BaseDAO<PlanoVO> daoPlano;
+    private ArrayList<CarroVO> listaCarros;
+    private CarroVO car;
+    private ClienteVO c;
     private String msg;
 
     public ControllerMainCadastro(JPanel panel) {
@@ -83,8 +88,8 @@ public class ControllerMainCadastro {
             daoPlano = new PlanoDAO();
 
             PlanoVO p = getPlanoForm();
-            CarroVO car = getCarroForm();
-            ClienteVO c = getClienteForm();
+            car = getCarroForm();
+            c = getClienteForm();
             EnderecoVO e = getEnderecoForm();
             ContratoVO con = getContratoForm();
 
@@ -119,7 +124,9 @@ public class ControllerMainCadastro {
                 }
             }
 
+            cadastrarListaCarros();
             atualizarListaClientes();
+            limparTabelaCarros();
             System.out.println(msg + "\n");
             if (msg != null && !msg.trim().isEmpty() && !msg.contains("NOME")
                 && !msg.contains("CPF") && !msg.contains("TELEFONE") && !msg.contains("PLACA")
@@ -134,13 +141,23 @@ public class ControllerMainCadastro {
     }
 
     /**
-     * Atualiza a tabela de Clientes em ListaClientesView a cada alteração
+     * Atualiza a tabela de Clientes em ListaClientesView a cada alteração de Cadastro/Atualização/Erro
+     * & limpa a tabela de carros em DadosView
      */
     private void atualizarListaClientes() {
         ConstHelpers.FLAG = 1;
         clientesView = MainView.getClienteView();
         clientesCtrl = new ControllerListaClientes(clientesView);
         clientesCtrl.atualizarTabela();
+    }
+
+    /**
+     * Limpa a tabela de carros de cadastroView
+     */
+    private void limparTabelaCarros() {
+        dadosView = MainView.getDadosCadastroView();
+        dadosCtrl = new ControllerCadastroDados(dadosView);
+        dadosCtrl.limparTabelaCarros();
     }
 
     /**
@@ -253,7 +270,9 @@ public class ControllerMainCadastro {
     private CarroVO getCarroForm() {
         dadosView = MainView.getDadosCadastroView();
         dadosCtrl = new ControllerCadastroDados(dadosView);
-        return dadosCtrl.getFormCarro();
+        CarroVO carro = dadosCtrl.getFormCarro(dadosView.getTable());
+        this.listaCarros = dadosCtrl.retornarListaCarros();
+        return carro;
     }
 
     /**
@@ -333,6 +352,16 @@ public class ControllerMainCadastro {
         }
     }
 
+    private void cadastrarListaCarros() {
+        String id = String.valueOf(c.getId());
+        for (CarroVO carro : listaCarros) {
+            if (carro != car) {
+                c.setCarro(carro);
+//                daoCliente.cadastrar();
+            }
+        }
+    }
+
     /**
      * Preenche os valores na tela quando clicar no botão atualizar;
      *
@@ -372,13 +401,18 @@ public class ControllerMainCadastro {
 
     private void preencherTabelaCarros(CarroVO carro) {
         try {
-            JTable table = new JTable();
+            dadosView = MainView.getDadosCadastroView();
+            dadosCtrl = new ControllerCadastroDados(dadosView);
+            dadosCtrl.limparTabelaCarros();
+
+            JTable table = dadosView.getTable();
             for (int i = 0; i < table.getRowCount(); i++) {
                 table.setValueAt(carro.getPlaca(), i, 0);
                 table.setValueAt(carro.getModelo().getMarca(), i, 1);
                 table.setValueAt(carro.getModelo(), i, 2);
                 table.setValueAt(carro.getCor(), i, 3);
             }
+            dadosView.setTable(table);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

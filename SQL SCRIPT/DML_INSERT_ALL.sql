@@ -458,7 +458,6 @@ VALUES ('39', 'VELAR');
 INSERT INTO `dbestacionamento`.`modelo` (`idMarca`, `descricao`)
 VALUES ('40', 'MOTOS EM GERAIS');
 
-
 -- CARRO
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
 VALUES ('1', '1', 'ABC0001', 'BRANCO');

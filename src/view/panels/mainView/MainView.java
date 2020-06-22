@@ -77,17 +77,6 @@ public class MainView extends JFrame {
         MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
         MainView.getPlanoCadastroView().getTxtCartao().setText("");
         MainView.getPlanoCadastroView().getLblMesValidade().setText("");
-        limparTabelaCarros_DadosView();
-    }
-
-    private static void limparTabelaCarros_DadosView() {
-        JTable table = new JTable(new DefaultTableModel()) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        MainView.getDadosCadastroView().setTable(table);
     }
 
     private static void manterDadosImportantes() {

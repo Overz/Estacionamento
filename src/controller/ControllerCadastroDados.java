@@ -5,7 +5,6 @@ import model.dao.veiculos.CarroDAO;
 import model.dao.veiculos.MarcaDAO;
 import model.dao.veiculos.ModeloDAO;
 import model.vo.cliente.ClienteVO;
-import model.vo.cliente.ContratoVO;
 import model.vo.veiculo.CarroVO;
 import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
@@ -16,8 +15,9 @@ import util.helpers.Modificacoes;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import java.awt.event.ActionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.util.ArrayList;
 
 public class ControllerCadastroDados {
@@ -27,6 +27,7 @@ public class ControllerCadastroDados {
     private ArrayList<CarroVO> linhas;
     private ArrayList<CarroVO> lista;
     private int id;
+    private int listaCheia;
 
     public ControllerCadastroDados(JPanel panel) {
         this.cadastroView = (PanelzinhoCadastroDados) panel;
@@ -92,12 +93,16 @@ public class ControllerCadastroDados {
     /**
      * Pega a lista de Carros da tabela
      *
+     * @param table JTable
      * @return CarroVO
      */
-    public CarroVO getFormCarro() {
-        int colum = cadastroView.getTable().getColumnCount();
+    public CarroVO getFormCarro(JTable table) { // TODO ALTERAR PARA PEGAR OS CAMPOS
+        int row = table.getRowCount();
         DefaultTableModel model = (DefaultTableModel) cadastroView.getTable().getModel();
-        for (int i = 0; i < colum; i++) {
+        String primeiraPlaca = null;
+        String primeiraCor = null;
+        ModeloVO primeiroModelo = null;
+        for (int i = 0; i < row; i++) {
             String placa = (String) model.getValueAt(i, 0);
             MarcaVO marca = (MarcaVO) model.getValueAt(i, 1);
             ModeloVO modelo = (ModeloVO) model.getValueAt(i, 2);
@@ -108,31 +113,29 @@ public class ControllerCadastroDados {
             if (placa != null && !placa.trim().isEmpty()) {
                 placa = placa.replace('?', ' ').trim();
             }
-            return new CarroVO(placa, cor, modelo);
+            if (primeiraPlaca == null || primeiraCor == null || primeiroModelo == null) {
+                primeiraPlaca = placa;
+                primeiraCor = cor;
+                primeiroModelo = modelo;
+            }
+            if (i > 0) {
+                this.salvarOutrosCarros(new CarroVO(placa, cor, modelo));
+            }
         }
-        return null;
+        return new CarroVO(primeiraPlaca, primeiraCor, primeiroModelo);
+    }
+
+    public void salvarOutrosCarros(CarroVO carroVO) {
+        lista.add(carroVO);
     }
 
     /**
-     * Limpa o formulario
+     * Método para retornar aa lista de Carros completa
+     *
+     * @return ArrayList
      */
-    public void limparForm() {
-        try {
-            cadastroView.getTxtNome().setText("");
-            cadastroView.getTxtCPF().setText("");
-            cadastroView.getTxtRG().setText("");
-            cadastroView.getTxtEmail().setText("");
-            cadastroView.getTxtTelefone().setText("");
-        } catch (Exception e) {
-            try {
-                System.out.println(e.getClass().getSimpleName());
-                System.out.println(e.getClass().getMethod("limparForm",
-                        PanelzinhoCadastroDados.class, ControllerCadastroDados.class));
-                System.out.println(e.getMessage());
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            }
-        }
+    public ArrayList<CarroVO> retornarListaCarros() {
+        return lista;
     }
 
     /**
@@ -162,6 +165,15 @@ public class ControllerCadastroDados {
             System.out.println(e.getClass().getSimpleName());
             System.out.println(e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public void limparTabelaCarros() {
+        JTable table = cadastroView.getTable();
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        int row = table.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(i);
         }
     }
 
