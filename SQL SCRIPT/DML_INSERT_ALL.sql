@@ -1,9 +1,3 @@
--- ENDERECO
-INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
-VALUES ('1', '10', 'TESTE 01', 'AAAA', 'CIDADE TESTE 1');
-INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
-VALUES ('2', '30', 'TESTE 03', 'CCCC', 'CIDADE TESTE 3');
-
 -- MARCA
 INSERT INTO `dbestacionamento`.`marca` (`id`, `nome`)
 VALUES ('1', 'Aston Martin');
@@ -464,11 +458,17 @@ VALUES ('1', '1', 'ABC0001', 'BRANCO');
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
 VALUES ('2', '2', 'A0B0C0D', 'VERMELHO');
 
+-- ENDERECO
+INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
+VALUES ('1', '10', 'XXX', 'AAAA', 'CIDADE XXX');
+INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
+VALUES ('2', '30', 'YYY', 'CCCC', 'CIDADE YYY');
+
 -- CLIENTE
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('1', '1', '1', 'JOSE', '00000000010', '1234567', 'teste1@email.com', '48000000001');
+VALUES ('1', '1', '1', 'JOSE', '00000000010', '12345678900', 'teste1@email.com', '48000000001');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('2', '2', '2', 'JOAO', '00000000030', '7891234', 'teste3@email.com', '48000000003');
+VALUES ('2', '2', '2', 'JOAO', '00000000030', '78912345678', 'teste3@email.com', '48000000003');
 
 -- TICKET
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)

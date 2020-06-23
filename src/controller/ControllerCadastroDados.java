@@ -1,11 +1,5 @@
 package controller;
 
-import java.util.ArrayList;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-
 import model.banco.BaseDAO;
 import model.dao.veiculos.MarcaDAO;
 import model.dao.veiculos.ModeloDAO;
@@ -15,6 +9,9 @@ import model.vo.veiculo.MarcaVO;
 import model.vo.veiculo.ModeloVO;
 import util.constantes.ConstInicio;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 public class ControllerCadastroDados {
 
@@ -45,29 +42,23 @@ public class ControllerCadastroDados {
 	}
 
 	/**
-	 * Pega o formulario de cadastro de Carro
-	 * 
+	 * Pega a lista de Carros da tabela
+	 *
 	 * @return CarroVO
 	 */
-	public CarroVO getFormCarro(JTable table) {
-		String placa = cadastroView.getTxtPlaca().getText();
-		String cor = cadastroView.getCbCor().getSelectedItem().toString();
-		MarcaVO marca = (MarcaVO) cadastroView.getCbMarca().getSelectedItem();
-		ModeloVO modelo = (ModeloVO) cadastroView.getCbModelo().getSelectedItem();
-		modelo.setMarca(marca);
-		return new CarroVO(placa, cor, modelo);
+	public CarroVO getFormCarro() {
+		try {
+			String placa = cadastroView.getTxtPlaca().getText();
+			String cor = (String) cadastroView.getCbCor().getSelectedItem();
+			ModeloVO modelo = (ModeloVO) cadastroView.getCbModelo().getSelectedItem();
+			MarcaVO marca = (MarcaVO) cadastroView.getCbMarca().getSelectedItem();
+			modelo.setMarca(marca);
+			return new CarroVO(placa, cor, modelo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
-
-//		ADICIONA COMBO BOX A TABELA
-//    private void addComboBoxTable_MarcaVO() {
-//        JTable table = cadastroView.getTable();
-//        TableColumn tableColumn = table.getColumnModel().getColumn(1);
-//        tableColumn.setCellEditor(new DefaultCellEditor(new JComboBox<>(preencherCbx_Marca())));
-//
-//        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-//        renderer.setToolTipText("CLIQUE PARA O COMBO BOX APARECER");
-//        tableColumn.setCellRenderer(renderer);
-//    }
 
 	public DefaultComboBoxModel<String> preencherCbx_Cores() {
 		ArrayList<String> cores = new ArrayList<>();
@@ -89,12 +80,22 @@ public class ControllerCadastroDados {
 		return new DefaultComboBoxModel(cores.toArray());
 	}
 
+	/**
+	 * Preenche o ComboBox Marca da JTable
+	 *
+	 * @return new DefaultComboBoxModel
+	 */
 	public DefaultComboBoxModel<MarcaVO> preencherCbx_Marca() {
 		BaseDAO<MarcaVO> bDAO = new MarcaDAO();
 		ArrayList<MarcaVO> list = bDAO.consultarTodos();
 		return new DefaultComboBoxModel(list.toArray());
 	}
 
+	/**
+	 * Preenche o ComboBox Modelo da JTable
+	 *
+	 * @return new DefaultComboBoxModel
+	 */
 	public DefaultComboBoxModel<ModeloVO> preencherCbx_Modelo() {
 		BaseDAO<ModeloVO> bDAO = new ModeloDAO();
 		ArrayList<ModeloVO> list = bDAO.consultarTodos();

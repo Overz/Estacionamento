@@ -27,9 +27,6 @@ public class ControllerListaClientes {
         list = new ArrayList<>();
     }
 
-    /**
-     * Preenche a tabela da Lista de Clientes na tela
-     */
     public void atualizarTabela() {
 
         limparTabela();
@@ -128,7 +125,7 @@ public class ControllerListaClientes {
         listaClientesView.getTxtProcurar().setForeground(Color.BLACK);
     }
 
-    public void getSelectedRowObject() {
+    public void atualizarObjeto() {
         try {
             JTable table = listaClientesView.getTable();
             int row = table.getSelectedRow();

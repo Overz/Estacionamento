@@ -63,17 +63,23 @@ public class MainView extends JFrame {
     /**
      * limpa os dados das telas de cadastro ao clicar no botão atualizar
      */
-    public static void gambiarra() {
+    public static void limparDadosDasTelasCadastro() {
         MainView.getDadosCadastroView().getTxtRG().setText("");
         MainView.getDadosCadastroView().getTxtNome().setText("");
         MainView.getDadosCadastroView().getTxtTelefone().setText("");
         MainView.getDadosCadastroView().getTxtEmail().setText("");
         MainView.getDadosCadastroView().getTxtCPF().setText("");
+        MainView.getDadosCadastroView().getTxtPlaca().setText("");
+        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
+        MainView.getDadosCadastroView().getCbCor().setSelectedIndex(0);
+        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
+
         MainView.getEnderecoCadastroView().getTxtRua().setText("");
         MainView.getEnderecoCadastroView().getTxtNumero().setText("");
         MainView.getEnderecoCadastroView().getTxtCidade().setText("");
         MainView.getEnderecoCadastroView().getTxtBairro().setText("");
-        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(-1);
+
+        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(0);
         MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
         MainView.getPlanoCadastroView().getTxtCartao().setText("");
         MainView.getPlanoCadastroView().getLblMesValidade().setText("");

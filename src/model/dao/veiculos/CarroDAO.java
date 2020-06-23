@@ -121,8 +121,8 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
         try {
             stmt.setInt(1, newObject.getModelo().getId());
-            stmt.setString(2, newObject.getPlaca());
-            stmt.setString(3, newObject.getCor());
+            stmt.setString(2, newObject.getPlaca().toUpperCase());
+            stmt.setString(3, newObject.getCor().toUpperCase());
 
             int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();
@@ -151,15 +151,17 @@ public class CarroDAO implements BaseDAO<CarroVO> {
 
     @Override
     public boolean alterar(CarroVO object) {
-        String qry = "update carro set placa=?, cor=?;";
+        String qry = "update carro set placa=?, cor=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setString(1, object.getPlaca());
             stmt.setString(2, object.getCor());
+            stmt.setInt(3, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            int i = stmt.executeUpdate();
+            if (i == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
             }
         } catch (SQLException e) {

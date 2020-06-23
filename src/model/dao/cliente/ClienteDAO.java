@@ -86,10 +86,32 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public ArrayList<ClienteVO> consultar(String... values) {
+    public ClienteVO consultar(String... values) {
+        String qry = "select * from cliente where cpf=?;";
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+        try {
+            stmt.setString(1, values[0]);
+            result = stmt.executeQuery();
+            if (result != null && result.next()) {
+                return criarResultSet(result);
+            }
+        } catch (SQLException e) {
+            String method = "ConsultarTodos()";
+            System.out.println("\n" +
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
     }
-
 
     @Override
     public ClienteVO consultarPorId(int id) {
@@ -163,7 +185,7 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
 
     @Override
     public boolean alterar(ClienteVO object) {
-        String qry = "update cliente set nome=?, cpf=?, rg=?, email=?, telefone=?, where id=?;";
+        String qry = "update cliente set nome=?, cpf=?, rg=?, email=?, telefone=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -175,7 +197,8 @@ public class ClienteDAO implements BaseDAO<ClienteVO> {
             stmt.setString(5, object.getTelefone());
             stmt.setInt(6, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            int i = stmt.executeUpdate();
+            if (i == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
             }
         } catch (SQLException e) {

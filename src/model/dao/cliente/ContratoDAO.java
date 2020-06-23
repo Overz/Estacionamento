@@ -203,7 +203,7 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
 
     @Override
     public boolean alterar(ContratoVO object) {
-        String qry = "update contrato set n_cartao=?, dt_entrada=?, dt_saida=?, ativo=?, valor=? where id=?;";
+        String qry = "update contrato set n_cartao=?, dt_entrada=?, dt_validade =?, ativo=?, valor=?, tipoPgto=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -213,8 +213,11 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
             stmt.setTimestamp(3, Timestamp.valueOf(object.getDtSaida()));
             stmt.setBoolean(4, object.isAtivo());
             stmt.setDouble(5, object.getValor());
+            stmt.setString(6, object.getTipoPgto());
+            stmt.setInt(7, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            int i = stmt.executeUpdate();
+            if (i == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
             }
         } catch (SQLException e) {

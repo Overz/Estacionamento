@@ -143,7 +143,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public boolean alterar(EnderecoVO object) {
-        String qry = "update endereco set numer=?, rua=?, bairro=?, cidade=?, where id=?;";
+        String qry = "update endereco set numero=?, rua=?, bairro=?, cidade=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -154,7 +154,8 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
             stmt.setString(4, object.getCidade());
             stmt.setInt(5, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            int i = stmt.executeUpdate();
+            if (i == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
             }
         } catch (SQLException e) {

@@ -24,9 +24,7 @@ import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 import view.panels.mainView.MainView;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class ControllerMainCadastro {
 
@@ -43,9 +41,6 @@ public class ControllerMainCadastro {
     private BaseDAO<EnderecoVO> daoEndereco;
     private BaseDAO<ContratoVO> daoContrato;
     private BaseDAO<PlanoVO> daoPlano;
-    private ArrayList<CarroVO> listaCarros;
-    private CarroVO car;
-    private ClienteVO c;
     private String msg;
 
     public ControllerMainCadastro(JPanel panel) {
@@ -88,15 +83,15 @@ public class ControllerMainCadastro {
             daoPlano = new PlanoDAO();
 
             PlanoVO p = getPlanoForm();
-            car = getCarroForm();
-            c = getClienteForm();
+            CarroVO car = getCarroForm();
+            ClienteVO c = getClienteForm();
             EnderecoVO e = getEnderecoForm();
             ContratoVO con = getContratoForm();
 
             if (tipoCadastro == 0) {
                 // Cadastrar
                 if (corredorPolones(con, car, c, e)) {
-                    bigJOptionPane(msg);
+//                    bigJOptionPane(msg);
                     try {
                         if (cadastrarCliente(con, car, c, e, p)) {
                             msg = "Cliente Cadastrado!";
@@ -110,6 +105,10 @@ public class ControllerMainCadastro {
                 // Alterar
             } else {
                 if (corredorPolones(con, car, c, e)) {
+
+                    ClienteVO clienteForID = daoCliente.consultar(c.getCpf());
+                    this.inserirIdParaUpdate(con, car, c, e, clienteForID);
+
                     boolean v = daoCarro.alterar(car);
                     boolean x = daoCliente.alterar(c);
                     boolean w = daoEndereco.alterar(e);
@@ -118,22 +117,21 @@ public class ControllerMainCadastro {
 
                     if (v && x && w && y && z) {
                         msg = "Cliente Atualizado!";
+                        MainView.limparDadosDasTelasCadastro();
                     }
                 } else {
                     bigJOptionPane(msg);
                 }
             }
 
-            cadastrarListaCarros();
             atualizarListaClientes();
-            limparTabelaCarros();
             System.out.println(msg + "\n");
             if (msg != null && !msg.trim().isEmpty() && !msg.contains("NOME")
                 && !msg.contains("CPF") && !msg.contains("TELEFONE") && !msg.contains("PLACA")
                 && !msg.contains("MARCA") && !msg.contains("MODELO") && !msg.contains("COR")
                 && !msg.contains("RUA") && !msg.contains("BAIRRO") && !msg.contains("CIDADE")) {
-                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
-                        JOptionPane.PLAIN_MESSAGE);
+//                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
+//                        JOptionPane.PLAIN_MESSAGE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,23 +139,30 @@ public class ControllerMainCadastro {
     }
 
     /**
-     * Atualiza a tabela de Clientes em ListaClientesView a cada alteração de Cadastro/Atualização/Erro
-     * & limpa a tabela de carros em DadosView
+     * Insere o ID para atualizar os objetos no DB
+     *
+     * @param con          ContratoVO
+     * @param car          CarroVO
+     * @param c            ClienteVO
+     * @param e            EnderecoVO
+     * @param clienteForID ClienteVO
+     */
+    private void inserirIdParaUpdate(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e, ClienteVO clienteForID) {
+        int id = clienteForID.getId();
+        c.setId(id);
+        con.setId(id);
+        car.setId(id);
+        e.setId(id);
+    }
+
+    /**
+     * Atualiza a tabela de Clientes em ListaClientesView a cada alteração
      */
     private void atualizarListaClientes() {
         ConstHelpers.FLAG = 1;
         clientesView = MainView.getClienteView();
         clientesCtrl = new ControllerListaClientes(clientesView);
         clientesCtrl.atualizarTabela();
-    }
-
-    /**
-     * Limpa a tabela de carros de cadastroView
-     */
-    private void limparTabelaCarros() {
-        dadosView = MainView.getDadosCadastroView();
-        dadosCtrl = new ControllerCadastroDados(dadosView);
-        dadosCtrl.limparTabelaCarros();
     }
 
     /**
@@ -270,9 +275,7 @@ public class ControllerMainCadastro {
     private CarroVO getCarroForm() {
         dadosView = MainView.getDadosCadastroView();
         dadosCtrl = new ControllerCadastroDados(dadosView);
-        CarroVO carro = dadosCtrl.getFormCarro(dadosView.getTable());
-        this.listaCarros = dadosCtrl.retornarListaCarros();
-        return carro;
+        return dadosCtrl.getFormCarro();
     }
 
     /**
@@ -352,16 +355,6 @@ public class ControllerMainCadastro {
         }
     }
 
-    private void cadastrarListaCarros() {
-        String id = String.valueOf(c.getId());
-        for (CarroVO carro : listaCarros) {
-            if (carro != car) {
-                c.setCarro(carro);
-//                daoCliente.cadastrar();
-            }
-        }
-    }
-
     /**
      * Preenche os valores na tela quando clicar no botão atualizar;
      *
@@ -369,50 +362,36 @@ public class ControllerMainCadastro {
      */
     public void preencherObjetos(ContratoVO contrato) {
         try {
-            dadosView = MainView.getDadosCadastroView();
+
+            // CADOS PESSOAIS DO CLIENTE
             ClienteVO cliente = contrato.getCliente();
+            dadosView = MainView.getDadosCadastroView();
             dadosView.getTxtNome().setText(cliente.getNome());
             dadosView.getTxtCPF().setText(cliente.getCpf());
             dadosView.getTxtEmail().setText(cliente.getEmail());
             dadosView.getTxtRG().setText(cliente.getRg());
             dadosView.getTxtTelefone().setText(cliente.getTelefone());
+            // CARRO
+            dadosView.getTxtPlaca().setText(cliente.getCarro().getPlaca());
+            dadosView.getCbCor().setSelectedItem(cliente.getCarro().getCor());
+            dadosView.getCbMarca().getModel().setSelectedItem(cliente.getCarro().getModelo().getMarca());
+            dadosView.getCbModelo().getModel().setSelectedItem(cliente.getCarro().getModelo());
 
-            enderecoView = MainView.getEnderecoCadastroView();
+            // ENDERECO
             EnderecoVO endereco = cliente.getEndereco();
+            enderecoView = MainView.getEnderecoCadastroView();
             enderecoView.getTxtBairro().setText(endereco.getBairro());
             enderecoView.getTxtCidade().setText(endereco.getCidade());
             enderecoView.getTxtNumero().setText(String.valueOf(endereco.getNumero()));
             enderecoView.getTxtRua().setText(endereco.getRua());
 
-            planoView = MainView.getPlanoCadastroView();
+            // PLANO
             PlanoVO plano = contrato.getPlano();
+            planoView = MainView.getPlanoCadastroView();
             planoView.getLblMesValidade().setText(contrato.getDtSaida().format(ConstHelpers.DTF));
             planoView.getCbPlano().setSelectedItem(plano);
             planoView.getCbFormaPgto().setSelectedItem(contrato.getTipoPgto());
             planoView.getTxtCartao().setText(String.valueOf(contrato.getNumeroCartao()));
-
-            preencherTabelaCarros(cliente.getCarro());
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void preencherTabelaCarros(CarroVO carro) {
-        try {
-            dadosView = MainView.getDadosCadastroView();
-            dadosCtrl = new ControllerCadastroDados(dadosView);
-            dadosCtrl.limparTabelaCarros();
-
-            JTable table = dadosView.getTable();
-            for (int i = 0; i < table.getRowCount(); i++) {
-                table.setValueAt(carro.getPlaca(), i, 0);
-                table.setValueAt(carro.getModelo().getMarca(), i, 1);
-                table.setValueAt(carro.getModelo(), i, 2);
-                table.setValueAt(carro.getCor(), i, 3);
-            }
-            dadosView.setTable(table);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

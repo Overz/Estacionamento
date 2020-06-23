@@ -144,15 +144,17 @@ public class PlanoDAO implements BaseDAO<PlanoVO> {
 
     @Override
     public boolean alterar(PlanoVO object) {
-        String qry = "update plano set tipo=?, descricao=?;";
+        String qry = "update plano set tipo=?, descricao=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
             stmt.setString(1, object.getTipo());
             stmt.setString(2, object.getDescircao());
+            stmt.setInt(3, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+            int i = stmt.executeUpdate();
+            if (i == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
             }
         } catch (SQLException e) {
