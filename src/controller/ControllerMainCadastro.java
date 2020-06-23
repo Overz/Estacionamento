@@ -130,8 +130,8 @@ public class ControllerMainCadastro {
                 && !msg.contains("CPF") && !msg.contains("TELEFONE") && !msg.contains("PLACA")
                 && !msg.contains("MARCA") && !msg.contains("MODELO") && !msg.contains("COR")
                 && !msg.contains("RUA") && !msg.contains("BAIRRO") && !msg.contains("CIDADE")) {
-//                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
-//                        JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
+                        JOptionPane.PLAIN_MESSAGE);
             }
         } catch (Exception e) {
             e.printStackTrace();

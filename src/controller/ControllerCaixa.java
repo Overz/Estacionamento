@@ -467,9 +467,9 @@ public class ControllerCaixa {
             ConstHelpers.SUB_FLAG = 4;
             String dt1 = String.valueOf(LocalDate.now());
             lista = daoM.consultar(dt1, dt1);
-//            atualizarStatusMovimento(lista); TODO Mudar no final
             String caminhoEscolhido = Util.caminhoFileChooser(jFileChooser.getSelectedFile());
             PdfCaixaFinal pdf = new PdfCaixaFinal(lista, caminhoEscolhido);
+            atualizarStatusMovimento(lista);
             return pdf.gerarPdf();
 
         } catch (Exception e) {

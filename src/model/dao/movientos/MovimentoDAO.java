@@ -13,6 +13,7 @@ import util.constantes.ConstHelpers;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MovimentoDAO implements BaseDAO<MovimentoVO> {
@@ -240,14 +241,27 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean alterar(MovimentoVO object) {
-        String qry = "update movimento set hr_entrada=?, hr_saida=? where id=?;";
+        String qry = "update movimento set hr_entrada=?, hr_saida=?, atual=? where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
-            stmt.setTimestamp(1, Timestamp.valueOf(object.getHr_entrada()));
-            stmt.setTimestamp(2, Timestamp.valueOf(object.getHr_saida()));
-            stmt.setInt(3, object.getId());
+            LocalDateTime entrada = object.getHr_entrada();
+            LocalDateTime saida = object.getHr_saida();
+
+            if (entrada != null) {
+                stmt.setTimestamp(1, Timestamp.valueOf(object.getHr_entrada()));
+            } else {
+                stmt.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now()));
+            }
+            if (saida != null) {
+                stmt.setTimestamp(2, Timestamp.valueOf(object.getHr_saida()));
+            } else {
+                stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            }
+
+            stmt.setBoolean(3, object.isAtual());
+            stmt.setInt(4, object.getId());
 
             if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
                 return true;
@@ -271,12 +285,12 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
     @Override
     public boolean excluirPorID(int id) {
         String qry = ConstHelpers.FLAG != 1 ? "delete m, con, cli, car, e " +
-                                       "from movimento m inner join contrato con on m.idContrato = con.id " +
-                                       "inner join cliente cli on con.idCliente = cli.id " +
-                                       "inner join carro car on cli.idCarro = car.id " +
-                                       "inner join endereco e on cli.idEndereco = e.id " +
-                                       "where e.id = cli.id and car.id = cli.id and cli.id = con.id " +
-                                       "and con.id = m.id and m.id = ?;" : "delete * from movimento where id=?;";
+                                              "from movimento m inner join contrato con on m.idContrato = con.id " +
+                                              "inner join cliente cli on con.idCliente = cli.id " +
+                                              "inner join carro car on cli.idCarro = car.id " +
+                                              "inner join endereco e on cli.idEndereco = e.id " +
+                                              "where e.id = cli.id and car.id = cli.id and cli.id = con.id " +
+                                              "and con.id = m.id and m.id = ?;" : "delete * from movimento where id=?;";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
