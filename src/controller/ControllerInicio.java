@@ -554,4 +554,8 @@ public class ControllerInicio {
         timer.start();
     }
 
+    public void pegarTicketTabelaClick() {
+
+    }
+
 }

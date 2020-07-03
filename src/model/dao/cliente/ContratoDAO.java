@@ -97,11 +97,16 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                      " left join modelo mdl on car.idModelo = mdl.id " +
                      " left join marca mar on mdl.idMarca = mar.id ";
 
-        SeletorCliente seletor = new SeletorCliente();
-        seletor.setValor(values[0]);
+        if (ConstHelpers.FLAG == 1) {
+            qry = "select * from contrato where n_cartao = ?;";
 
-        if (seletor.temFiltro()) {
-            qry = seletor.criarFiltro(qry);
+        } else {
+            SeletorCliente seletor = new SeletorCliente();
+            seletor.setValor(values[0]);
+
+            if (seletor.temFiltro()) {
+                qry = seletor.criarFiltro(qry);
+            }
         }
 
         list = new ArrayList<>();
@@ -109,9 +114,16 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
         try {
+            if (ConstHelpers.FLAG == 1) {
+                stmt.setLong(1, Long.parseLong(values[0]));
+            }
+
             result = stmt.executeQuery();
-            while (result.next()) {
+            while (result != null && result.next()) {
                 contratoVO = criarResultSet(result);
+                if (ConstHelpers.FLAG == 1) {
+                    return (T) contratoVO;
+                }
                 list.add(contratoVO);
             }
             return (T) list;

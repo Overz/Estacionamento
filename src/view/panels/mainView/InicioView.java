@@ -221,7 +221,7 @@ public class InicioView extends JPanel {
 
     private void addListeners() {
 
-        Util.habilitarOpcoes(table, btnRemover, "#FF8C00", 2);
+        Util.habilitarOpcoes(table, btnRemover, "#FF8C00", 2, txtTicket);
 
         txtTicket.addFocusListener(new FocusAdapter() {
             @Override

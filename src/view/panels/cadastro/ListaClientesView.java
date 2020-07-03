@@ -163,7 +163,7 @@ public class ListaClientesView extends JPanel {
             }
         });
 
-        Util.habilitarOpcoes(table, btnAtualizar, "#FF8C00", 2);
+        Util.habilitarOpcoes(table, btnAtualizar, "#FF8C00", 2, null);
 
         cbConfirmaExclusao.addActionListener(e -> {
 

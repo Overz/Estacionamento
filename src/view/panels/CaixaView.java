@@ -132,7 +132,7 @@ public class CaixaView extends JPanel {
 
     private void addListeners() {
 
-        Util.habilitarOpcoes(table, btnImprimirComprovante, "", 1);
+        Util.habilitarOpcoes(table, btnImprimirComprovante, "", 1, null);
 
         btnAdicionarValor.addActionListener(e -> {
             ConstHelpers.FLAG = 1;

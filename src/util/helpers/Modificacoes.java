@@ -1,21 +1,10 @@
 package util.helpers;
 
-import model.banco.BaseDAO;
-import model.dao.veiculos.MarcaDAO;
-import model.dao.veiculos.ModeloDAO;
-import model.vo.veiculo.MarcaVO;
-import model.vo.veiculo.ModeloVO;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.InputMethodEvent;
 import java.awt.event.InputMethodListener;
-import java.text.ParseException;
-import java.util.ArrayList;
 
 public class Modificacoes {
 
@@ -66,56 +55,6 @@ public class Modificacoes {
         table.setShowVerticalLines(false);
 
         return table;
-    }
-
-    /**
-     * Configura a Tabela para editar as celulas, deixando elas centralizadas,
-     * para esquerda, ou direita
-     *
-     * @param table: JTable
-     * @return table
-     */
-    public JTable tableConfigurations(JTable table) {
-        DefaultTableCellRenderer centerRendererLeft = new DefaultTableCellRenderer();
-        DefaultTableCellRenderer centerRendererCenter = new DefaultTableCellRenderer();
-        DefaultTableCellRenderer centerRendererRight = new DefaultTableCellRenderer();
-
-//		Renderizar os valores dentro da celular
-        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
-            table.getColumnModel().getColumn(i).setCellRenderer(centerRendererCenter);
-        }
-
-        return table;
-    }
-
-    /**
-     * Criação de uma mascara para o campo de acordo com a instancia, e um place holder(Palavras que somem ao
-     * digitar)
-     *
-     * @param mask: MaskFormatter
-     * @param tipo: int
-     * @param text: String
-     */
-    public MaskFormatter maskAndPlaceHolder(MaskFormatter mask, int tipo, String text) {
-
-        try {
-            mask = new MaskFormatter();
-            if (tipo == 1) {
-                mask.setMask("###################################");
-            }
-
-            if (tipo == 2) {
-                mask.setMask("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-            }
-
-            if (tipo == 3) {
-                mask.setMask("***********************************");
-            }
-            mask.setPlaceholder(text);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return mask;
     }
 
     /**

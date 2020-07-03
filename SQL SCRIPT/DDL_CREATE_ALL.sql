@@ -33,7 +33,7 @@ CREATE TABLE `dbestacionamento`.`carro`
 (
     `id`       INT         NOT NULL AUTO_INCREMENT,
     `idModelo` INT         NOT NULL,
-    `placa`    VARCHAR(45) NOT NULL,
+    `placa`    VARCHAR(7) NOT NULL,
     `cor`      VARCHAR(45) NULL,
     CONSTRAINT `pk_carro` PRIMARY KEY (`id`),
     CONSTRAINT `fk_carro_modelo` FOREIGN KEY (`idModelo`) REFERENCES `dbestacionamento`.`modelo` (`id`)
@@ -46,10 +46,10 @@ CREATE TABLE `dbestacionamento`.`cliente`
     `idEndereco` INT          NOT NULL,
     `idCarro`    INT          NOT NULL,
     `nome`       VARCHAR(255) NOT NULL,
-    `cpf`        VARCHAR(14)  NOT NULL,
+    `cpf`        VARCHAR(11)  NOT NULL UNIQUE,
     `rg`         VARCHAR(14)  NOT NULL,
     `email`      VARCHAR(255) NOT NULL,
-    `telefone`   VARCHAR(45)  NOT NULL,
+    `telefone`   VARCHAR(16)  NOT NULL,
     CONSTRAINT `pk_cliente` PRIMARY KEY (`id`),
     CONSTRAINT `fk_cliente_endereco` FOREIGN KEY (`idEndereco`) REFERENCES `dbestacionamento`.`endereco` (`id`)
         ON DELETE CASCADE ON UPDATE CASCADE,

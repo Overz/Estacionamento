@@ -9,7 +9,7 @@ public class ConstHelpers {
     public static final String REGEX_NUMEROS_PALAVRAS = "[A-Za-z0-9]+";
     public static int FLAG = 0;
     public static int SUB_FLAG = 0;
-    public static final int TEMPO_1_MIN = 60 * 1000;
+    public static final int TEMPO_1_MIN = 60 * 5000;
     public static final int TEMPO_30_SEG = 30 * 1000;
     public static int TEMPO_X = 0;
     public static int TEMPO_TICKET = 0;

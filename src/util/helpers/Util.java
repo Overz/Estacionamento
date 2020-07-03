@@ -43,7 +43,7 @@ public class Util {
     }
 
     /**
-     * Evento de Click, caso pressionado um pré-requisito na tela
+     * Evento de Click, caso pressionado um pré-requisito na tela,
      * realiza ações de Enable(True)
      *
      * @param table   JTable
@@ -51,7 +51,7 @@ public class Util {
      * @param color   String
      * @param tipoCor int
      */
-    public synchronized static void habilitarOpcoes(JTable table, JButton button, String color, int tipoCor) {
+    public synchronized static void habilitarOpcoes(JTable table, JButton button, String color, int tipoCor, JTextField field) {
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -81,6 +81,13 @@ public class Util {
                     Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
                     timer.start();
                 }
+
+                int row = table.getSelectedRow();
+                int col = table.getSelectedColumn();
+
+                Object o = table.getValueAt(row, col);
+                field.setText(String.valueOf(o));
+
             }
         });
     }

@@ -30,10 +30,7 @@ public class ClienteBO {
                        && c.getCpf().trim().matches(ConstHelpers.REGEX_NUMEROS);
             }
         } catch (Exception e) {
-            if (e != null) {
-                e.printStackTrace();
-                return false;
-            }
+            e.printStackTrace();
         }
         return false;
     }

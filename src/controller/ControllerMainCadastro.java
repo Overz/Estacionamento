@@ -91,16 +91,18 @@ public class ControllerMainCadastro {
             if (tipoCadastro == 0) {
                 // Cadastrar
                 if (corredorPolones(con, car, c, e)) {
-//                    bigJOptionPane(msg);
+                    bigJOptionPane(msg);
                     try {
                         if (cadastrarCliente(con, car, c, e, p)) {
                             msg = "Cliente Cadastrado!";
                         } else {
-                            msg = "Erro ao Cadastrar Cliente!";
+                            msg += "Erro ao Cadastrar Cliente!</body></html>";
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
+                } else {
+                    bigJOptionPane(msg);
                 }
                 // Alterar
             } else {
@@ -124,15 +126,10 @@ public class ControllerMainCadastro {
                 }
             }
 
-            atualizarListaClientes();
+            this.atualizarListaClientes();
             System.out.println(msg + "\n");
-            if (msg != null && !msg.trim().isEmpty() && !msg.contains("NOME")
-                && !msg.contains("CPF") && !msg.contains("TELEFONE") && !msg.contains("PLACA")
-                && !msg.contains("MARCA") && !msg.contains("MODELO") && !msg.contains("COR")
-                && !msg.contains("RUA") && !msg.contains("BAIRRO") && !msg.contains("CIDADE")) {
-                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
-                        JOptionPane.PLAIN_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
+                    JOptionPane.PLAIN_MESSAGE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -311,29 +308,41 @@ public class ControllerMainCadastro {
      * @return true/false
      */
     private boolean cadastrarCliente(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e, PlanoVO p) {
-        e = daoEndereco.cadastrar(e);
-        car = daoCarro.cadastrar(car);
-
-        c.setEndereco(e);
-        c.setCarro(car);
-        c = daoCliente.cadastrar(c);
-
-        con.setCliente(c);
-        con.setPlano(p);
-        con = daoContrato.cadastrar(con);
-
-        int idE = e.getId();
-        int idCar = car.getId();
-        int idCli = c.getId();
-        int idCon = con.getId();
-
-        boolean result = false;
-        if (idE > 0 && idCli > 0 && idCar > 0 && idCon > 0) {
-            if (idE == idCli && idCli == idCar && idCli == idCon) {
-                result = true;
+        ConstHelpers.FLAG = 1;
+        ClienteVO existeCliente = daoCliente.consultar(c.getCpf());
+        ContratoVO existeContrato = daoContrato.consultar(String.valueOf(con.getNumeroCartao()));
+        if (existeCliente != null && existeCliente.getCpf().equalsIgnoreCase(c.getCpf())) {
+            msg = "<html><body>Cliente com este CPF já Existe!<br>";
+            if (existeContrato != null && existeContrato.getNumeroCartao() == con.getNumeroCartao()) {
+                msg += "Número do Cartão Já está em Uso!<br>";
             }
+            return false;
+        } else {
+            e = daoEndereco.cadastrar(e);
+            car = daoCarro.cadastrar(car);
+
+            c.setEndereco(e);
+            c.setCarro(car);
+            c = daoCliente.cadastrar(c);
+
+            con.setCliente(c);
+            con.setPlano(p);
+            con = daoContrato.cadastrar(con);
+
+            int idE = e.getId();
+            int idCar = car.getId();
+            int idCli = c.getId();
+            int idCon = con.getId();
+
+            boolean result = false;
+            if (idE > 0 && idCli > 0 && idCar > 0 && idCon > 0) {
+                if (idE == idCli && idCli == idCar && idCli == idCon) {
+                    result = true;
+                    ConstHelpers.FLAG = 0;
+                }
+            }
+            return result;
         }
-        return result;
     }
 
     /**

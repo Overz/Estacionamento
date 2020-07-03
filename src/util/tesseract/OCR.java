@@ -1,25 +1,29 @@
 package util.tesseract;
 
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
+import net.sourceforge.tess4j.*;
 
 import java.io.File;
 
 public class OCR {
 
-    private File file;
-    private String path;
-    private String read;
-
-    public OCR(File file) {
-        this.file = file;
+    public static void main(String[] args) {
+        lerImagem();
     }
 
-    private void lerImagem() {
+    private static void lerImagem() {
         try {
-            ITesseract tesseract = new Tesseract();
-            read = tesseract.doOCR(file);
+//            tesseract  --tessdata-dir  tessdataPath  image.png  output  -l  eng
+
+            String _env = System.getenv("TESSDATA_PREFIX");
+            System.out.println(_env);
+
+
+            File file = new File("/home/cris/Área de Trabalho/tesseract/placa1.png");
+            ITesseract tess = new Tesseract1();
+            tess.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/");
+            tess.setLanguage("por");
+            tess.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
+            String read = tess.doOCR(file).replaceAll("[^\\w\n.,;!?\'\":»«„”\\(\\) ]", "");
             System.out.println(read);
 
 
