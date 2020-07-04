@@ -10,11 +10,15 @@ import util.helpers.Util;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import static util.helpers.Modificacoes.addMask;
+import static util.helpers.Modificacoes.addMyFocusListener;
 
 public class InicioView extends JPanel {
 
@@ -27,8 +31,10 @@ public class InicioView extends JPanel {
     private JTable table;
     private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
             btnRemover, btnAbrirEntrada, btnAbrirSaida;
-    private JTextField txtTicket, txtProcurar;
+    private JFormattedTextField txtTicket;
+    private JTextField txtProcurar;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída;
+    private MaskFormatter numberMask, newMask;
 
     public InicioView() {
 
@@ -113,7 +119,7 @@ public class InicioView extends JPanel {
     }
 
     private void setInputFields() {
-        txtTicket = new JTextField("Nº Ticket");
+        txtTicket = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_TICKET_CARD_15, "Nº Ticket"));
         txtTicket.setFont(new Font("Arial", Font.BOLD, 20));
         txtTicket.setBorder(new LineBorder(Color.BLACK));
         txtTicket.setBackground(Color.WHITE);
@@ -223,13 +229,8 @@ public class InicioView extends JPanel {
 
         Util.habilitarOpcoes(table, btnRemover, "#FF8C00", 2, txtTicket);
 
-        txtTicket.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                txtTicket.setText("");
-                txtTicket.setForeground(Color.BLACK);
-            }
-        });
+        txtTicket.addFocusListener(addMyFocusListener(txtTicket, 0));
+
         txtProcurar.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -238,7 +239,14 @@ public class InicioView extends JPanel {
             }
         });
 
-        btnCancelar.addActionListener(e -> txtTicket.setText("Nº Ticket"));
+        btnCancelar.addActionListener(e -> {
+            try {
+                numberMask.uninstall();
+                numberMask.install(txtTicket);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
 
         btnValidar.addActionListener(e -> {
             String ticket = txtTicket.getText().trim();
@@ -269,7 +277,7 @@ public class InicioView extends JPanel {
         return table;
     }
 
-    public JTextField getTxtTicket() {
+    public JFormattedTextField getTxtTicket() {
         return txtTicket;
     }
 
@@ -281,4 +289,7 @@ public class InicioView extends JPanel {
         return lblTotalDeVeiculos;
     }
 
+    public MaskFormatter getNumberMask() {
+        return numberMask;
+    }
 }

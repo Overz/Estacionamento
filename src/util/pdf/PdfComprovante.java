@@ -5,14 +5,14 @@ import com.itextpdf.text.pdf.*;
 import model.vo.movimentos.MovimentoVO;
 import util.helpers.Util;
 
-import static util.pdf.PdfHelpers.*;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+
+import static util.pdf.PdfHelpers.*;
 
 /**
  * Esta classe usa uma API chamada IText para criar um PDF, mas também pode ser usado PDFBox
@@ -30,12 +30,12 @@ public class PdfComprovante {
 
     private static final String PASS = "";
     private static final String OWNER_PASS = "";
+    private final MovimentoVO m;
     private Chunk mainChunk, secondChunk, thirdChunk;
     private Phrase mainFrase;
     private Paragraph mainPrgf, secondPrgf, prgfCodeBar;
     private Path path;
     private Image img;
-    private final MovimentoVO m;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
         CAMINHO = caminho;

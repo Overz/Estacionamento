@@ -1,6 +1,9 @@
 package util.tesseract;
 
-import net.sourceforge.tess4j.*;
+import net.sourceforge.tess4j.ITessAPI;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract1;
+import net.sourceforge.tess4j.TesseractException;
 
 import java.io.File;
 

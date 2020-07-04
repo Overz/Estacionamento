@@ -24,9 +24,7 @@ public class LostTicketBO {
     public static boolean validarCpf(LostTicketVO vo) {
         try {
             if (vo != null) {
-                return !vo.getCPF().isEmpty()
-                       && vo.getCPF().length() > 0
-                       && vo.getCPF().length() < 14
+                return vo.getCPF().length() == 11
                        && vo.getCPF().matches(ConstHelpers.REGEX_NUMEROS);
             }
         } catch (Exception e) {
@@ -41,9 +39,7 @@ public class LostTicketBO {
     public static boolean validarRenavam(LostTicketVO vo) {
         try {
             if (vo != null) {
-                return !vo.getRenavam().isEmpty()
-                       && vo.getRenavam().length() > 0
-                       && vo.getRenavam().length() < 14
+                return vo.getRenavam().length() == 12
                        && vo.getRenavam().matches(ConstHelpers.REGEX_NUMEROS);
             }
         } catch (Exception e) {

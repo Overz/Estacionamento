@@ -8,8 +8,11 @@ import util.helpers.Util;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static util.helpers.Modificacoes.addMask;
 
 public class LostTicketView extends JPanel {
 
@@ -95,19 +98,19 @@ public class LostTicketView extends JPanel {
         add(txtNome, "cell 4 4 5 1,grow");
         txtNome.setColumns(10);
 
-        txtCPF = new JTextField();
+        txtCPF = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_RENAVAM_11, ""));
         txtCPF.setFont(new Font("Arial", Font.BOLD, 14));
         txtCPF.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtCPF.setColumns(10);
         add(txtCPF, "cell 4 5 5 1,grow");
 
-        txtPlaca = new JTextField();
+        txtPlaca = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_PLATE_7, ""));
         txtPlaca.setFont(new Font("Arial", Font.BOLD, 14));
         txtPlaca.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtPlaca.setColumns(10);
         add(txtPlaca, "cell 4 6 5 1,grow");
 
-        txtRenavam = new JTextField();
+        txtRenavam = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_CPF, ""));
         txtRenavam.setFont(new Font("Arial", Font.BOLD, 14));
         txtRenavam.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtRenavam.setColumns(10);
@@ -115,12 +118,12 @@ public class LostTicketView extends JPanel {
     }
 
     public void setButtons() {
-        tiposPagamento = new ArrayList<String>();
+        tiposPagamento = new ArrayList<>();
         tiposPagamento.add(ConstInicio.VAZIO);
         tiposPagamento.add(ConstInicio.PGTO_DINHEIRO);
         tiposPagamento.add(ConstInicio.PGTO_CARTAO);
 
-        comboBox = new JComboBox<Object>(tiposPagamento.toArray());
+        comboBox = new JComboBox<>(tiposPagamento.toArray());
         comboBox.setFont(new Font("Arial", Font.BOLD, 14));
         comboBox.setBorder(new LineBorder(Color.BLACK, 1, true));
         comboBox.setBackground(Color.WHITE);

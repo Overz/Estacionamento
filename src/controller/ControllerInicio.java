@@ -533,8 +533,8 @@ public class ControllerInicio {
      * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
      */
     private void ajustarFocusTxtTicket() {
-        inicioView.getTxtTicket().setText("Nº Ticket");
-        inicioView.setForeground(Color.BLACK);
+        inicioView.getNumberMask().uninstall();
+        inicioView.getNumberMask().install(inicioView.getTxtTicket());
     }
 
     /**
@@ -553,9 +553,4 @@ public class ControllerInicio {
         Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();
     }
-
-    public void pegarTicketTabelaClick() {
-
-    }
-
 }

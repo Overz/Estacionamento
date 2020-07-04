@@ -4,12 +4,13 @@ import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
 import util.constantes.ConstHelpers;
 import util.helpers.Util;
-import util.pdf.PdfHelpers;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -105,4 +106,27 @@ public class ControllerCadastroPlano {
         return new DefaultComboBoxModel(Util.atualizarListaModelo().toArray());
     }
 
+    private MouseAdapter addMousAdapter() {
+        return new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                LocalDateTime validade = LocalDateTime.now();
+                validade = validade.plusWeeks(5);
+                planoView.getLblMesValidade().setText(validade.format(ConstHelpers.DTF));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                LocalDateTime validade = LocalDateTime.now();
+                validade = validade.plusWeeks(5);
+                planoView.getLblMesValidade().setText(validade.format(ConstHelpers.DTF));
+            }
+        };
+    }
+
+    public void addValidade() {
+        planoView.getCbPlano().addMouseListener(addMousAdapter());
+        planoView.getCbFormaPgto().addMouseListener(addMousAdapter());
+        planoView.getTxtCartao().addMouseListener(addMousAdapter());
+    }
 }

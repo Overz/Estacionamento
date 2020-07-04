@@ -8,7 +8,7 @@ public class ContratoBO {
             if (c != null) {
                 String cartao = String.valueOf(c.getNumeroCartao());
                 return cartao.trim().length() > 0
-                       && cartao.trim().length() <= 30;
+                       && cartao.trim().length() <= 18;
             }
         } catch (Exception e) {
             if (e != null) {

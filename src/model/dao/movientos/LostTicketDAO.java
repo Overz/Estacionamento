@@ -4,7 +4,10 @@ import model.banco.Banco;
 import model.banco.BaseDAO;
 import model.vo.movimentos.LostTicketVO;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class LostTicketDAO implements BaseDAO<LostTicketVO> {
@@ -40,7 +43,7 @@ public class LostTicketDAO implements BaseDAO<LostTicketVO> {
             stmt.setBytes(6, newObject.getDocumento());
 
             result = stmt.getGeneratedKeys();
-            if (result.next()){
+            if (result.next()) {
                 int id = result.getInt(1);
                 newObject.setId(id);
             }

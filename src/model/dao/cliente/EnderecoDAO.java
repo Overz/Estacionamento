@@ -106,7 +106,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
 
     @Override
     public EnderecoVO cadastrar(EnderecoVO newObject, String... values) {
-        String qry = "insert into endereco (numero, rua, bairro, cidade) values (?,?,?,?);";
+        String qry = "insert into endereco (numero, rua, bairro, cidade, uf) values (?,?,?,?,?);";
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -115,6 +115,7 @@ public class EnderecoDAO implements BaseDAO<EnderecoVO> {
             stmt.setString(2, newObject.getRua());
             stmt.setString(3, newObject.getBairro());
             stmt.setString(4, newObject.getCidade());
+            stmt.setString(5, newObject.getUf());
 
             int i = stmt.executeUpdate();
             result = stmt.getGeneratedKeys();

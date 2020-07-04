@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class ContratoDAO implements BaseDAO<ContratoVO> {
 
+    int resultado = 0;
     private Connection conn = null;
     private PreparedStatement stmt = null;
     private ResultSet result = null;
     private ArrayList<ContratoVO> list = null;
     private ContratoVO contratoVO = null;
-    int resultado = 0;
 
     public ContratoVO criarResultSet(ResultSet result) {
         contratoVO = new ContratoVO();

@@ -62,7 +62,7 @@ public class EnderecoBO {
         try {
             if (e != null) {
                 String numero = String.valueOf(e.getNumero());
-                return numero.trim().length() > 0 && numero.trim().length() <= 10;
+                return numero.trim().length() > 0 && numero.trim().length() <= 11;
             }
         } catch (Exception e1) {
             if (e1 != null) {

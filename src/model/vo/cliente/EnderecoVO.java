@@ -7,8 +7,9 @@ public class EnderecoVO {
     private String rua;
     private String bairro;
     private String cidade;
+    private String uf;
 
-    public EnderecoVO(int id, Integer numero, String rua, String bairro, String cidade) {
+    public EnderecoVO(int id, Integer numero, String rua, String bairro, String cidade, String uf) {
         super();
         this.id = id;
         this.numero = numero;
@@ -17,7 +18,7 @@ public class EnderecoVO {
         this.cidade = cidade;
     }
 
-    public EnderecoVO(Integer numero, String rua, String bairro, String cidade) {
+    public EnderecoVO(Integer numero, String rua, String bairro, String cidade, String uf) {
         this.numero = numero;
         this.rua = rua;
         this.bairro = bairro;
@@ -66,6 +67,14 @@ public class EnderecoVO {
 
     public void setCidade(String cidade) {
         this.cidade = cidade;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
     }
 
     @Override

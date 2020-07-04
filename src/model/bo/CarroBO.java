@@ -2,18 +2,14 @@ package model.bo;
 
 import model.vo.veiculo.CarroVO;
 import util.constantes.ConstHelpers;
-import util.constantes.ConstInicio;
 
 public class CarroBO {
     public static boolean validarPlaca(CarroVO carro) {
         try {
             if (carro != null) {
                 return !carro.getPlaca().trim().isEmpty()
-                       && !carro.getPlaca().equals(ConstInicio.VAZIO);
-//               && !carro.getPlaca().trim().isEmpty()
-//               && carro.getPlaca().trim().length() > 0
-//               && carro.getPlaca().trim().length() <= 10
-//               && carro.getPlaca().replace('?', ' ').trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
+                       && carro.getPlaca().trim().length() == 7
+                       && carro.getPlaca().trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
             }
         } catch (Exception e) {
             if (e != null) {
@@ -28,8 +24,7 @@ public class CarroBO {
         try {
             if (carro != null) {
                 return !carro.trim().isEmpty()
-                       && carro.trim().length() > 0
-                       && carro.trim().length() <= 7
+                       && carro.trim().length() == 7
                        && carro.trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS);
             }
         } catch (Exception e) {

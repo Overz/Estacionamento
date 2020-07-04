@@ -1,16 +1,23 @@
 package view.panels.cadastro.subCadastro;
 
 import net.miginfocom.swing.MigLayout;
+import util.constantes.ConstHelpers;
+import util.constantes.ConstInicio;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
+
+import static util.helpers.Modificacoes.addMask;
+import static util.helpers.Modificacoes.addMyFocusListener;
 
 public class PanelzinhoCadastroEndereco extends JPanel {
 
     private static final long serialVersionUID = 6735598086664804404L;
-    private JTextField txtRua, txtBairro, txtNumero, txtCidade;
-	private JComboBox<String> cbEstado;
+    private JTextField txtRua, txtBairro, txtCidade;
+    private JFormattedTextField txtNumero;
+    private JComboBox<String> cbEstado;
 
     public PanelzinhoCadastroEndereco() {
 
@@ -27,7 +34,7 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         setJLabels_JSeparator();
 
         setInputFields();
-        
+
         setComboBox();
 
     }
@@ -53,7 +60,7 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         lblCidade.setHorizontalAlignment(SwingConstants.CENTER);
         lblCidade.setFont(new Font("Arial", Font.BOLD, 14));
         add(lblCidade, "cell 0 5 2 1,grow");
-        
+
         JLabel lblEstado = new JLabel("Estado(UF)");
         lblEstado.setHorizontalAlignment(SwingConstants.CENTER);
         lblEstado.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -69,7 +76,8 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         add(txtRua, "cell 2 2 3 1,grow");
         txtRua.setColumns(10);
 
-        txtNumero = new JTextField();
+        txtNumero = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_NUMBER, ""));
+        addMyFocusListener(txtNumero, 0);
         txtNumero.setFont(new Font("Arial", Font.BOLD, 14));
         txtNumero.setColumns(10);
         txtNumero.setBorder(new LineBorder(Color.BLACK, 1, true));
@@ -86,15 +94,15 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         txtCidade.setColumns(10);
         txtCidade.setBorder(new LineBorder(Color.BLACK, 1, true));
         add(txtCidade, "cell 2 5 3 1,grow");
-        
+
     }
-    
+
     private void setComboBox() {
-    	 cbEstado = new JComboBox<>(new DefaultComboBoxModel<String>(new String[] {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
-    			 "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
-         cbEstado.setFont(new Font("Dialog", Font.BOLD, 18));
-         cbEstado.setBackground(Color.WHITE);
-         add(cbEstado, "cell 2 6 3 1,grow");
+        cbEstado = new JComboBox<>(new DefaultComboBoxModel<String>(new String[]{ConstInicio.VAZIO, "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA",
+                "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
+        cbEstado.setFont(new Font("Dialog", Font.BOLD, 18));
+        cbEstado.setBackground(Color.WHITE);
+        add(cbEstado, "cell 2 6 3 1,grow");
     }
 
     public JTextField getTxtRua() {
@@ -112,8 +120,8 @@ public class PanelzinhoCadastroEndereco extends JPanel {
     public JTextField getTxtCidade() {
         return txtCidade;
     }
-    
+
     public JComboBox<String> getCbEstado() {
-		return cbEstado;
-	}
+        return cbEstado;
+    }
 }

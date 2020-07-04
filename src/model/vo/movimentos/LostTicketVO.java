@@ -1,7 +1,5 @@
 package model.vo.movimentos;
 
-import java.io.InputStream;
-
 public class LostTicketVO {
 
     private int id;

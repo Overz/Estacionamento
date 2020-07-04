@@ -5,14 +5,13 @@ import util.constantes.ConstCaixa;
 import view.panels.CaixaView;
 import view.panels.LostTicketView;
 import view.panels.MovimentoView;
-import view.panels.cadastro.MainPanelCadastro;
 import view.panels.cadastro.ListaClientesView;
+import view.panels.cadastro.MainPanelCadastro;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroDados;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco;
 import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class MainView extends JFrame {
@@ -58,61 +57,6 @@ public class MainView extends JFrame {
                 e.printStackTrace();
             }
         });
-    }
-
-    /**
-     * limpa os dados das telas de cadastro ao clicar no botão atualizar
-     */
-    public static void limparDadosDasTelasCadastro() {
-        MainView.getDadosCadastroView().getTxtRG().setText("");
-        MainView.getDadosCadastroView().getTxtNome().setText("");
-        MainView.getDadosCadastroView().getTxtTelefone().setText("");
-        MainView.getDadosCadastroView().getTxtEmail().setText("");
-        MainView.getDadosCadastroView().getTxtCPF().setText("");
-        MainView.getDadosCadastroView().getTxtPlaca().setText("");
-        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
-        MainView.getDadosCadastroView().getCbCor().setSelectedIndex(0);
-        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
-
-        MainView.getEnderecoCadastroView().getTxtRua().setText("");
-        MainView.getEnderecoCadastroView().getTxtNumero().setText("");
-        MainView.getEnderecoCadastroView().getTxtCidade().setText("");
-        MainView.getEnderecoCadastroView().getTxtBairro().setText("");
-
-        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(0);
-        MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
-        MainView.getPlanoCadastroView().getTxtCartao().setText("");
-        MainView.getPlanoCadastroView().getLblMesValidade().setText("");
-    }
-
-    private static void manterDadosImportantes() {
-        String a = CAIXA_VIEW.getLblSaldoEmDinheiror().getText();
-        String b = CAIXA_VIEW.getLblSaldoEmDinheiror().getText();
-        String c = CAIXA_VIEW.getLblTotalCaixa().getText();
-        if (a == null || a.equals("") || b == null || b.equals("") || c == null || c.equals("")) {
-            CAIXA_VIEW.getLblSaldoEmDinheiror().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO));
-            CAIXA_VIEW.getLblSaldoEmCarto().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_CARTAO));
-            CAIXA_VIEW.getLblTotalCaixa().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_TOTAL));
-        }
-        INICIO_VIEW.getTxtTicket().repaint();
-        INICIO_VIEW.getTxtTicket().revalidate();
-        INICIO_VIEW.getTxtProcurar().repaint();
-        INICIO_VIEW.getTxtProcurar().revalidate();
-    }
-
-    public static void swithPanel(JPanel panel) {
-
-        layeredPane.removeAll();
-
-        manterDadosImportantes();
-        panel.setBorder(null);
-        panel.setBackground(Color.WHITE);
-        panel.repaint();
-        panel.revalidate();
-        layeredPane.add(panel, "grow");
-        layeredPane.repaint();
-        layeredPane.revalidate();
-
     }
 
     private void initialize() {
@@ -189,6 +133,65 @@ public class MainView extends JFrame {
 
         Component strut5 = Box.createHorizontalStrut(35);
         menuBar.add(strut5);
+
+    }
+
+    /**
+     * limpa os dados das telas de cadastro ao clicar no botão atualizar
+     */
+    public static void limparDadosDasTelasCadastro() {
+        // DADOS
+        MainView.getDadosCadastroView().getTxtRG().setText("");
+        MainView.getDadosCadastroView().getTxtNome().setText("");
+        MainView.getDadosCadastroView().getTxtTelefone().setText("");
+        MainView.getDadosCadastroView().getTxtEmail().setText("");
+        MainView.getDadosCadastroView().getTxtCPF().setText("");
+        MainView.getDadosCadastroView().getTxtPlaca().setText("");
+        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
+        MainView.getDadosCadastroView().getCbCor().setSelectedIndex(-1);
+        MainView.getDadosCadastroView().getCbModelo().setSelectedIndex(-1);
+
+        // ENDERECO
+        MainView.getEnderecoCadastroView().getTxtRua().setText("");
+        MainView.getEnderecoCadastroView().getTxtNumero().setText("");
+        MainView.getEnderecoCadastroView().getTxtCidade().setText("");
+        MainView.getEnderecoCadastroView().getTxtBairro().setText("");
+        MainView.getEnderecoCadastroView().getCbEstado().setSelectedIndex(0);
+
+        // PLANO
+        MainView.getPlanoCadastroView().getCbFormaPgto().setSelectedIndex(0);
+        MainView.getPlanoCadastroView().getCbPlano().setSelectedIndex(0);
+        MainView.getPlanoCadastroView().getTxtCartao().setText("");
+        MainView.getPlanoCadastroView().getLblMesValidade().setText("");
+    }
+
+    private static void manterDadosImportantes() {
+        String a = CAIXA_VIEW.getLblSaldoEmDinheiror().getText();
+        String b = CAIXA_VIEW.getLblSaldoEmDinheiror().getText();
+        String c = CAIXA_VIEW.getLblTotalCaixa().getText();
+        if (a == null || a.equals("") || b == null || b.equals("") || c == null || c.equals("")) {
+            CAIXA_VIEW.getLblSaldoEmDinheiror().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_DINHEIRO));
+            CAIXA_VIEW.getLblSaldoEmCarto().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_CARTAO));
+            CAIXA_VIEW.getLblTotalCaixa().setText(String.valueOf(ConstCaixa.LBL_VALOR_CAIXA_TOTAL));
+        }
+        INICIO_VIEW.getTxtTicket().repaint();
+        INICIO_VIEW.getTxtTicket().revalidate();
+        INICIO_VIEW.getTxtProcurar().repaint();
+        INICIO_VIEW.getTxtProcurar().revalidate();
+    }
+
+    public static void swithPanel(JPanel panel) {
+
+        layeredPane.removeAll();
+
+        manterDadosImportantes();
+        panel.setBorder(null);
+        panel.setBackground(Color.WHITE);
+        panel.repaint();
+        panel.revalidate();
+        layeredPane.add(panel, "grow");
+        layeredPane.repaint();
+        layeredPane.revalidate();
 
     }
 

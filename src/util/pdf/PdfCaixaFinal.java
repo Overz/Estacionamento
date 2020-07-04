@@ -1,19 +1,22 @@
 package util.pdf;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import model.vo.movimentos.MovimentoVO;
 import util.constantes.ConstHelpers;
 import util.helpers.Util;
-import static util.pdf.PdfHelpers.*;
 
 import javax.validation.constraints.NotNull;
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.Stream;
+
+import static util.pdf.PdfHelpers.CAMINHO;
+import static util.pdf.PdfHelpers.EXTENSAO;
 
 public class PdfCaixaFinal extends Document {
 

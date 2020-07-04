@@ -6,7 +6,9 @@ import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import model.vo.movimentos.LostTicketVO;
 import util.helpers.Util;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
@@ -95,6 +97,7 @@ public class PdfTermo extends Document {
 
     /**
      * Assinatura do Responsavel
+     *
      * @return Element
      */
     private Element addSignature() {

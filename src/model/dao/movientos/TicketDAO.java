@@ -6,9 +6,7 @@ import model.vo.movimentos.TicketVO;
 import org.jetbrains.annotations.Nullable;
 import util.constantes.ConstHelpers;
 
-import javax.validation.constraints.Null;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TicketDAO implements BaseDAO<TicketVO> {

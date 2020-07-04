@@ -23,13 +23,14 @@ public class ControllerCadastroEndereco {
         try {
             String rua = enderecoView.getTxtRua().getText();
             String strNumero = enderecoView.getTxtNumero().getText();
-            int numero = 0 ;
-            if (!strNumero.isEmpty()){
+            int numero = 0;
+            if (!strNumero.isEmpty()) {
                 numero = Integer.parseInt(strNumero);
             }
             String bairro = enderecoView.getTxtBairro().getText();
             String cidade = enderecoView.getTxtCidade().getText();
-            return new EnderecoVO(numero, rua, bairro, cidade);
+            String uf = String.valueOf(enderecoView.getCbEstado().getModel().getSelectedItem());
+            return new EnderecoVO(numero, rua, bairro, cidade, uf);
         } catch (Exception e) {
             e.printStackTrace();
         }

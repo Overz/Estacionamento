@@ -40,7 +40,7 @@ public class ClienteBO {
             if (c != null) {
                 return !c.getRg().trim().isEmpty()
                        && c.getRg().trim().length() > 0
-                       && c.getRg().trim().length() <= 11
+                       && c.getRg().trim().length() <= 10
                        && c.getRg().trim().matches(ConstHelpers.REGEX_NUMEROS)
                        || (c.getRg() != null ? c.getRg().trim().isBlank() : true)
                        || (c.getRg() != null ? c.getRg().trim().isEmpty() : true);
@@ -78,7 +78,7 @@ public class ClienteBO {
             if (c != null) {
                 return !c.getTelefone().trim().isEmpty()
                        && c.getTelefone().trim().length() > 0
-                       && c.getTelefone().trim().length() <= 16
+                       && c.getTelefone().trim().length() <= 12
                        && c.getTelefone().trim().matches(ConstHelpers.REGEX_NUMEROS);
             }
         } catch (Exception e) {

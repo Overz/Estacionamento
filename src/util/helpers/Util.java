@@ -52,44 +52,48 @@ public class Util {
      * @param tipoCor int
      */
     public synchronized static void habilitarOpcoes(JTable table, JButton button, String color, int tipoCor, JTextField field) {
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == MouseEvent.BUTTON1) {
-                    Object o = table.getModel().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
-                    if (o != null) {
-                        if (tipoCor == 1) {
-                            button.setBackground(new Color(100, 149, 237));
-                        } else if (tipoCor == 2) {
-                            button.setBackground(Color.decode(color));
+        try {
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == MouseEvent.BUTTON1) {
+                        Object o = table.getModel().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
+                        if (o != null) {
+                            if (tipoCor == 1) {
+                                button.setBackground(new Color(100, 149, 237));
+                            } else if (tipoCor == 2) {
+                                button.setBackground(Color.decode(color));
+                            }
+                            button.setEnabled(true);
                         }
-                        button.setEnabled(true);
+                    }
+                    /*
+                     * Remove o focus e as linhas selecionadas
+                     * da tabela e trasnfere para o campo de procura
+                     * apois 20 mili segundos
+                     */
+                    if (table.hasFocus()) {
+                        ActionListener event = e1 -> {
+                            table.getSelectionModel().clearSelection();
+                            table.clearSelection();
+                            button.setBackground(Color.WHITE);
+                            button.setEnabled(false);
+                        };
+                        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+                        timer.start();
+                    }
+
+                    int row = table.getSelectedRow();
+                    int col = table.getSelectedColumn();
+                    if (col == 0) {
+                        Object o = table.getValueAt(row, col);
+                        field.setText(String.valueOf(o));
                     }
                 }
-                /*
-                 * Remove o focus e as linhas selecionadas
-                 * da tabela e trasnfere para o campo de procura
-                 * apois 20 mili segundos
-                 */
-                if (table.hasFocus()) {
-                    ActionListener event = e1 -> {
-                        table.getSelectionModel().clearSelection();
-                        table.clearSelection();
-                        button.setBackground(Color.WHITE);
-                        button.setEnabled(false);
-                    };
-                    Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
-                    timer.start();
-                }
-
-                int row = table.getSelectedRow();
-                int col = table.getSelectedColumn();
-
-                Object o = table.getValueAt(row, col);
-                field.setText(String.valueOf(o));
-
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

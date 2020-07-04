@@ -1,20 +1,16 @@
 package view.panels.cadastro.subCadastro;
 
 import controller.ControllerCadastroPlano;
-import model.banco.BaseDAO;
-import model.dao.cliente.PlanoDAO;
-import model.vo.cliente.PlanoVO;
 import net.miginfocom.swing.MigLayout;
 import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+
+import static util.helpers.Modificacoes.addMask;
 
 public class PanelzinhoCadastroPlano extends JPanel {
 
@@ -22,7 +18,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
     private ControllerCadastroPlano control;
     private JComboBox cbPlano;
     private JComboBox cbFormaPgto;
-    private JTextField txtCartao;
+    private JFormattedTextField txtCartao;
     private JLabel lblMesValidade, lblHora;
     private JCheckBox chckbxBloquear;
 
@@ -43,6 +39,8 @@ public class PanelzinhoCadastroPlano extends JPanel {
         setInputField();
 
         setCheckbox();
+
+        control.addValidade();
 
     }
 
@@ -119,7 +117,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
     }
 
     private void setInputField() {
-        txtCartao = new JTextField();
+        txtCartao = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_TICKET_CARD_15, ""));
         txtCartao.setFont(new Font("Dialog", Font.BOLD, 14));
         txtCartao.setColumns(10);
         txtCartao.setBorder(new LineBorder(Color.BLACK, 1, true));

@@ -1,10 +1,14 @@
 package util.helpers;
 
+import org.jetbrains.annotations.NotNull;
+import util.constantes.ConstHelpers;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
+import java.awt.event.*;
+import java.text.ParseException;
 
 public class Modificacoes {
 
@@ -60,10 +64,9 @@ public class Modificacoes {
     /**
      * Remove os espaçoes em branco do campo, iniciando a digitação no começo do campo
      *
-     * @param txt: JTextField
-     * @return cast(JFormatedTextField)
+     * @param txt {@link JFormattedTextField}
      */
-    public JFormattedTextField caretPosition(JTextField txt) {
+    public static void caretPosition(@NotNull JFormattedTextField txt) {
         txt.addInputMethodListener(new InputMethodListener() {
             public void caretPositionChanged(InputMethodEvent event) {
                 txt.viewToModel2D((Point) event.getText());
@@ -75,6 +78,87 @@ public class Modificacoes {
 
             }
         });
-        return (JFormattedTextField) txt;
+
+    }
+
+    public static MaskFormatter addMask(MaskFormatter mask, String type, String placeHolder) {
+        try {
+            mask = new MaskFormatter(type);
+            mask.setPlaceholder(placeHolder);
+            return mask;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Arruma a mascara para que o place holder seja "focado" novamente.
+     *
+     * @param mask  {@link MaskFormatter}
+     * @param field {@link JFormattedTextField}
+     */
+    public static void reinstalMask(MaskFormatter mask, JFormattedTextField field) {
+        mask.uninstall();
+        mask.install(field);
+    }
+
+    /**
+     * Ajusta o ganho de Focus, verificando se o texto do campo NÃO bate com: NUMEROS, PALAVRAS, ou AMBOS,
+     * se não bater, remove o texto, se sim, foca o CaretPosition para o tamanho do texto
+     *
+     * @param field {@link JTextField}
+     * @param tipo  int
+     * @return new {@link FocusAdapter}
+     */
+    public static FocusListener addMyFocusListener(JFormattedTextField field, int tipo) {
+        if (tipo == 0) {
+            return new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (!field.getText().trim().matches(ConstHelpers.REGEX_NUMEROS)) {
+                        field.setText("");
+                        field.setForeground(Color.BLACK);
+                    } else {
+                        String txt = field.getText().trim();
+                        field.setCaretPosition(txt.length());
+                    }
+                }
+            };
+        } else if (tipo == 1) {
+            return new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (!field.getText().trim().matches(ConstHelpers.REGEX_PALAVRAS)) {
+                        field.setText("");
+                        field.setForeground(Color.BLACK);
+                    } else {
+                        String txt = field.getText().trim();
+                        field.setCaretPosition(txt.length());
+                    }
+                }
+            };
+        } else if (tipo == 2) {
+            return new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    if (!field.getText().trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS)) {
+                        field.setText("");
+                        field.setForeground(Color.BLACK);
+                    } else {
+                        String txt = field.getText().trim();
+                        field.setCaretPosition(txt.length());
+                    }
+                }
+            };
+        } else {
+            return new FocusAdapter() {
+                @Override
+                public void focusGained(FocusEvent e) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            };
+        }
     }
 }

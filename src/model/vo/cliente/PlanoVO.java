@@ -1,7 +1,5 @@
 package model.vo.cliente;
 
-import util.helpers.Util;
-
 public class PlanoVO {
 
     private int id;

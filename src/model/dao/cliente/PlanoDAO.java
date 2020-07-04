@@ -2,11 +2,7 @@ package model.dao.cliente;
 
 import model.banco.Banco;
 import model.banco.BaseDAO;
-import model.seletor.SeletorCliente;
-import model.vo.cliente.ClienteVO;
-import model.vo.cliente.ContratoVO;
 import model.vo.cliente.PlanoVO;
-import util.constantes.ConstHelpers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

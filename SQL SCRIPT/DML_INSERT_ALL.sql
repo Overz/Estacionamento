@@ -466,9 +466,9 @@ VALUES ('2', '30', 'YYY', 'CCCC', 'CIDADE YYY');
 
 -- CLIENTE
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('1', '1', '1', 'JOSE', '00000000010', '12345678900', 'teste1@email.com', '48000000001');
+VALUES ('1', '1', '1', 'JOSE', '00000000001', '1234567890', 'teste1@email.com', '48000000001');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('2', '2', '2', 'JOAO', '00000000030', '78912345678', 'teste3@email.com', '48000000003');
+VALUES ('2', '2', '2', 'JOAO', '00000000002', '9876543210', 'teste3@email.com', '48000000003');
 
 -- TICKET
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)
@@ -483,10 +483,12 @@ INSERT INTO `dbestacionamento`.`plano` (`id`, `tipo`, `descricao`)
 VALUES ('2', 'PRÉ-PAGO', 'R$ 25.00');
 
 -- CONTRATO
-INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
+                                           `ativo`, `valor`, `tipoPgto`)
 VALUES ('1', '1', '1', '10000000001', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
-INSERT INTO `dbestacionamento`.`contrato` (`id`,`idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`, `ativo`, `valor`, `tipoPgto`)
-VALUES ('2','2','2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
+                                           `ativo`, `valor`, `tipoPgto`)
+VALUES ('2', '2', '2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
 
 -- MOVIMENTO
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
@@ -497,4 +499,3 @@ INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)
 VALUES ('3', '1', now());
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)
 VALUES ('4', '2', now());
-
