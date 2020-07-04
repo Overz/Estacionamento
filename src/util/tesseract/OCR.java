@@ -1,36 +1,46 @@
 package util.tesseract;
 
-import net.sourceforge.tess4j.ITessAPI;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract1;
-import net.sourceforge.tess4j.TesseractException;
-
+import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class OCR {
 
     public static void main(String[] args) {
-        lerImagem();
+        try {
+            JFileChooser jFileChooser = new JFileChooser();
+            String userName = System.getProperty("user.home");
+            File dir = new File(userName + "/Desktop");
+
+            jFileChooser.setCurrentDirectory(dir);
+            jFileChooser.setDialogTitle("Salvar em...");
+            String path = jFileChooser.getSelectedFile().getAbsolutePath();
+            OCR.lerImagem(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void lerImagem() {
+
+    /**
+     * Parametros para rodar em Command Line: tesseract  --tessdata-dir  tessdataPath  image.png  output  -l  eng
+     * <p>
+     * Método que utiliza de um Script em Python3, para ler imagens em OCR utilizando Tesseract
+     */
+    private static void lerImagem(String path) {
         try {
-//            tesseract  --tessdata-dir  tessdataPath  image.png  output  -l  eng
 
-            String _env = System.getenv("TESSDATA_PREFIX");
-            System.out.println(_env);
-
-
-            File file = new File("/home/cris/Área de Trabalho/tesseract/placa1.png");
-            ITesseract tess = new Tesseract1();
-            tess.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/");
-            tess.setLanguage("por");
-            tess.setOcrEngineMode(ITessAPI.TessOcrEngineMode.OEM_DEFAULT);
-            String read = tess.doOCR(file).replaceAll("[^\\w\n.,;!?\'\":»«„”\\(\\) ]", "");
-            System.out.println(read);
-
-
-        } catch (TesseractException e) {
+            String line, placa = "wp3.png";
+            Process p = Runtime.getRuntime().exec("python3 " + path);
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            ArrayList<String> listaPlacas = new ArrayList<>();
+            while ((line = in.readLine()) != null) {
+                listaPlacas.add(line);
+                System.out.println(line);
+            }
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }

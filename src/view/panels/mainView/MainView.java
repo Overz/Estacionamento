@@ -2,6 +2,7 @@ package view.panels.mainView;
 
 import net.miginfocom.swing.MigLayout;
 import util.constantes.ConstCaixa;
+import util.tesseract.OCR;
 import view.panels.CaixaView;
 import view.panels.LostTicketView;
 import view.panels.MovimentoView;
