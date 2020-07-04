@@ -20,9 +20,8 @@ public class PanelzinhoCadastroDados extends JPanel {
     private ControllerCadastroDados control;
     private Modificacoes modificacoes;
     private JTextField txtEmail, txtNome;
-    private JFormattedTextField txtCPF, txtRG, txtTelefone;
+    private JFormattedTextField txtCPF, txtRG, txtTelefone, txtPlaca;
     private JCheckBox chckbxBloquear;
-    private JTextField txtPlaca;
     private JComboBox cbCor;
     private JComboBox cbMarca;
     private JComboBox cbModelo;
@@ -162,9 +161,9 @@ public class PanelzinhoCadastroDados extends JPanel {
     }
 
     private void addListeners() {
-        txtCPF.addFocusListener(addMyFocusListener(txtCPF, 0));
-        txtRG.addFocusListener(addMyFocusListener(txtRG, 0));
-        txtTelefone.addFocusListener(addMyFocusListener(txtTelefone, 0));
+        txtCPF.addFocusListener(addMyFocusListener(txtCPF, ConstHelpers.REGEX_CPF));
+        txtRG.addFocusListener(addMyFocusListener(txtRG, ConstHelpers.REGEX_NUMEROS));
+        txtTelefone.addFocusListener(addMyFocusListener(txtTelefone, ConstHelpers.REGEX_TELEFONE));
     }
 
     public ClienteVO returnForm() {
@@ -183,15 +182,15 @@ public class PanelzinhoCadastroDados extends JPanel {
         return txtNome;
     }
 
-    public JTextField getTxtCPF() {
+    public JFormattedTextField getTxtCPF() {
         return txtCPF;
     }
 
-    public JTextField getTxtRG() {
+    public JFormattedTextField getTxtRG() {
         return txtRG;
     }
 
-    public JTextField getTxtTelefone() {
+    public JFormattedTextField getTxtTelefone() {
         return txtTelefone;
     }
 
@@ -199,7 +198,7 @@ public class PanelzinhoCadastroDados extends JPanel {
         return chckbxBloquear;
     }
 
-    public JTextField getTxtPlaca() {
+    public JFormattedTextField getTxtPlaca() {
         return txtPlaca;
     }
 

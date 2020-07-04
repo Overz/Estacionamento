@@ -533,8 +533,8 @@ public class ControllerInicio {
      * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
      */
     private void ajustarFocusTxtTicket() {
-        inicioView.getNumberMask().uninstall();
-        inicioView.getNumberMask().install(inicioView.getTxtTicket());
+//        inicioView.getNumberMask().uninstall();
+//        inicioView.getNumberMask().install(inicioView.getTxtTicket());
     }
 
     /**

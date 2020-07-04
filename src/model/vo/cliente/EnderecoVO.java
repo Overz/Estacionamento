@@ -82,7 +82,8 @@ public class EnderecoVO {
         return "Número: " + this.numero +
                " - Rua: " + this.rua +
                " - Bairro: " + this.bairro +
-               " - Cidade: " + this.cidade;
+               " - Cidade: " + this.cidade +
+               " - UF: " + this.uf;
     }
 
 

@@ -132,7 +132,7 @@ public class PanelzinhoCadastroPlano extends JPanel {
         return cbFormaPgto;
     }
 
-    public JTextField getTxtCartao() {
+    public JFormattedTextField getTxtCartao() {
         return txtCartao;
     }
 

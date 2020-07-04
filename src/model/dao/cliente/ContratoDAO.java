@@ -126,7 +126,11 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
                 }
                 list.add(contratoVO);
             }
-            return (T) list;
+            if (list.size() == 0) {
+                return null;
+            } else {
+                return (T) list;
+            }
         } catch (SQLException e) {
             String method = "Consultar()";
             System.out.println("\n" +

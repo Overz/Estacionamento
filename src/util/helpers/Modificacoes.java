@@ -1,7 +1,6 @@
 package util.helpers;
 
 import org.jetbrains.annotations.NotNull;
-import util.constantes.ConstHelpers;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -34,31 +33,6 @@ public class Modificacoes {
         }
 
         return label;
-    }
-
-    /**
-     * Modifica e retorna fonte, cor, e tamanho, padronizados.
-     *
-     * @param table: JTable
-     * @return table(Style da Table)
-     */
-    public JTable tableLookAndFiel(JTable table) {
-        table.setBackground(Color.WHITE);
-        table.setForeground(Color.BLACK);
-        table.setFont(new Font("Arial", Font.BOLD, 16));
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
-        table.getTableHeader().setBackground(Color.WHITE);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-
-        table.setRowHeight(35);
-        table.setShowGrid(true);
-        table.setGridColor(Color.BLACK);
-        table.setShowHorizontalLines(true);
-        table.setShowVerticalLines(false);
-
-        return table;
     }
 
     /**
@@ -106,59 +80,54 @@ public class Modificacoes {
     /**
      * Ajusta o ganho de Focus, verificando se o texto do campo NÃO bate com: NUMEROS, PALAVRAS, ou AMBOS,
      * se não bater, remove o texto, se sim, foca o CaretPosition para o tamanho do texto
+     * <br>
+     * 0: numeros<br>
+     * 1: palavras<br>
+     * 2: numeros & palavras<br>
+     * 3: telefone com mascara<br>
+     * 4: cpf com mascara<br>
      *
      * @param field {@link JTextField}
      * @param tipo  int
      * @return new {@link FocusAdapter}
      */
-    public static FocusListener addMyFocusListener(JFormattedTextField field, int tipo) {
-        if (tipo == 0) {
-            return new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    if (!field.getText().trim().matches(ConstHelpers.REGEX_NUMEROS)) {
-                        field.setText("");
-                        field.setForeground(Color.BLACK);
-                    } else {
-                        String txt = field.getText().trim();
-                        field.setCaretPosition(txt.length());
-                    }
-                }
-            };
-        } else if (tipo == 1) {
-            return new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    if (!field.getText().trim().matches(ConstHelpers.REGEX_PALAVRAS)) {
-                        field.setText("");
-                        field.setForeground(Color.BLACK);
-                    } else {
-                        String txt = field.getText().trim();
-                        field.setCaretPosition(txt.length());
-                    }
-                }
-            };
-        } else if (tipo == 2) {
-            return new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    if (!field.getText().trim().matches(ConstHelpers.REGEX_NUMEROS_PALAVRAS)) {
-                        field.setText("");
-                        field.setForeground(Color.BLACK);
-                    } else {
-                        String txt = field.getText().trim();
-                        field.setCaretPosition(txt.length());
-                    }
-                }
-            };
-        } else {
-            return new FocusAdapter() {
-                @Override
-                public void focusGained(FocusEvent e) {
+    public static FocusListener addMyFocusListener(JFormattedTextField field, String regex) {
+        return new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (!field.getText().trim().matches(regex)) {
                     field.setText("");
                     field.setForeground(Color.BLACK);
+                } else {
+                    String txt = field.getText().trim();
+                    field.setCaretPosition(txt.length());
                 }
-            };
-        }
+            }
+        };
+    }
+
+    /**
+     * Modifica e retorna fonte, cor, e tamanho, padronizados.
+     *
+     * @param table: JTable
+     * @return table(Style da Table)
+     */
+    public JTable tableLookAndFiel(JTable table) {
+        table.setBackground(Color.WHITE);
+        table.setForeground(Color.BLACK);
+        table.setFont(new Font("Arial", Font.BOLD, 16));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+        table.getTableHeader().setBackground(Color.WHITE);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+
+        table.setRowHeight(35);
+        table.setShowGrid(true);
+        table.setGridColor(Color.BLACK);
+        table.setShowHorizontalLines(true);
+        table.setShowVerticalLines(false);
+
+        return table;
     }
 }

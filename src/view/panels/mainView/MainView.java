@@ -59,83 +59,6 @@ public class MainView extends JFrame {
         });
     }
 
-    private void initialize() {
-
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.WHITE);
-        setJMenuBar(menuBar);
-
-        JButton btnInicio = new JButton("INICIO");
-        btnInicio.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-fita-de-bookmark-50.png")));
-        btnInicio.setFont(new Font("Arial", Font.BOLD, 16));
-        btnInicio.setBackground(Color.WHITE);
-        btnInicio.setBorder(null);
-        menuBar.add(btnInicio);
-        btnInicio.addActionListener(e -> swithPanel(INICIO_VIEW));
-
-        Component strut1 = Box.createHorizontalStrut(20);
-        menuBar.add(strut1);
-
-        JButton btnCaixa = new JButton("CAIXA");
-        btnCaixa.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-caixa-registradora-50.png")));
-        btnCaixa.setFont(new Font("Arial", Font.BOLD, 16));
-        btnCaixa.setBackground(Color.WHITE);
-        btnCaixa.setBorder(null);
-        menuBar.add(btnCaixa);
-        btnCaixa.addActionListener(e -> swithPanel(CAIXA_VIEW));
-
-        Component strut2 = Box.createHorizontalStrut(20);
-        menuBar.add(strut2);
-
-        JButton btnClientes = new JButton("CLIENTES");
-        btnClientes.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-gestão-de-cliente-50.png")));
-        btnClientes.setFont(new Font("Arial", Font.BOLD, 16));
-        btnClientes.setBackground(Color.WHITE);
-        btnClientes.setBorder(null);
-        menuBar.add(btnClientes);
-        btnClientes.addActionListener(e -> swithPanel(CLIENTE_VIEW));
-
-        Component strut3 = Box.createHorizontalStrut(20);
-        menuBar.add(strut3);
-
-        JButton btnMovimento = new JButton("MOVIMENTO");
-        btnMovimento.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-lista-50.png")));
-        btnMovimento.setFont(new Font("Arial", Font.BOLD, 16));
-        btnMovimento.setBackground(Color.WHITE);
-        btnMovimento.setBorder(null);
-        menuBar.add(btnMovimento);
-        btnMovimento.addActionListener(e -> swithPanel(MOVIMENTO_VIEW));
-
-        Component strut4 = Box.createHorizontalStrut(20);
-        menuBar.add(strut4);
-
-        JButton btnTicketPerdido = new JButton("TICKET PERDIDO");
-        btnTicketPerdido.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-busca-50.png")));
-        btnTicketPerdido.setFont(new Font("Arial", Font.BOLD, 16));
-        btnTicketPerdido.setBackground(Color.WHITE);
-        btnTicketPerdido.setBorder(null);
-        menuBar.add(btnTicketPerdido);
-        btnTicketPerdido.addActionListener(e -> swithPanel(LOST_TICKET_VIEW));
-
-        menuBar.add(Box.createHorizontalGlue());
-
-        JButton btnConfig = new JButton("CONFIGURAÇÕES");
-        btnConfig.setIcon(new ImageIcon(MainView.class.getResource("/img/atualizacao-50.png")));
-        btnConfig.setFont(new Font("Arial", Font.BOLD, 16));
-        btnConfig.setBorder(null);
-        btnConfig.setBackground(Color.WHITE);
-        btnConfig.setAlignmentX(JButton.RIGHT_ALIGNMENT);
-        menuBar.add(btnConfig);
-        btnConfig.addActionListener(e -> {
-
-
-        });
-
-        Component strut5 = Box.createHorizontalStrut(35);
-        menuBar.add(strut5);
-
-    }
-
     /**
      * limpa os dados das telas de cadastro ao clicar no botão atualizar
      */
@@ -229,6 +152,83 @@ public class MainView extends JFrame {
 
     public static LostTicketView getLostTicketView() {
         return LOST_TICKET_VIEW;
+    }
+
+    private void initialize() {
+
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(Color.WHITE);
+        setJMenuBar(menuBar);
+
+        JButton btnInicio = new JButton("INICIO");
+        btnInicio.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-fita-de-bookmark-50.png")));
+        btnInicio.setFont(new Font("Arial", Font.BOLD, 16));
+        btnInicio.setBackground(Color.WHITE);
+        btnInicio.setBorder(null);
+        menuBar.add(btnInicio);
+        btnInicio.addActionListener(e -> swithPanel(INICIO_VIEW));
+
+        Component strut1 = Box.createHorizontalStrut(20);
+        menuBar.add(strut1);
+
+        JButton btnCaixa = new JButton("CAIXA");
+        btnCaixa.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-caixa-registradora-50.png")));
+        btnCaixa.setFont(new Font("Arial", Font.BOLD, 16));
+        btnCaixa.setBackground(Color.WHITE);
+        btnCaixa.setBorder(null);
+        menuBar.add(btnCaixa);
+        btnCaixa.addActionListener(e -> swithPanel(CAIXA_VIEW));
+
+        Component strut2 = Box.createHorizontalStrut(20);
+        menuBar.add(strut2);
+
+        JButton btnClientes = new JButton("CLIENTES");
+        btnClientes.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-gestão-de-cliente-50.png")));
+        btnClientes.setFont(new Font("Arial", Font.BOLD, 16));
+        btnClientes.setBackground(Color.WHITE);
+        btnClientes.setBorder(null);
+        menuBar.add(btnClientes);
+        btnClientes.addActionListener(e -> swithPanel(CLIENTE_VIEW));
+
+        Component strut3 = Box.createHorizontalStrut(20);
+        menuBar.add(strut3);
+
+        JButton btnMovimento = new JButton("MOVIMENTO");
+        btnMovimento.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-lista-50.png")));
+        btnMovimento.setFont(new Font("Arial", Font.BOLD, 16));
+        btnMovimento.setBackground(Color.WHITE);
+        btnMovimento.setBorder(null);
+        menuBar.add(btnMovimento);
+        btnMovimento.addActionListener(e -> swithPanel(MOVIMENTO_VIEW));
+
+        Component strut4 = Box.createHorizontalStrut(20);
+        menuBar.add(strut4);
+
+        JButton btnTicketPerdido = new JButton("TICKET PERDIDO");
+        btnTicketPerdido.setIcon(new ImageIcon(MainView.class.getResource("/img/icons8-busca-50.png")));
+        btnTicketPerdido.setFont(new Font("Arial", Font.BOLD, 16));
+        btnTicketPerdido.setBackground(Color.WHITE);
+        btnTicketPerdido.setBorder(null);
+        menuBar.add(btnTicketPerdido);
+        btnTicketPerdido.addActionListener(e -> swithPanel(LOST_TICKET_VIEW));
+
+        menuBar.add(Box.createHorizontalGlue());
+
+        JButton btnConfig = new JButton("CONFIGURAÇÕES");
+        btnConfig.setIcon(new ImageIcon(MainView.class.getResource("/img/atualizacao-50.png")));
+        btnConfig.setFont(new Font("Arial", Font.BOLD, 16));
+        btnConfig.setBorder(null);
+        btnConfig.setBackground(Color.WHITE);
+        btnConfig.setAlignmentX(JButton.RIGHT_ALIGNMENT);
+        menuBar.add(btnConfig);
+        btnConfig.addActionListener(e -> {
+
+
+        });
+
+        Component strut5 = Box.createHorizontalStrut(35);
+        menuBar.add(strut5);
+
     }
 
 }

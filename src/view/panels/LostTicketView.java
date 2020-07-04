@@ -21,7 +21,8 @@ public class LostTicketView extends JPanel {
 
     private ArrayList<String> tiposPagamento;
     private JComboBox<Object> comboBox;
-    private JTextField txtNome, txtCPF, txtPlaca, txtRenavam;
+    private JTextField txtNome;
+    private JFormattedTextField txtCPF, txtPlaca, txtRenavam;
     private JButton btnSalvar, btnLimpar;
 
     public LostTicketView() {

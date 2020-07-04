@@ -17,7 +17,6 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static util.helpers.Modificacoes.addMask;
 import static util.helpers.Modificacoes.addMyFocusListener;
 
 public class InicioView extends JPanel {
@@ -34,7 +33,7 @@ public class InicioView extends JPanel {
     private JFormattedTextField txtTicket;
     private JTextField txtProcurar;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída;
-    private MaskFormatter numberMask, newMask;
+    private MaskFormatter numberMask;
 
     public InicioView() {
 
@@ -119,19 +118,27 @@ public class InicioView extends JPanel {
     }
 
     private void setInputFields() {
-        txtTicket = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_TICKET_CARD_15, "Nº Ticket"));
-        txtTicket.setFont(new Font("Arial", Font.BOLD, 20));
-        txtTicket.setBorder(new LineBorder(Color.BLACK));
-        txtTicket.setBackground(Color.WHITE);
-        txtTicket.setColumns(10);
-        add(txtTicket, "cell 1 5 2 1,grow");
+        try {
+            txtTicket = new JFormattedTextField();
+            txtTicket.setFont(new Font("Arial", Font.BOLD, 20));
+            txtTicket.setBorder(new LineBorder(Color.BLACK));
+            txtTicket.setBackground(Color.WHITE);
+            txtTicket.setColumns(10);
+            add(txtTicket, "cell 1 5 2 1,grow");
 
-        txtProcurar = new JTextField("Procurar...");
-        txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
-        txtProcurar.setFocusAccelerator('u');
-        txtProcurar.setColumns(10);
-        txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
-        add(txtProcurar, "cell 6 2 7 1,grow");
+            numberMask = new MaskFormatter(ConstHelpers.MASK_TICKET_CARD_15);
+            numberMask.setPlaceholder("Nº Ticket");
+            numberMask.install(txtTicket);
+
+            txtProcurar = new JTextField("Procurar...");
+            txtProcurar.setFont(new Font("Arial", Font.BOLD, 16));
+            txtProcurar.setFocusAccelerator('u');
+            txtProcurar.setColumns(10);
+            txtProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+            add(txtProcurar, "cell 6 2 7 1,grow");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setButtons() {
@@ -229,7 +236,7 @@ public class InicioView extends JPanel {
 
         Util.habilitarOpcoes(table, btnRemover, "#FF8C00", 2, txtTicket);
 
-        txtTicket.addFocusListener(addMyFocusListener(txtTicket, 0));
+        txtTicket.addFocusListener(addMyFocusListener(txtTicket, ConstHelpers.REGEX_NUMEROS));
 
         txtProcurar.addFocusListener(new FocusAdapter() {
             @Override

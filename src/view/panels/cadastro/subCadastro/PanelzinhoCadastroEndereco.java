@@ -77,7 +77,7 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         txtRua.setColumns(10);
 
         txtNumero = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_NUMBER, ""));
-        addMyFocusListener(txtNumero, 0);
+        txtNumero.addFocusListener(addMyFocusListener(txtNumero, ConstHelpers.REGEX_NUMEROS));
         txtNumero.setFont(new Font("Arial", Font.BOLD, 14));
         txtNumero.setColumns(10);
         txtNumero.setBorder(new LineBorder(Color.BLACK, 1, true));
@@ -113,7 +113,7 @@ public class PanelzinhoCadastroEndereco extends JPanel {
         return txtBairro;
     }
 
-    public JTextField getTxtNumero() {
+    public JFormattedTextField getTxtNumero() {
         return txtNumero;
     }
 

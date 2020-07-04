@@ -35,7 +35,8 @@ public class ControllerCadastroPlano {
      */
     public ContratoVO getContratoForm() {
         try {
-            String strCartao = planoView.getTxtCartao().getText();
+            String strCartao = planoView.getTxtCartao().getText().trim();
+            String tipoPgto = String.valueOf(planoView.getCbFormaPgto().getSelectedItem());
             long cartao = 0;
             if (!strCartao.isEmpty()) {
                 cartao = Long.parseLong(strCartao);
@@ -54,7 +55,7 @@ public class ControllerCadastroPlano {
             } else if (p.getId() == 2) {
                 valor = 25.0;
             }
-            return new ContratoVO(cartao, now, validade, ativo, valor, p.getTipo(), p);
+            return new ContratoVO(cartao, now, validade, ativo, valor, tipoPgto, p);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

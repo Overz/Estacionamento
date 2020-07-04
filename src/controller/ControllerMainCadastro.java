@@ -26,6 +26,8 @@ import view.panels.mainView.MainView;
 import javax.swing.*;
 import java.awt.*;
 
+import static util.constantes.ConstHelpers.clienteForID;
+
 public class ControllerMainCadastro {
 
     private ListaClientesView clientesView;
@@ -108,7 +110,6 @@ public class ControllerMainCadastro {
             } else {
                 if (corredorPolones(con, car, c, e)) {
 
-                    ClienteVO clienteForID = daoCliente.consultar(c.getCpf());
                     this.inserirIdParaUpdate(con, car, c, e, clienteForID);
 
                     boolean v = daoCarro.alterar(car);
@@ -128,8 +129,12 @@ public class ControllerMainCadastro {
 
             this.atualizarListaClientes();
             System.out.println(msg + "\n");
-            JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
-                    JOptionPane.PLAIN_MESSAGE);
+            if (msg.equalsIgnoreCase("Cliente Cadastrado!") || msg.equalsIgnoreCase("Cliente Atualizado!")) {
+                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig(msg), "Validação",
+                        JOptionPane.PLAIN_MESSAGE);
+            } else {
+                bigJOptionPane(msg);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -247,6 +252,11 @@ public class ControllerMainCadastro {
         return bool;
     }
 
+    /**
+     * Pega os valores na tela Sub Plano
+     *
+     * @return ContratoVO
+     */
     private ContratoVO getContratoForm() {
         planoView = MainView.getPlanoCadastroView();
         planoCtrl = new ControllerCadastroPlano(planoView);
@@ -308,41 +318,47 @@ public class ControllerMainCadastro {
      * @return true/false
      */
     private boolean cadastrarCliente(ContratoVO con, CarroVO car, ClienteVO c, EnderecoVO e, PlanoVO p) {
-        ConstHelpers.FLAG = 1;
-        ClienteVO existeCliente = daoCliente.consultar(c.getCpf());
-        ContratoVO existeContrato = daoContrato.consultar(String.valueOf(con.getNumeroCartao()));
-        if (existeCliente != null && existeCliente.getCpf().equalsIgnoreCase(c.getCpf())) {
-            msg = "<html><body>Cliente com este CPF já Existe!<br>";
-            if (existeContrato != null && existeContrato.getNumeroCartao() == con.getNumeroCartao()) {
-                msg += "Número do Cartão Já está em Uso!<br>";
-            }
-            return false;
-        } else {
-            e = daoEndereco.cadastrar(e);
-            car = daoCarro.cadastrar(car);
-
-            c.setEndereco(e);
-            c.setCarro(car);
-            c = daoCliente.cadastrar(c);
-
-            con.setCliente(c);
-            con.setPlano(p);
-            con = daoContrato.cadastrar(con);
-
-            int idE = e.getId();
-            int idCar = car.getId();
-            int idCli = c.getId();
-            int idCon = con.getId();
-
-            boolean result = false;
-            if (idE > 0 && idCli > 0 && idCar > 0 && idCon > 0) {
-                if (idE == idCli && idCli == idCar && idCli == idCon) {
-                    result = true;
-                    ConstHelpers.FLAG = 0;
+        try {
+            ConstHelpers.FLAG = 1;
+            ClienteVO existeCliente = daoCliente.consultar(c.getCpf());
+            ContratoVO existeContrato = daoContrato.consultar(String.valueOf(con.getNumeroCartao()));
+            if (existeCliente != null && existeCliente.getCpf().equalsIgnoreCase(c.getCpf())) {
+                msg = "<html><body>Cliente com este CPF já Existe!<br>";
+                if (existeContrato != null && existeContrato.getNumeroCartao() == con.getNumeroCartao()) {
+                    msg += "Número do Cartão Já está em Uso!<br>";
+                    return false;
                 }
+                return false;
+            } else {
+                e = daoEndereco.cadastrar(e);
+                car = daoCarro.cadastrar(car);
+
+                c.setEndereco(e);
+                c.setCarro(car);
+                c = daoCliente.cadastrar(c);
+
+                con.setCliente(c);
+                con.setPlano(p);
+                con = daoContrato.cadastrar(con);
+
+                int idE = e.getId();
+                int idCar = car.getId();
+                int idCli = c.getId();
+                int idCon = con.getId();
+
+                boolean result = false;
+                if (idE > 0 && idCli > 0 && idCar > 0 && idCon > 0) {
+                    if (idE == idCli && idCli == idCar && idCli == idCon) {
+                        result = true;
+                        ConstHelpers.FLAG = 0;
+                    }
+                }
+                return result;
             }
-            return result;
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
+        return false;
     }
 
     /**
@@ -374,6 +390,7 @@ public class ControllerMainCadastro {
 
             // CADOS PESSOAIS DO CLIENTE
             ClienteVO cliente = contrato.getCliente();
+            clienteForID = cliente;
             dadosView = MainView.getDadosCadastroView();
             dadosView.getTxtNome().setText(cliente.getNome());
             dadosView.getTxtCPF().setText(cliente.getCpf());
