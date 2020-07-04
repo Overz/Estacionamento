@@ -588,11 +588,6 @@ public class ControllerCaixa {
                     caixaView.getLblSaldoEmCarto().setText(concatC);
                     caixaView.getLblTotalCaixa().setText(concatT);
 
-//                    System.out.println("TImer Refersh Label : Caixa View");
-//                    System.out.println(concatD);
-//                    System.out.println(concatC);
-//                    System.out.println(concatT);
-//                    System.out.println();
                 } catch (Exception e1) {
                     System.out.println(e1.getClass().getSimpleName());
                     try {
@@ -613,7 +608,6 @@ public class ControllerCaixa {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     private void timerRefreshData() {

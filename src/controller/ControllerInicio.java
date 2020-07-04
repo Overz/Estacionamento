@@ -187,17 +187,19 @@ public class ControllerInicio {
         int row = inicioView.getTable().getSelectedRow();
         if (row >= 0) {
 
-            MovimentoVO m = lista.get(row);
             DefaultTableModel model = (DefaultTableModel) inicioView.getTable().getModel();
-            model.removeRow(row);
-            lista.remove(row);
 
-            if (daoM.excluirPorID(m.getId())) {
-                msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
-                this.atualizarTabela();
+            MovimentoVO m = lista.get(row);
+            if (m.getTicket() != null) {
+                ConstHelpers.FLAG = 1;
+                realizarExclusao(row, model, m);
+            } else if (m.getContrato() != null) {
+                ConstHelpers.FLAG = 0;
+                realizarExclusao(row, model, m);
             } else {
-                msg = "ERRO AO REALIZAR EXCLUSÃO!";
+                msg = "Erro ao Tentar Excluir a Linha Selecionada!";
             }
+
             JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title,
                     JOptionPane.INFORMATION_MESSAGE);
             System.out.println(m.toString());
@@ -205,6 +207,24 @@ public class ControllerInicio {
             msg = "Escolha uma Linha para Remover!";
             JOptionPane.showMessageDialog(inicioView, Modificacoes.labelConfig(msg), title,
                     JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Excluir definitivamente a linha selecionada
+     *
+     * @param row   int
+     * @param model {@link DefaultTableModel}
+     * @param m     {@link MovimentoVO}
+     */
+    private void realizarExclusao(int row, DefaultTableModel model, MovimentoVO m) {
+        if (daoM.excluirPorID(m.getId())) {
+            msg = "EXCLUSÃO REALIZADA COM SUCESSO!";
+            model.removeRow(row);
+            lista.remove(row);
+            this.atualizarTabela();
+        } else {
+            msg = "ERRO AO REALIZAR EXCLUSÃO!";
         }
     }
 
@@ -533,8 +553,8 @@ public class ControllerInicio {
      * Atualiza o foco do campo TxtTicket na tela após os calculos/validações
      */
     private void ajustarFocusTxtTicket() {
-//        inicioView.getNumberMask().uninstall();
-//        inicioView.getNumberMask().install(inicioView.getTxtTicket());
+        inicioView.getNumberMask().uninstall();
+        inicioView.getNumberMask().install(inicioView.getTxtTicket());
     }
 
     /**

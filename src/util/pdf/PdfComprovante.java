@@ -30,11 +30,11 @@ public class PdfComprovante {
 
     private static final String PASS = "";
     private static final String OWNER_PASS = "";
-    private final MovimentoVO m;
+    private MovimentoVO m;
     private Chunk mainChunk, secondChunk, thirdChunk;
     private Phrase mainFrase;
     private Paragraph mainPrgf, secondPrgf, prgfCodeBar;
-    private Path path;
+    private Path path1, path2;
     private Image img;
 
     public PdfComprovante(String caminho, MovimentoVO movimento) {
@@ -75,7 +75,8 @@ public class PdfComprovante {
             this.instanciarAtributos();
 
             Element header, info, codeBar, tableData;
-            path = Paths.get(ClassLoader.getSystemResource("img/code-bar-GG-1.png").toURI());
+            path1 = Paths.get(ClassLoader.getSystemResource("img/code-bar-GG-1.png").toURI());
+            path2 = Paths.get(ClassLoader.getSystemResource("img/codebar-resizeimage.png").toURI());
 
             // Instancia o documento PDF
             Document document = new Document();
@@ -103,7 +104,7 @@ public class PdfComprovante {
             }
 
             // Adiciona o Codigo de Barras (Code-Bar)
-            img = Image.getInstance(path.toAbsolutePath().toString());
+            img = Image.getInstance(path2.toAbsolutePath().toString());
             codeBar = this.addBarCode(prgfCodeBar, img);
             if (codeBar != null) {
                 document.add(codeBar);
@@ -166,7 +167,7 @@ public class PdfComprovante {
      */
     private Element addInformation(Chunk secondChunk, Phrase mainFrase, Paragraph secondPrgf) {
         String msg = "Carencia Rotativa 10 minutos\n" +
-                     "Ticket perdido: R$ 20.0\n\n";
+                     "Ticket perdido: R$ 56.70\n\n";
         secondChunk.append(msg);
         mainFrase.add(secondChunk);
         mainFrase.setFont(FONT4ALL);
@@ -248,7 +249,7 @@ public class PdfComprovante {
      */
     private void addCustomRowsExample(PdfPTable table) throws IOException, BadElementException {
 
-        img = Image.getInstance(path.toAbsolutePath().toString());
+        img = Image.getInstance(path1.toAbsolutePath().toString());
         img.scalePercent(10);
 
         // Imagem dentro da Tabela

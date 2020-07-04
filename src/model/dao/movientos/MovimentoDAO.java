@@ -282,13 +282,13 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 
     @Override
     public boolean excluirPorID(int id) {
-        String qry = ConstHelpers.FLAG != 1 ? "delete m, con, cli, car, e " +
-                                              "from movimento m inner join contrato con on m.idContrato = con.id " +
+        String qry = ConstHelpers.FLAG == 0 ? "delete m from movimento m " +
+                                              "inner join contrato con on m.idContrato = con.id " +
                                               "inner join cliente cli on con.idCliente = cli.id " +
                                               "inner join carro car on cli.idCarro = car.id " +
                                               "inner join endereco e on cli.idEndereco = e.id " +
-                                              "where e.id = cli.id and car.id = cli.id and cli.id = con.id " +
-                                              "and con.id = m.id and m.id = ?;" : "delete * from movimento where id=?;";
+                                              "where m.id = ?" : "delete from movimento where id=?";
+
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 

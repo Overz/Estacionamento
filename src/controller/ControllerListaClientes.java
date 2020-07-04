@@ -41,8 +41,8 @@ public class ControllerListaClientes {
         for (ContratoVO contrato : list) {
 
             novaLinha[0] = contrato.getCliente().getId();
-            novaLinha[1] = contrato.getCliente().getNome();
-            novaLinha[2] = contrato.getPlano().getTipo();
+            novaLinha[1] = contrato.getCliente().getNome().toUpperCase();
+            novaLinha[2] = contrato.getPlano().getTipo().toUpperCase();
             novaLinha[3] = contrato.getDtSaida().format(ConstHelpers.DTF);
 
             model.addRow(novaLinha);

@@ -87,14 +87,15 @@ CREATE TABLE `dbestacionamento`.`contrato`
 
 CREATE TABLE `dbestacionamento`.`ticket`
 (
-    `id`           INT        NOT NULL AUTO_INCREMENT,
-    `n_ticket`     LONG       NOT NULL,
-    `valor`        DOUBLE     NULL     DEFAULT NULL,
-    `tipo`         VARCHAR(8) NOT NULL DEFAULT 'DINHEIRO',
-    `hr_entrada`   TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `hr_validacao` TIMESTAMP  NULL     DEFAULT NULL,
-    `statusTicket` BOOLEAN    NOT NULL DEFAULT TRUE,
-    `validado`     BOOLEAN    NOT NULL DEFAULT FALSE,
+    `id`           INT         NOT NULL AUTO_INCREMENT,
+    `placa`        VARCHAR(45) NULL,
+    `n_ticket`     LONG        NOT NULL,
+    `valor`        DOUBLE      NULL     DEFAULT NULL,
+    `tipo`         VARCHAR(8)  NOT NULL DEFAULT 'DINHEIRO',
+    `hr_entrada`   TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `hr_validacao` TIMESTAMP   NULL     DEFAULT NULL,
+    `statusTicket` BOOLEAN     NOT NULL DEFAULT TRUE,
+    `validado`     BOOLEAN     NOT NULL DEFAULT FALSE,
     CONSTRAINT `pk_ticket` PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 

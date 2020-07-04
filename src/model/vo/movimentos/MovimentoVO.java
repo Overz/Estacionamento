@@ -5,6 +5,9 @@ import util.constantes.ConstHelpers;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe Principal do sistema
+ */
 public class MovimentoVO {
 
     private int id;
