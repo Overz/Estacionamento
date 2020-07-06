@@ -6,6 +6,7 @@ import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
 import util.helpers.Modificacoes;
 import util.helpers.Util;
+import util.tesseract.OCR;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -29,7 +30,7 @@ public class InicioView extends JPanel {
     private JComboBox cbFormaPgto, cbxProcurar;
     private JTable table;
     private JButton btnCancelar, btnValidar, btnGerarTicket, btnProcurar,
-            btnRemover, btnAbrirEntrada, btnAbrirSaida;
+            btnRemover, btnAbrirEntrada, btnAbrirSaida, btnSimular;
     private JFormattedTextField txtTicket;
     private JTextField txtProcurar;
     private JLabel lblTotalDeVeiculos, lblCancelaEntrada, lblCancelaSaída;
@@ -193,6 +194,11 @@ public class InicioView extends JPanel {
         btnProcurar.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
         add(btnProcurar, "cell 13 2 2 1,grow");
 
+        btnSimular = new JButton("Simular");
+        btnSimular.setFont(new Font("Dialog", Font.BOLD, 16));
+        btnSimular.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+        btnSimular.setBackground(Color.WHITE);
+        add(btnSimular, "cell 1 18 2 2,grow");
     }
 
     private void setJTable() {
@@ -278,6 +284,10 @@ public class InicioView extends JPanel {
         control.controlarCancela(btnAbrirEntrada, lblCancelaEntrada);
 
         control.controlarCancela(btnAbrirSaida, lblCancelaSaída);
+
+        btnSimular.addActionListener(e -> {
+            new OCR(new JFrame()).realizerSimulado(this);
+        });
     }
 
     public JTable getTable() {

@@ -12,7 +12,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -21,6 +23,9 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class Util {
+
+    private static final String linuxOs = "Linux";
+    private static final String windowsOs = "Windows";
 
     private static long diff; // Diferença ENTRE Dias
     private static long days; // Diferença de Dias
@@ -160,6 +165,31 @@ public class Util {
         }
     }
 
+    private static String getOs() {
+        return System.getProperty("os.name");
+    }
+
+    private static String getDesktopPath() {
+        try {
+            if (getOs().equalsIgnoreCase(linuxOs)) {
+                String path;
+                Process p = Runtime.getRuntime().exec("xdg-user-dir DESKTOP");
+                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                if ((path = in.readLine()) != null) {
+                    return path;
+                }
+            } else {
+                String userHome = System.getProperty("user.home");
+                if (!userHome.contains("Desktop")) {
+                    return userHome.concat("/Desktop");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return System.getProperty("user.home");
+    }
+
     /**
      * Abre um JFileChooser com um Caminho Pré-Definido /Home/ ou /Desktop
      *
@@ -168,11 +198,13 @@ public class Util {
      * @return int - SaveDialog(...-1,0,1...)
      */
     public static int abrirJFileChooser(JPanel panel, JFileChooser jFileChooser) {
-        String userName = System.getProperty("user.home");
-        File dir = new File(userName + "/Desktop");
-
-        jFileChooser.setCurrentDirectory(dir);
-        jFileChooser.setDialogTitle("Salvar em...");
+        try {
+            File dir = new File(getDesktopPath());
+            jFileChooser.setCurrentDirectory(dir);
+            jFileChooser.setDialogTitle("Salvar em...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return jFileChooser.showSaveDialog(panel);
     }
 
