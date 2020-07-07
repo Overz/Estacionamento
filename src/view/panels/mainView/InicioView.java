@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import static util.helpers.Modificacoes.addMyFocusListener;
+import static util.helpers.Util.abrirJFileChooser;
 
 public class InicioView extends JPanel {
 
@@ -286,7 +287,11 @@ public class InicioView extends JPanel {
         control.controlarCancela(btnAbrirSaida, lblCancelaSaída);
 
         btnSimular.addActionListener(e -> {
-            new OCR(new JFrame()).realizerSimulado(this);
+            OCR ocr = new OCR();
+            ocr.setVisible(true);
+            if (!ocr.isShowing() && !ocr.isFocused() || !ocr.isActive() || ocr.isValid()) {
+                abrirJFileChooser(this, new JFileChooser());
+            }
         });
     }
 

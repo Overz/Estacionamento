@@ -1,47 +1,57 @@
 package util.tesseract;
 
+import com.itextpdf.text.Image;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-
-import static util.helpers.Util.abrirJFileChooser;
 
 /**
  * https://nanonets.com/blog/ocr-with-tesseract/
  */
-public class OCR {
+public class OCR extends JFrame {
 
     private static final String python = "python3 ";
-    private JFrame frame;
+    private static OCR window;
+    private String path;
 
     public static void main(String[] args) {
-        new Runnable() {
-            @Override
-            public void run() {
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                int width = (int) screenSize.getWidth() / 3;
-                int height = (int) screenSize.getHeight() / 3;
-                int y = (int) (height * 0.1);
-                int x = (int) (width * 0.2);
-
-
-                JFrame frame = new JFrame();
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setTitle("Placa Identificada");
-                frame.setBounds(x, y, width, height);
-//                Thread t = new Thread((Runnable) frame);
-//                t.start();
+        EventQueue.invokeLater(() -> {
+            try {
+                window = new OCR();
+                window.setVisible(true);
+                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                window.setResizable(false);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        };
-
-//        lerImagem(null);
+        });
     }
 
-    public OCR(JFrame frame) {
-        this.frame = frame;
+    public OCR() {
+        try {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int width = (int) screenSize.getWidth() / 3;
+            int height = (int) screenSize.getHeight() / 3;
+            this.setTitle("Placa Identificada");
+            this.setBounds(width, height, width, height);
+            this.setLayout(new MigLayout("", "[grow]", "[grow]"));
+
+            ImageIcon icon = new ImageIcon("/home/cris/tess/wp3.png");
+            JLabel label = new JLabel(icon);
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            this.add(label, "cell 0 0, grow");
+            lerImagem(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -55,28 +65,37 @@ public class OCR {
      */
     private void lerImagem(String path) {
         try {
+            ActionListener event = e -> {
+                try {
+                    String scriptPath = new File(".").getCanonicalPath().concat("/py_script/ocr.py");
+                    String command = python.concat(scriptPath);
+                    String line, pathTest = "/home/cris/tess/wp3.png";
+                    Process p = Runtime.getRuntime().exec(command + " " + pathTest);
+                    BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    ArrayList<String> listaPlacas = new ArrayList<>();
+                    while ((line = in.readLine()) != null) {
+                        listaPlacas.add(line);
+                        System.out.println(line);
+                    }
+                } catch (Exception ex) {
+                    System.out.println("Erro ao tentar processar a Imagem!");
+                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
+                }
+            };
 
-            String scriptPath = new File(".").getCanonicalPath().concat("/py_script/ocr.py");
-            String command = python.concat(scriptPath);
-            String line, pathTest = "/home/cris/tess/wp3.png";
-            Process p = Runtime.getRuntime().exec(command + " " + path);
-            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            ArrayList<String> listaPlacas = new ArrayList<>();
-            while ((line = in.readLine()) != null) {
-                listaPlacas.add(line);
-                System.out.println(line);
-            }
         } catch (Exception e) {
+            System.out.println("Erro no Action Listener de OCR");
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public void realizerSimulado(JPanel panel) {
-
-        frame.setVisible(true);
-
-        int res = abrirJFileChooser(panel, new JFileChooser());
+    public String getPath() {
+        return path;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

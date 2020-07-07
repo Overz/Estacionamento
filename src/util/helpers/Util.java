@@ -169,6 +169,12 @@ public class Util {
         return System.getProperty("os.name");
     }
 
+    /**
+     * Verifica o sistema operacional para executar um comando que verifica o Desktop,
+     * e roda na terminal um comando, pegando o retorno e inserindo no JFileChooser como padrão de abertura
+     *
+     * @return String user directory
+     */
     private static String getDesktopPath() {
         try {
             if (getOs().equalsIgnoreCase(linuxOs)) {
