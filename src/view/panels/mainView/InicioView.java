@@ -13,8 +13,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import java.awt.event.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -286,13 +286,7 @@ public class InicioView extends JPanel {
 
         control.controlarCancela(btnAbrirSaida, lblCancelaSaída);
 
-        btnSimular.addActionListener(e -> {
-            OCR ocr = new OCR();
-            ocr.setVisible(true);
-            if (!ocr.isShowing() && !ocr.isFocused() || !ocr.isActive() || ocr.isValid()) {
-                abrirJFileChooser(this, new JFileChooser());
-            }
-        });
+        btnSimular.addActionListener(e -> control.runOcr());
     }
 
     public JTable getTable() {

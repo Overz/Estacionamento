@@ -43,7 +43,7 @@ public class LostTicketDAO implements BaseDAO<LostTicketVO> {
             stmt.setBytes(6, newObject.getDocumento());
 
             result = stmt.getGeneratedKeys();
-            if (result.next()) {
+            if (result != null && result.next()) {
                 int id = result.getInt(1);
                 newObject.setId(id);
             }

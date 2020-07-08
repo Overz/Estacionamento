@@ -16,6 +16,7 @@ import util.constantes.ConstHelpers;
 import util.constantes.ConstInicio;
 import util.helpers.Modificacoes;
 import util.helpers.Util;
+import util.tesseract.OCR;
 import view.panels.mainView.InicioView;
 
 import javax.swing.*;
@@ -572,5 +573,31 @@ public class ControllerInicio {
         ActionListener event = e -> this.atualizarTabela();
         Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();
+    }
+
+    /**
+     * Gambiarra do OCR
+     */
+    public void runOcr() {
+        OCR ocr = new OCR();
+        ocr.lerImagem();
+        Timer timer;
+        ActionListener event = e1 -> {
+            ocr.mostrarImagemComLabel();
+        };
+        timer = new Timer(10000, event);
+        timer.start();
+
+        if (ocr.getI() == 99){
+            timer.stop();
+            timer.setRepeats(false);
+        }
+
+        for (String placa : ocr.getListaPlacas()) {
+            MovimentoVO m = daoM.consultar(placa);
+            if (!m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)){
+
+            }
+        }
     }
 }
