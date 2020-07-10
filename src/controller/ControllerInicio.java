@@ -588,15 +588,15 @@ public class ControllerInicio {
         timer = new Timer(10000, event);
         timer.start();
 
-        if (ocr.getI() == 99){
+        if (ocr.getI() == -1){
             timer.stop();
             timer.setRepeats(false);
         }
 
         for (String placa : ocr.getListaPlacas()) {
             MovimentoVO m = daoM.consultar(placa);
-            if (!m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)){
-
+            if (m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)){
+                
             }
         }
     }

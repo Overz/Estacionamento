@@ -1,6 +1,7 @@
 package util.tesseract;
 
 import net.miginfocom.swing.MigLayout;
+import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
 
 import javax.swing.*;
@@ -9,7 +10,10 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static util.constantes.ConstHelpers.TEMPO_1_MIN;
 
 public class OCR extends JFrame {
 
@@ -45,7 +49,7 @@ public class OCR extends JFrame {
                 this.lerImagem();
                 this.mostrarImagemComLabel();
             };
-            Timer timer = new Timer(10000, event);
+            Timer timer = new Timer(TEMPO_1_MIN, event);
             timer.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +67,7 @@ public class OCR extends JFrame {
      */
     public void lerImagem() {
         try {
-            String scriptPath = new File(".").getCanonicalPath().concat("/py_script/ocr.py");
+            String scriptPath = Paths.get("files", "bp1.png").toAbsolutePath().toString();
             String command = python.concat(scriptPath);
             String line, path = this.imagePath();
             Process p = Runtime.getRuntime().exec(command + " " + path);
@@ -90,61 +94,65 @@ public class OCR extends JFrame {
         switch (i) {
             // Blue plates
             case 1:
-                imagePath = "/home/cris/tess/blueplate/bp1.png";
+                imagePath = imagePath("bp1.png");
                 break;
             case 2:
-                imagePath = "/home/cris/tess/blueplate/bp2.png";
+                imagePath = imagePath("bp2.png");
                 break;
             case 3:
-                imagePath = "/home/cris/tess/blueplate/bp3.png";
+                imagePath = imagePath("bp3.png");
                 break;
             case 4:
-                imagePath = "/home/cris/tess/blueplate/bp4.png";
+                imagePath = imagePath("bp4.png");
                 break;
             case 5:
-                imagePath = "/home/cris/tess/blueplate/bp5.png";
+                imagePath = imagePath("bp5.png");
                 break;
             case 6:
-                imagePath = "/home/cris/tess/blueplate/bp6.png";
+                imagePath = imagePath("bp6.png");
                 break;
 
             // Black plates
             case 7:
-                imagePath = "/home/cris/tess/blackplate/bp1.png";
+                imagePath = imagePath("bp7.png");
                 break;
             case 8:
-                imagePath = "/home/cris/tess/blackplate/bp2.png";
+                imagePath = imagePath("bp8.png");
                 break;
             case 9:
-                imagePath = "/home/cris/tess/blackplate/bp3.png";
+                imagePath = imagePath("bp10.png");
                 break;
             case 10:
-                imagePath = "/home/cris/tess/blackplate/bp4.png";
+                imagePath = imagePath("bp11.png");
                 break;
             case 11:
-                imagePath = "/home/cris/tess/blackplate/bp5.png";
+                imagePath = imagePath("bp12.png");
                 break;
             case 12:
-                imagePath = "/home/cris/tess/blackplate/bp6.png";
+                imagePath = imagePath("bp13.png");
                 break;
             case 13:
-                imagePath = "/home/cris/tess/blackplate/bp7.png";
+                imagePath = imagePath("bp14.png");
                 break;
             case 14:
-                imagePath = "/home/cris/tess/blackplate/bp8.png";
+                imagePath = imagePath("bp15.png");
                 break;
             case 15:
-                imagePath = "/home/cris/tess/blackplate/bp9.png";
+                imagePath = imagePath("bp16.png");
                 break;
             case 16:
-                imagePath = "/home/cris/tess/blackplate/bp10.png";
-                i = 99;
+                imagePath = imagePath("bp17.png");
+                i = -1;
                 break;
             default:
                 return null;
         }
         System.out.println(imagePath);
         return imagePath;
+    }
+
+    private String imagePath(String img) {
+        return Paths.get("files", img).toAbsolutePath().toString();
     }
 
     /**
