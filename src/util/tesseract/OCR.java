@@ -1,7 +1,17 @@
 package util.tesseract;
 
+import controller.ControllerInicio;
+import model.banco.BaseDAO;
+import model.dao.cliente.ContratoDAO;
+import model.dao.movientos.MovimentoDAO;
+import model.dao.movientos.TicketDAO;
+import model.vo.cliente.ContratoVO;
+import model.vo.movimentos.MovimentoVO;
+import model.vo.movimentos.TicketVO;
 import net.miginfocom.swing.MigLayout;
+import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
+import view.panels.mainView.MainView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,12 +19,19 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class OCR extends JFrame {
 
     private static final String python = "python3 ";
     private static OCR window;
+    private ControllerInicio controllerInicio;
+    private BaseDAO<TicketVO> daoT;
+    private BaseDAO<MovimentoVO> daoM;
+    private BaseDAO<ContratoVO> daoC;
+    private TicketVO t;
+    private MovimentoVO m;
     private ArrayList<String> listaPlacas;
     private String imagePath;
     private int i = 0;
@@ -41,6 +58,15 @@ public class OCR extends JFrame {
     public OCR() {
     }
 
+    public OCR(ControllerInicio controllerInicio, BaseDAO<MovimentoVO> daoM, BaseDAO<TicketVO> daoT, BaseDAO<ContratoVO> daoC, MovimentoVO m, TicketVO t) {
+        this.controllerInicio = controllerInicio;
+        this.daoM = daoM;
+        this.daoT = daoT;
+        this.daoC = daoC;
+        this.m = m;
+        this.t = t;
+    }
+
     /**
      * Método principal para executar a Simulação do OCR
      */
@@ -52,6 +78,7 @@ public class OCR extends JFrame {
                 ActionListener event = e -> {
                     this.lerImagem();
                     this.mostrarImagemComLabel();
+                    this.cadastrar();
                 };
                 timer = new Timer(15000, event);
                 timer.start();
@@ -62,6 +89,61 @@ public class OCR extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // TODO DAR CONTINUIDADE - EXTREMA IMPORTANCIA
+    // TODO Testar para ver se cadastra Ticket/Cliente
+    private void cadastrar() {
+        controllerInicio = new ControllerInicio(MainView.getInicioView());
+        daoC = new ContratoDAO();
+        daoM = new MovimentoDAO();
+        daoT = new TicketDAO();
+
+        long leftLimit = 9999L;
+        long rightLimit = 999999999L;
+        if (timer.isRunning()) {
+
+            if (this.i == -1) {
+                start = 0; // Método para dar Stop no timer
+                timer.stop();
+                timer.setRepeats(false);
+            }
+
+            if (listaPlacas != null) {
+
+                for (String placa : listaPlacas) {
+                    ConstHelpers.FLAG = 2;
+                    ContratoVO c = daoC.consultar(placa); // TODO LEFT/INNER JOIN NO DAO
+
+                    if (c != null) {
+                        m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
+                        m = daoM.cadastrar(m);
+                        if (m != null) {
+                            controllerInicio.atualizarTabela();
+                            ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
+                            JOptionPane.showMessageDialog(MainView.getInicioView(),
+                                    Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                             + "<br>" + c.toString() + "</body></html>"));
+                        }
+                    } else {
+                        t = new TicketVO(controllerInicio.randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
+                        t = daoT.cadastrar(t);
+                        if (t != null) {
+                            m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
+                            m = daoM.cadastrar(m);
+                            if (m != null) {
+                                controllerInicio.atualizarTabela();
+                                ConstHelpers.FLAG = 1;
+                                JOptionPane.showMessageDialog(MainView.getInicioView(),
+                                        Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                 + "<br>" + t.toString()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ConstHelpers.TIPO_TOSTRING = 0;
     }
 
     /**
@@ -162,8 +244,18 @@ public class OCR extends JFrame {
      * Mostra um JOptionPane informando uma nova placa, com uma tela exibindo a placa
      */
     public void mostrarImagemComLabel() {
-        JOptionPane.showMessageDialog(this, Modificacoes.labelConfig("Uma nova placa foi Identificada!"),
-                "Nova Placa", JOptionPane.INFORMATION_MESSAGE, null);
+        int res;
+        do { // Enquanto o Usuário não clicar em OK, o timer acrescentara um Delay de 0.5s
+            timer.setDelay(500);
+            res = JOptionPane.showConfirmDialog(this, Modificacoes.labelConfig("Uma nova placa foi Identificada!"),
+                    "Nova Placa", JOptionPane.OK_CANCEL_OPTION);
+
+            if (res == JOptionPane.CANCEL_OPTION || res == JOptionPane.CLOSED_OPTION) {
+                timer.stop();
+                JOptionPane.showMessageDialog(this, Modificacoes.labelConfig("A Simulação foi Finalizada!"));
+            }
+        } while (res != JOptionPane.OK_OPTION);
+
         if (imagePath != null && !imagePath.isEmpty()) {
 
             icon = new ImageIcon(imagePath);
@@ -208,23 +300,8 @@ public class OCR extends JFrame {
         return icon.getIconHeight();
     }
 
-    public int getLastIndexPlate() {
-        return i;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
     public void setStart(int start) {
         this.start = start;
     }
 
-    public Timer getTimer() {
-        return timer;
-    }
-
-    public ArrayList<String> getListaPlacas() {
-        return listaPlacas;
-    }
 }

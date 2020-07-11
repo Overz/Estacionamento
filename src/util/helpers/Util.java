@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -38,14 +39,16 @@ public class Util {
      */
     public static void checkPythonVersion() {
         try {
+            String line;
             Process p = Runtime.getRuntime().exec("python3 --version");
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            if (in.readLine() == null || in.readLine().isEmpty()) {
+            if ((line = in.readLine()) != null) {
+                Runtime.getRuntime().exec("pip install pytesseract");
+            } else {
                 JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("POR FAVOR, INSTALE PYTHON 3.x !"));
                 System.exit(0);
-            } else {
-                Runtime.getRuntime().exec("pip install pytesseract");
             }
+            System.out.println(line);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -554,7 +554,7 @@ public class ControllerInicio {
      * @param rightLimit long
      * @return long
      */
-    private long randomTicketGenerator(long leftLimit, long rightLimit) {
+    public long randomTicketGenerator(long leftLimit, long rightLimit) {
         return new RandomDataGenerator().nextLong(leftLimit, rightLimit);
     }
 
@@ -588,59 +588,10 @@ public class ControllerInicio {
      */
     public void runOcr() {
         try {
-            // TODO DAR CONTINUIDADE - EXTREMA IMPORTANCIA
-            // TODO Tentar mudar "if(ocr.gettimer.isrunning)": não esta 100%, eu acho
-            // TODO Testar para ver se cadastra Ticket/Cliente
-            OCR ocr = new OCR();
+            OCR ocr = new OCR(this, daoM, daoT, daoC, m, t);
+            JOptionPane.showMessageDialog(ocr, Modificacoes.labelConfig("Simulação Iniciada!"));
             ocr.setStart(1);
             ocr.runOcr();
-
-            int lastIndex;
-            long leftLimit = 9999L;
-            long rightLimit = 999999999L;
-            if (ocr.getTimer().isRunning()) {
-
-                if (ocr.getLastIndexPlate() == -1) {
-                    ocr.setStart(0); // Método para dar Stop no timer
-                }
-
-                if (ocr.getListaPlacas() != null) {
-                    lastIndex = ocr.getListaPlacas().size(); // Verifica se o tamanho da lista é maior do que a posição anterior para Continuar
-                    if (ocr.getListaPlacas().size() > lastIndex) {
-
-                        for (String placa : ocr.getListaPlacas()) {
-                            ContratoVO c = daoC.consultar(placa); // TODO LEFT/INNER JOIN NO DAO
-
-                            if (c != null) {
-                                m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
-                                m = daoM.cadastrar(m);
-                                if (m != null) {
-                                    this.atualizarTabela();
-                                    ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
-                                    JOptionPane.showMessageDialog(inicioView,
-                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                                     + "<br>" + c.toString() + "</body></html>"));
-                                }
-                            } else {
-                                t = new TicketVO(randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
-                                t = daoT.cadastrar(t);
-                                if (t != null) {
-                                    m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
-                                    m = daoM.cadastrar(m);
-                                    if (m != null) {
-                                        this.atualizarTabela();
-                                        ConstHelpers.FLAG = 1;
-                                        JOptionPane.showMessageDialog(inicioView,
-                                                Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                                         + "<br>" + t.toString()));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ConstHelpers.TIPO_TOSTRING = 0;
         } catch (
                 Exception e) {
             e.printStackTrace();
