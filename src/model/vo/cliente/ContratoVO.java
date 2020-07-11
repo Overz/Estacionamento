@@ -98,14 +98,16 @@ public class ContratoVO {
         this.tipoPgto = tipoPgto;
     }
 
-    @Override
-    public String toString() {
+    // TODO TESTAR SE FUNCIONA: Quando salvar a placa do OCR com o cliente, devera exibir toString de "else if(flag)"
+    private String builderToString() {
         if (dtSaida == null) {
             return " - ID: " + this.id +
                    " - Nº: " + this.numeroCartao +
                    " - Hora de Entrada: " + this.dtEntrada.format(ConstHelpers.DTF) +
                    " - Ativo?: " + this.ativo +
                    " - R$: " + this.valor;
+        } else if (ConstHelpers.FLAG == 1) {
+            return "Nº: " + this.numeroCartao + " Nome: " + clienteVO.getNome();
         } else {
             return " - ID: " + this.id +
                    " - Nº: " + this.numeroCartao +
@@ -114,6 +116,11 @@ public class ContratoVO {
                    " - Ativo?: " + this.ativo +
                    " - R$: " + this.valor;
         }
+    }
+
+    @Override
+    public String toString() {
+        return builderToString();
     }
 
     public PlanoVO getPlano() {

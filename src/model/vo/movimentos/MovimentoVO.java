@@ -17,24 +17,17 @@ public class MovimentoVO {
     private TicketVO ticket;
     private ContratoVO contrato;
 
-    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, boolean atual, TicketVO ticket, ContratoVO contrato) {
+    public MovimentoVO(int id, LocalDateTime hr_entrada, LocalDateTime hr_saida, boolean atual, ContratoVO contrato) {
         super();
         this.id = id;
         this.hr_entrada = hr_entrada;
         this.hr_saida = hr_saida;
         this.atual = atual;
-        this.ticket = ticket;
         this.contrato = contrato;
     }
 
     public MovimentoVO(int id, LocalDateTime hr_entrada, boolean atual, TicketVO ticket) {
         this.id = id;
-        this.hr_entrada = hr_entrada;
-        this.atual = atual;
-        this.ticket = ticket;
-    }
-
-    public MovimentoVO(LocalDateTime hr_entrada, boolean atual, TicketVO ticket) {
         this.hr_entrada = hr_entrada;
         this.atual = atual;
         this.ticket = ticket;

@@ -14,6 +14,8 @@ import view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano;
 import javax.swing.*;
 import java.awt.*;
 
+import static util.helpers.Util.checkPythonVersion;
+
 public class MainView extends JFrame {
 
     private static final long serialVersionUID = 6514484047054253588L;
@@ -31,6 +33,8 @@ public class MainView extends JFrame {
     private static JLayeredPane layeredPane;
 
     public MainView() {
+        checkPythonVersion();
+
         this.setTitle("Estacionamento Senac - EasyWay");
         this.setBounds(100, 100, 1163, 739);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

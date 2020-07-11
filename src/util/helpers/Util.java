@@ -34,6 +34,24 @@ public class Util {
     private static long seconds; // DIferença de Segundos
 
     /**
+     * Verifica a versão do Python instalada, para poder utilizar do Pytesseract - Pré requisito para o OCR
+     */
+    public static void checkPythonVersion() {
+        try {
+            Process p = Runtime.getRuntime().exec("python3 --version");
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            if (in.readLine() == null || in.readLine().isEmpty()) {
+                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("POR FAVOR, INSTALE PYTHON 3.x !"));
+                System.exit(0);
+            } else {
+                Runtime.getRuntime().exec("pip install pytesseract");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Formatador de valores;
      *
      * @param value double

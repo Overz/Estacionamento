@@ -4,9 +4,11 @@ import model.banco.BaseDAO;
 import model.bo.CarroBO;
 import model.bo.ClienteBO;
 import model.bo.InicioBO;
+import model.dao.cliente.ContratoDAO;
 import model.dao.movientos.MovimentoDAO;
 import model.dao.movientos.TicketDAO;
 import model.vo.cliente.ClienteVO;
+import model.vo.cliente.ContratoVO;
 import model.vo.movimentos.MovimentoVO;
 import model.vo.movimentos.TicketVO;
 import org.apache.commons.math3.random.RandomDataGenerator;
@@ -36,6 +38,7 @@ public class ControllerInicio {
     private final InicioView inicioView;
     private final BaseDAO<MovimentoVO> daoM;
     private final BaseDAO<TicketVO> daoT;
+    private final BaseDAO<ContratoVO> daoC;
     private ArrayList<MovimentoVO> lista;
     private MovimentoVO m;
     private TicketVO t;
@@ -48,6 +51,7 @@ public class ControllerInicio {
         this.inicioView = inicioView;
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
+        daoC = new ContratoDAO();
         m = new MovimentoVO();
         t = new TicketVO();
         lista = new ArrayList<>();
@@ -585,32 +589,60 @@ public class ControllerInicio {
     public void runOcr() {
         try {
             // TODO DAR CONTINUIDADE - EXTREMA IMPORTANCIA
+            // TODO Tentar mudar "if(ocr.gettimer.isrunning)": não esta 100%, eu acho
+            // TODO Testar para ver se cadastra Ticket/Cliente
             OCR ocr = new OCR();
             ocr.setStart(1);
             ocr.runOcr();
-            if (ocr.getLastIndexPlate() == -1) {
-                ocr.setStart(0);
-            }
 
+            int lastIndex;
             long leftLimit = 9999L;
             long rightLimit = 999999999L;
-            for (String placa : ocr.getListaPlacas()) {
-                MovimentoVO m = daoM.consultar(placa);
-                if (m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)) {
-                    TicketVO t = new TicketVO(randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
-                    m = new MovimentoVO(LocalDateTime.now(), true, t);
-                    t = daoT.cadastrar(t); // TODO TESTAR
-                    m = daoM.cadastrar(m); // TODO TESTAR
-                    if (t != null && m != null) {
-                        ConstHelpers.TIPO_TOSTRING = 1;
-                        JOptionPane.showMessageDialog(inicioView,
-                                Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                         + "<br>" + t.toString()));
+            if (ocr.getTimer().isRunning()) {
+
+                if (ocr.getLastIndexPlate() == -1) {
+                    ocr.setStart(0); // Método para dar Stop no timer
+                }
+
+                if (ocr.getListaPlacas() != null) {
+                    lastIndex = ocr.getListaPlacas().size(); // Verifica se o tamanho da lista é maior do que a posição anterior para Continuar
+                    if (ocr.getListaPlacas().size() > lastIndex) {
+
+                        for (String placa : ocr.getListaPlacas()) {
+                            ContratoVO c = daoC.consultar(placa); // TODO LEFT/INNER JOIN NO DAO
+
+                            if (c != null) {
+                                m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
+                                m = daoM.cadastrar(m);
+                                if (m != null) {
+                                    this.atualizarTabela();
+                                    ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
+                                    JOptionPane.showMessageDialog(inicioView,
+                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                     + "<br>" + c.toString() + "</body></html>"));
+                                }
+                            } else {
+                                t = new TicketVO(randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
+                                t = daoT.cadastrar(t);
+                                if (t != null) {
+                                    m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
+                                    m = daoM.cadastrar(m);
+                                    if (m != null) {
+                                        this.atualizarTabela();
+                                        ConstHelpers.FLAG = 1;
+                                        JOptionPane.showMessageDialog(inicioView,
+                                                Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                         + "<br>" + t.toString()));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
             ConstHelpers.TIPO_TOSTRING = 0;
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
         }
     }

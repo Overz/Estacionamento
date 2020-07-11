@@ -100,6 +100,10 @@ public class ContratoDAO implements BaseDAO<ContratoVO> {
         if (ConstHelpers.FLAG == 1) {
             qry = "select * from contrato where n_cartao = ?;";
 
+        }
+
+        if (ConstHelpers.FLAG == 2) {
+            qry = ""; // TODO LEFT/INNER JOIN
         } else {
             SeletorCliente seletor = new SeletorCliente();
             seletor.setValor(values[0]);

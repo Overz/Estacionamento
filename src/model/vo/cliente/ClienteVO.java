@@ -36,7 +36,6 @@ public class ClienteVO {
     }
 
     public ClienteVO() {
-        super();
     }
 
     public int getId() {

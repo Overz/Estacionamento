@@ -23,6 +23,7 @@ public class OCR extends JFrame {
     private int x;
     private ImageIcon icon;
     private JLabel label = new JLabel();
+    private Timer timer;
 
     public static void main(String[] args) {
         try {
@@ -38,13 +39,11 @@ public class OCR extends JFrame {
     }
 
     public OCR() {
-        try {
-            Runtime.getRuntime().exec("cd " + Paths.get("py_script").toAbsolutePath().toString() + " pip install pytesseract");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
+    /**
+     * Método principal para executar a Simulação do OCR
+     */
     public void runOcr() {
         try {
             this.addScreenPosition();
@@ -54,7 +53,7 @@ public class OCR extends JFrame {
                     this.lerImagem();
                     this.mostrarImagemComLabel();
                 };
-                Timer timer = new Timer(15000, event);
+                timer = new Timer(15000, event);
                 timer.start();
                 if (start == 0) {
                     timer.stop();
@@ -66,7 +65,7 @@ public class OCR extends JFrame {
     }
 
     /**
-     * Parametros para rodar em Command Line: tesseract  --tessdata-dir  tessdataPath  image.png  output  -l  eng
+     * Parametros para rodar em Command Line: tesseract  --tessdata-dir  tessdataPath  image.png  output  -l  eng<br>
      * tesseract /example/tesseract /example/tesseract/datapath/ image.png outputType -l language
      * <br><br>
      * Método que utiliza de um Script em Python3, para ler imagens em OCR utilizando Tesseract
@@ -219,6 +218,10 @@ public class OCR extends JFrame {
 
     public void setStart(int start) {
         this.start = start;
+    }
+
+    public Timer getTimer() {
+        return timer;
     }
 
     public ArrayList<String> getListaPlacas() {
