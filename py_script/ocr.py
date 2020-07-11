@@ -39,10 +39,10 @@ def matches(path):
     fail = str(replaces(re.findall(regexFail, image_text)))
     if not fail:  # Se der match somente em palavras, não ira exibir
         if matched:
-            print('Primeiro match')
+            # print('Primeiro match')
             print(matched)
     if matched2:
-        print('Segundo match')
+        # print('Segundo match')
         print(matched2)
 
 
