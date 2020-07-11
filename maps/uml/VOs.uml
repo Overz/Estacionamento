@@ -11,12 +11,12 @@
     <node x="1222.4166666666665" y="674.0">model.vo.cliente.EnderecoVO</node>
     <node x="947.5" y="1287.0">model.vo.cliente.ClienteVO</node>
     <node x="1688.4166666666665" y="0.0">model.vo.movimentos.LostTicketVO</node>
-    <node x="0.0" y="2044.0">model.vo.movimentos.TicketVO</node>
     <node x="917.9166666666666" y="301.0">model.vo.veiculo.ModeloVO</node>
+    <node x="0.0" y="2044.0">model.vo.movimentos.TicketVO</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="0.18333333333333332" x="1068.5" y="1730.0000000000002" />
+  <settings layout="Hierarchic Group" zoom="0.20057971014492754" x="1020.0" y="1715.0" />
   <SelectedNodes>
     <node>model.vo.veiculo.MarcaVO</node>
   </SelectedNodes>

@@ -9,12 +9,12 @@
     <node x="0.0" y="420.0">model.bo.EnderecoBO</node>
     <node x="0.0" y="0.0">model.bo.CarroBO</node>
     <node x="353.0" y="420.0">model.bo.MovimentoBO</node>
-    <node x="0.0" y="696.0">model.bo.InicioBO</node>
     <node x="337.0" y="0.0">model.bo.LostTicketBO</node>
+    <node x="0.0" y="696.0">model.bo.InicioBO</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="0.8253557567917206" x="336.5" y="376.5" />
+  <settings layout="Hierarchic Group" zoom="0.8975356679636836" x="304.5" y="375.5" />
   <SelectedNodes>
     <node>model.bo.CaixaBO</node>
   </SelectedNodes>
