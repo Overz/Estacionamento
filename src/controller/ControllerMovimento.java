@@ -139,7 +139,8 @@ public class ControllerMovimento {
         ConstHelpers.SUB_FLAG = 4;
         LocalDate dt = LocalDate.now();
         String hj = String.valueOf(dt);
-        lista = daoM.consultar(hj, hj); // TODO Arrumar a consulta Query que esta "or hora is null", para um meio que preencha o final do dia
+        //TODO IGNORAR ESTA PARTE(10/07/2020)
+        lista = daoM.consultar(hj, hj); // TODO Arrumar a consulta Query que esta "or hora is null", para um meio que preencha o final do dia (15/06/2020)
         this.atualizarTabela();
     }
 

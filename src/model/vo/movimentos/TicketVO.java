@@ -2,9 +2,12 @@ package model.vo.movimentos;
 
 import java.time.LocalDateTime;
 
+import static util.constantes.ConstHelpers.TIPO_TOSTRING;
+
 public class TicketVO {
 
     private int id;
+    private String placa;
     private long numero;
     private double valor;
     private String tipo;
@@ -26,6 +29,13 @@ public class TicketVO {
     }
 
     public TicketVO(long numero, LocalDateTime dataEntrada, Boolean status, Boolean validado) {
+        this.numero = numero;
+        this.dataEntrada = dataEntrada;
+        this.status = status;
+        this.validado = validado;
+    }
+
+    public TicketVO(long numero, String placa, LocalDateTime dataEntrada, Boolean status, Boolean validado) {
         this.numero = numero;
         this.dataEntrada = dataEntrada;
         this.status = status;
@@ -100,16 +110,32 @@ public class TicketVO {
         this.validado = validado;
     }
 
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    private String builderToString() {
+        if (TIPO_TOSTRING == 1){
+            return "Nº: " + numero + " ENTRADA: " + dataEntrada;
+        }else {
+            return " - TICKET: " +
+                   " - ID: " + id +
+                   " - Nº: " + numero +
+                   " - VALOR: " + valor +
+                   " - TIPO: " + tipo +
+                   " - DT_ENTRADA: " + dataEntrada +
+                   " - DT_SAIDA: " + dataValidacao +
+                   " - STATUS: " + status +
+                   " - VALIDADO: " + validado;
+        }
+    }
+
     @Override
     public String toString() {
-        return " - TICKET: " +
-               " - ID: " + id +
-               " - Nº: " + numero +
-               " - VALOR: " + valor +
-               " - TIPO: " + tipo +
-               " - DT_ENTRADA: " + dataEntrada +
-               " - DT_SAIDA: " + dataValidacao +
-               " - STATUS: " + status +
-               " - VALIDADO: " + validado;
+        return builderToString();
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>util.pdf.PdfCaixaFinal</OriginalElement>
+  <nodes>
+    <node x="0.0" y="383.0">util.pdf.PdfCaixaFinal</node>
+    <node x="673.0" y="0.0">util.pdf.PdfHelpers</node>
+    <node x="1044.0" y="455.0">util.pdf.PdfTermo</node>
+    <node x="619.0" y="227.0">util.pdf.PdfComprovante</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.6826347305389222" x="658.0" y="443.0" />
+  <SelectedNodes>
+    <node>util.pdf.PdfCaixaFinal</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

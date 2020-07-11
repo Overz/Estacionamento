@@ -149,7 +149,7 @@ public class ControllerLostTicket {
 
     private void salvarDocumentoDAO(LostTicketVO vo, JFileChooser jFileChooser) {
         try {
-            //TODO Ler o Documento e salvar no Banco
+            //TODO TENTAR SALVAR O DOCUMENTO NO DB
             File file = new File(jFileChooser.getSelectedFile().getAbsolutePath() + PdfHelpers.EXTENSAO);
             byte[] bytesArray = loadFile(file.getAbsolutePath());
 

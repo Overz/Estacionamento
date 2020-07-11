@@ -34,6 +34,12 @@ public class MovimentoVO {
         this.ticket = ticket;
     }
 
+    public MovimentoVO(LocalDateTime hr_entrada, boolean atual, TicketVO ticket) {
+        this.hr_entrada = hr_entrada;
+        this.atual = atual;
+        this.ticket = ticket;
+    }
+
     public MovimentoVO() {
         super();
     }

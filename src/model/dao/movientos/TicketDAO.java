@@ -115,8 +115,8 @@ public class TicketDAO implements BaseDAO<TicketVO> {
     public TicketVO cadastrar(TicketVO newObject, String... values) {
         String qry;
         if (ConstHelpers.FLAG == 1) {
-            qry = "insert into ticket (n_ticket, hr_entrada, statusticket, validado)" +
-                  "values (?,?,?,?);";
+            qry = "insert into ticket (n_ticket, hr_entrada, statusticket, validado, placa)" +
+                  "values (?,?,?,?,?);";
         } else {
             qry = "insert into ticket (n_ticket, valor, tipo, hr_entrada, hr_saida, statusticket, validado" +
                   "values (?,?,?,?,?,?,?);";
@@ -130,7 +130,14 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getDataEntrada()));
                 stmt.setBoolean(3, newObject.getStatus());
                 stmt.setBoolean(4, newObject.getValidado());
-                //TODO Insert enum value
+
+                // TODO TESTAR SE ESTA FUNCIONANDO
+                String placa = newObject.getPlaca();
+                if (placa != null && !placa.isEmpty()){
+                    stmt.setString(5, placa);
+                } else {
+                    stmt.setString(5, "");
+                }
 
                 stmt.execute();
 

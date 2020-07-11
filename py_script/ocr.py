@@ -30,16 +30,19 @@ def replaces(string):
 
 # Leitura da Imagem
 def matches(path):
+    regexFail = '[A-Z]{7}'
     regex = '([A-Z0-9]{7})'  # Mercosul
-    regex2 = '([A-Z-0-9]{8})'  # Normal
+    regex2 = '([A-Z]{3}\\-[0-9]{4})'  # Normal
     image_text = pytesseract.image_to_string(Image.open(str(path)))  # Realiza a Leitura
     matched = str(replaces(re.findall(regex, image_text)))  # Match com o regex e replace
     matched2 = str(replaces(re.findall(regex2, image_text)))  # Match com o regex e replace
-    if matched:
-        print(image_text)
-        print(matched)
+    fail = str(replaces(re.findall(regexFail, image_text)))
+    if not fail:  # Se der match somente em palavras, não ira exibir
+        if matched:
+            print('Primeiro match')
+            print(matched)
     if matched2:
-        print(image_text)
+        print('Segundo match')
         print(matched2)
 
 

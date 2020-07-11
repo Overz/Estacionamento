@@ -1,19 +1,15 @@
 package util.tesseract;
 
 import net.miginfocom.swing.MigLayout;
-import util.constantes.ConstHelpers;
 import util.helpers.Modificacoes;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
-import static util.constantes.ConstHelpers.TEMPO_1_MIN;
 
 public class OCR extends JFrame {
 
@@ -22,11 +18,11 @@ public class OCR extends JFrame {
     private ArrayList<String> listaPlacas;
     private String imagePath;
     private int i = 0;
+    private int start = 0;
     private int y;
     private int x;
     private ImageIcon icon;
     private JLabel label = new JLabel();
-
 
     public static void main(String[] args) {
         try {
@@ -43,14 +39,27 @@ public class OCR extends JFrame {
 
     public OCR() {
         try {
+            Runtime.getRuntime().exec("cd " + Paths.get("py_script").toAbsolutePath().toString() + " pip install pytesseract");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void runOcr() {
+        try {
             this.addScreenPosition();
             this.setVisible(false);
-            ActionListener event = e -> {
-                this.lerImagem();
-                this.mostrarImagemComLabel();
-            };
-            Timer timer = new Timer(TEMPO_1_MIN, event);
-            timer.start();
+            if (start == 1) {
+                ActionListener event = e -> {
+                    this.lerImagem();
+                    this.mostrarImagemComLabel();
+                };
+                Timer timer = new Timer(15000, event);
+                timer.start();
+                if (start == 0) {
+                    timer.stop();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,7 +76,7 @@ public class OCR extends JFrame {
      */
     public void lerImagem() {
         try {
-            String scriptPath = Paths.get("files", "bp1.png").toAbsolutePath().toString();
+            String scriptPath = Paths.get("py_script", "ocr.py").toAbsolutePath().toString();
             String command = python.concat(scriptPath);
             String line, path = this.imagePath();
             Process p = Runtime.getRuntime().exec(command + " " + path);
@@ -75,7 +84,6 @@ public class OCR extends JFrame {
             listaPlacas = new ArrayList<>();
             while ((line = in.readLine()) != null) {
                 listaPlacas.add(line);
-                System.out.println(line);
             }
         } catch (Exception ex) {
             System.out.println("Erro ao tentar processar a Imagem!");
@@ -92,7 +100,6 @@ public class OCR extends JFrame {
     private String imagePath() {
         i++;
         switch (i) {
-            // Blue plates
             case 1:
                 imagePath = imagePath("bp1.png");
                 break;
@@ -111,8 +118,6 @@ public class OCR extends JFrame {
             case 6:
                 imagePath = imagePath("bp6.png");
                 break;
-
-            // Black plates
             case 7:
                 imagePath = imagePath("bp7.png");
                 break;
@@ -147,7 +152,6 @@ public class OCR extends JFrame {
             default:
                 return null;
         }
-        System.out.println(imagePath);
         return imagePath;
     }
 
@@ -205,8 +209,16 @@ public class OCR extends JFrame {
         return icon.getIconHeight();
     }
 
-    public int getI() {
+    public int getLastIndexPlate() {
         return i;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
     }
 
     public ArrayList<String> getListaPlacas() {

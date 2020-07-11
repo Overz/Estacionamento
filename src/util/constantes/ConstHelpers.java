@@ -27,5 +27,6 @@ public class ConstHelpers {
     public static int TEMPO_TICKET = 0;
     public static int MIN = 0;
     public static int HORA = 0;
-    public static double LOST_TICKET = 56.7;
+    public static double LOST_TICKET = 56.70;
+    public static int TIPO_TOSTRING;
 }

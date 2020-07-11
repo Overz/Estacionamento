@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model.vo.veiculo.MarcaVO</OriginalElement>
+  <nodes>
+    <node x="908.4166666666666" y="758.0">model.vo.veiculo.CarroVO</node>
+    <node x="652.0" y="2044.0">model.vo.cliente.ContratoVO</node>
+    <node x="687.5" y="1467.0">model.vo.cliente.PlanoVO</node>
+    <node x="956.9166666666666" y="0.0">model.vo.veiculo.MarcaVO</node>
+    <node x="313.29166666666663" y="2873.0">model.vo.movimentos.MovimentoVO</node>
+    <node x="1222.4166666666665" y="674.0">model.vo.cliente.EnderecoVO</node>
+    <node x="947.5" y="1287.0">model.vo.cliente.ClienteVO</node>
+    <node x="1688.4166666666665" y="0.0">model.vo.movimentos.LostTicketVO</node>
+    <node x="0.0" y="2044.0">model.vo.movimentos.TicketVO</node>
+    <node x="917.9166666666666" y="301.0">model.vo.veiculo.ModeloVO</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.18333333333333332" x="1068.5" y="1730.0000000000002" />
+  <SelectedNodes>
+    <node>model.vo.veiculo.MarcaVO</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

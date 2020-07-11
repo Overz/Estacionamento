@@ -111,7 +111,7 @@ public class ControllerInicio {
      */
     private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
         LocalDateTime entrada = movimento.getHr_entrada();
-
+        String placa = movimento.getTicket().getPlaca();
         // Impede que o Plano/Cliente seja Preenchido na tabela
         // caso o dia de entrada desse cliente, seja != do dia de hj
 //        if (entrada.toLocalDate().equals(now.toLocalDate())) {
@@ -120,8 +120,12 @@ public class ControllerInicio {
         novaColuna[0] = movimento.getTicket().getNumero();
         // Coluna 2 (Carro)
         novaColuna[1] = "";
-        // Coluna 3 (Placa)
-        novaColuna[2] = "";
+        // Coluna 3 (Placa) TODO TESTAR SE PREENCHE
+        if (placa != null && !placa.isEmpty()) {
+            novaColuna[2] = placa;
+        } else {
+            novaColuna[2] = "";
+        }
         // Coluna 4 (Cliente)
         novaColuna[3] = "";
         // Coluna 5 (Entrada)
@@ -579,25 +583,35 @@ public class ControllerInicio {
      * Gambiarra do OCR
      */
     public void runOcr() {
-        OCR ocr = new OCR();
-        ocr.lerImagem();
-        Timer timer;
-        ActionListener event = e1 -> {
-            ocr.mostrarImagemComLabel();
-        };
-        timer = new Timer(10000, event);
-        timer.start();
-
-        if (ocr.getI() == -1){
-            timer.stop();
-            timer.setRepeats(false);
-        }
-
-        for (String placa : ocr.getListaPlacas()) {
-            MovimentoVO m = daoM.consultar(placa);
-            if (m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)){
-                
+        try {
+            // TODO DAR CONTINUIDADE - EXTREMA IMPORTANCIA
+            OCR ocr = new OCR();
+            ocr.setStart(1);
+            ocr.runOcr();
+            if (ocr.getLastIndexPlate() == -1) {
+                ocr.setStart(0);
             }
+
+            long leftLimit = 9999L;
+            long rightLimit = 999999999L;
+            for (String placa : ocr.getListaPlacas()) {
+                MovimentoVO m = daoM.consultar(placa);
+                if (m.getContrato().getCliente().getCarro().getPlaca().equalsIgnoreCase(placa)) {
+                    TicketVO t = new TicketVO(randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
+                    m = new MovimentoVO(LocalDateTime.now(), true, t);
+                    t = daoT.cadastrar(t); // TODO TESTAR
+                    m = daoM.cadastrar(m); // TODO TESTAR
+                    if (t != null && m != null) {
+                        ConstHelpers.TIPO_TOSTRING = 1;
+                        JOptionPane.showMessageDialog(inicioView,
+                                Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                         + "<br>" + t.toString()));
+                    }
+                }
+            }
+            ConstHelpers.TIPO_TOSTRING = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
