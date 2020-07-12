@@ -594,8 +594,7 @@ public class ControllerInicio {
             JOptionPane.showMessageDialog(ocr, Modificacoes.labelConfig("Simulação Iniciada!"));
             ocr.setStart(1);
             ocr.runOcr();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

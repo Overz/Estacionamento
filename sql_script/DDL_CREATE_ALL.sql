@@ -121,8 +121,8 @@ CREATE TABLE `dbestacionamento`.`ticketlost`
     `id`        INT          NOT NULL AUTO_INCREMENT,
     `nome`      VARCHAR(255) NOT NULL,
     `cpf`       VARCHAR(11)  NOT NULL,
-    `placa`     VARCHAR(7)   NOT NULL,
-    `renavam`   VARCHAR(12)  NOT NULL,
+    `placa`     VARCHAR(8)   NOT NULL,
+    `renavam`   VARCHAR(11)  NOT NULL,
     `tipoPgo`   VARCHAR(8)   NOT NULL,
     `documento` LONGBLOB     NOT NULL,
     CONSTRAINT `pk_idTicketLost` PRIMARY KEY (`id`)

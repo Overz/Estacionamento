@@ -99,7 +99,7 @@ public class LostTicketView extends JPanel {
         add(txtNome, "cell 4 4 5 1,grow");
         txtNome.setColumns(10);
 
-        txtCPF = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_RENAVAM_11, ""));
+        txtCPF = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_CPF, ""));
         txtCPF.setFont(new Font("Arial", Font.BOLD, 14));
         txtCPF.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtCPF.setColumns(10);
@@ -111,7 +111,7 @@ public class LostTicketView extends JPanel {
         txtPlaca.setColumns(10);
         add(txtPlaca, "cell 4 6 5 1,grow");
 
-        txtRenavam = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_CPF, ""));
+        txtRenavam = new JFormattedTextField(addMask(new MaskFormatter(), ConstHelpers.MASK_RENAVAM_11, ""));
         txtRenavam.setFont(new Font("Arial", Font.BOLD, 14));
         txtRenavam.setBorder(new LineBorder(Color.BLACK, 1, true));
         txtRenavam.setColumns(10);

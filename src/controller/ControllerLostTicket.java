@@ -58,6 +58,7 @@ public class ControllerLostTicket {
         }
 
         msg += "</body></html>";
+        System.out.println(msg);
         if (!msg.equals("<html><body></body></html>")) {
             JOptionPane.showMessageDialog(lostTicketView, Modificacoes.labelConfig(msg),
                     "Ticket Perdido", JOptionPane.INFORMATION_MESSAGE);
@@ -72,10 +73,10 @@ public class ControllerLostTicket {
      * @return LostTicketVO
      */
     private LostTicketVO getResultadoForm() {
-        String nome = lostTicketView.getTxtNome().getText();
-        String cpf = lostTicketView.getTxtCPF().getText();
-        String placa = lostTicketView.getTxtPlaca().getText();
-        String renavam = lostTicketView.getTxtRenavam().getText();
+        String nome = lostTicketView.getTxtNome().getText().toUpperCase();
+        String cpf = lostTicketView.getTxtCPF().getText().replaceAll("\\.", "").replaceAll("-", "");
+        String placa = lostTicketView.getTxtPlaca().getText().trim();
+        String renavam = lostTicketView.getTxtRenavam().getText().trim();
         String formPgto = Objects.requireNonNull(lostTicketView.getComboBox().getSelectedItem()).toString();
         return new LostTicketVO(nome, cpf, placa, renavam, formPgto, 56.7);
     }
@@ -100,9 +101,7 @@ public class ControllerLostTicket {
     }
 
     /**
-     * Cria um diretorio: Path
-     * Verifica se existe, se existir pergunta se deseja substituir
-     * Cria um Novo Pdf nesse caminho
+     * Escolhe um caminho para slavar o PDF, verifica se existe com mesmo nome e se deseja substituir
      *
      * @param vo           LostTicketVO
      * @param jFileChooser JFileChooser
@@ -149,7 +148,6 @@ public class ControllerLostTicket {
 
     private void salvarDocumentoDAO(LostTicketVO vo, JFileChooser jFileChooser) {
         try {
-            //TODO TENTAR SALVAR O DOCUMENTO NO DB
             File file = new File(jFileChooser.getSelectedFile().getAbsolutePath() + PdfHelpers.EXTENSAO);
             byte[] bytesArray = loadFile(file.getAbsolutePath());
 

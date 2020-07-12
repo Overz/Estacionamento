@@ -39,7 +39,7 @@ public class LostTicketBO {
     public static boolean validarRenavam(LostTicketVO vo) {
         try {
             if (vo != null) {
-                return vo.getRenavam().length() == 12
+                return vo.getRenavam().length() == 11
                        && vo.getRenavam().matches(ConstHelpers.REGEX_NUMEROS);
             }
         } catch (Exception e) {

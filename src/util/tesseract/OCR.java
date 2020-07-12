@@ -84,11 +84,7 @@ public class OCR extends JFrame {
             if (start == 1) {
                 controllerInicio.getTimer().stop();
                 ActionListener event = e -> {
-                    if (this.i == -1) {
-                        start = 0; // Método para dar Stop no timer
-                        timer.stop();
-                        controllerInicio.getTimer().restart();
-                    }
+                    this.pararTimerOCR();
                     this.lerImagem();
                     this.mostrarImagemComLabel();
                     this.cadastrar();
@@ -101,6 +97,17 @@ public class OCR extends JFrame {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Método para dar Stop no timer
+     */
+    private void pararTimerOCR() {
+        if (this.i == -1) {
+            start = 0;
+            timer.stop();
+            controllerInicio.getTimer().restart();
         }
     }
 
