@@ -50,12 +50,12 @@ public class ControllerInicio {
 
     public ControllerInicio(InicioView inicioView) {
         this.inicioView = inicioView;
-        daoM = new MovimentoDAO();
-        daoT = new TicketDAO();
-        daoC = new ContratoDAO();
-        m = new MovimentoVO();
-        t = new TicketVO();
-        lista = new ArrayList<>();
+        this.daoM = new MovimentoDAO();
+        this.daoT = new TicketDAO();
+        this.daoC = new ContratoDAO();
+        this.m = new MovimentoVO();
+        this.t = new TicketVO();
+        this.lista = new ArrayList<>();
         this.timerRefreshData();
     }
 
@@ -114,7 +114,7 @@ public class ControllerInicio {
      * @param movimento  MovimentoVO
      * @param novaColuna Objet[]
      */
-    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+    public void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
         LocalDateTime entrada = movimento.getHr_entrada();
         String placa = movimento.getTicket().getPlaca();
         // Impede que o Plano/Cliente seja Preenchido na tabela
@@ -125,7 +125,7 @@ public class ControllerInicio {
         novaColuna[0] = movimento.getTicket().getNumero();
         // Coluna 2 (Carro)
         novaColuna[1] = "";
-        // Coluna 3 (Placa) TODO TESTAR SE PREENCHE
+        // Coluna 3 (Placa)
         if (placa != null && !placa.isEmpty()) {
             novaColuna[2] = placa;
         } else {
@@ -145,7 +145,7 @@ public class ControllerInicio {
      * @param novaColuna Object[]
      * @param now        LocalDateTime
      */
-    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+    public void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
         LocalDateTime entrada = movimento.getHr_entrada();
 
         // Impede que o Plano/Cliente seja Preenchido na tabela
@@ -602,10 +602,6 @@ public class ControllerInicio {
 
     public Timer getTimer() {
         return timer;
-    }
-
-    public void setTimer(Timer timer) {
-        this.timer = timer;
     }
 
 }

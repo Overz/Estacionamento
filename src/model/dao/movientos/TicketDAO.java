@@ -164,7 +164,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                     stmt.setString(5, "");
                 }
 
-                stmt.execute(); // TODO NÃO ESTA GERANDO O "TRUE" DO EXECUTE
+                stmt.execute();
                 result = stmt.getGeneratedKeys();
                 if (result != null && result.next()) {
                     newObject.setId(result.getInt(1));

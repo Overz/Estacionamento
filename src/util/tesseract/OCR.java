@@ -39,6 +39,7 @@ public class OCR extends JFrame {
 
     private Timer timer;
     private ArrayList<String> listaPlacas;
+    private ArrayList<MovimentoVO> listaMovimentos;
     private String imagePath;
     private long leftLimit = 9999L;
     private long rightLimit = 99999999L;
@@ -92,7 +93,7 @@ public class OCR extends JFrame {
                     this.mostrarImagemComLabel();
                     this.cadastrar();
                     ConstHelpers.FLAG = 0; // Utilizado para listar todos no método atualizar
-                    controllerInicio.atualizarTabela();
+//                    controllerInicio.atualizarTabela();
                     timer.setDelay(5000);
                 };
                 timer = new Timer(15000, event);
@@ -110,6 +111,7 @@ public class OCR extends JFrame {
         daoC = new ContratoDAO();
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
+        listaMovimentos = new ArrayList<>();
 
         if (timer.isRunning()) {
             if (listaPlacas != null) {
@@ -127,6 +129,8 @@ public class OCR extends JFrame {
                             m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
                             m = daoM.cadastrar(m);
                             if (m != null) {
+//                                listaMovimentos.add(m);
+//                                controllerInicio.atualizarTabelaPlano(m, new Object[5], LocalDateTime.now());
                                 ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
                                 do {
@@ -151,6 +155,8 @@ public class OCR extends JFrame {
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
                             m = daoM.cadastrar(m);
                             if (m != null) {
+//                                listaMovimentos.add(m);
+//                                controllerInicio.atualizarTabelaTicket(m, new Object[5], LocalDateTime.now());
                                 ConstHelpers.FLAG = 1; /// Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
                                 do {

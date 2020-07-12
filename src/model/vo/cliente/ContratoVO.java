@@ -98,7 +98,7 @@ public class ContratoVO {
         this.tipoPgto = tipoPgto;
     }
 
-    private String builderToString() {// TODO TESTAR SE FUNCIONA: Quando salvar a placa do OCR com o cliente, devera exibir toString de "else if(flag)"
+    private String builderToString() {
         if (dtSaida == null) {
             return " - ID: " + this.id +
                    " - Nº: " + this.numeroCartao +
