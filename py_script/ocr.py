@@ -4,7 +4,7 @@ import sys
 import pytesseract
 from PIL import Image
 
-teste1 = '/home/cris/tess/blackplate/bp1.jpeg'
+teste1 = '/home/cris/dev/git/intellij/estacionamento/files/bp2.png'
 teste2 = '/home/cris/tess/blueplate/bp2.png'
 
 

@@ -456,19 +456,37 @@ VALUES ('40', 'MOTOS EM GERAIS');
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
 VALUES ('1', '1', 'BRA2OE4', 'BRANCO');
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
-VALUES ('2', '2', 'A0B0C0D', 'VERMELHO');
+VALUES ('2', '2', 'LSN4I19', 'VERMELHO');
+INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
+VALUES ('3', '3', 'BRA1234', 'PRETO');
+INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
+VALUES ('4', '4', 'BRA7S19', 'AZUL');
+INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
+VALUES ('5', '5', 'BEE4R22', 'CINZA');
 
 -- ENDERECO
 INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
-VALUES ('1', '10', 'XXX', 'AAAA', 'CIDADE XXX');
+VALUES ('1', '10', 'ABC', 'AAAA', 'CIDADE AAA');
 INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
-VALUES ('2', '30', 'YYY', 'CCCC', 'CIDADE YYY');
+VALUES ('2', '20', 'DEF', 'BBBB', 'CIDADE BBB');
+INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
+VALUES ('3', '30', 'GHI', 'CCCC', 'CIDADE CCC');
+INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
+VALUES ('4', '40', 'JKL', 'DDDD', 'CIDADE DDD');
+INSERT INTO `dbestacionamento`.`endereco` (`id`, `numero`, `rua`, `bairro`, `cidade`)
+VALUES ('5', '50', 'MNO', 'EEEE', 'CIDADE EEE');
 
 -- CLIENTE
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('1', '1', '1', 'JOSE', '00000000001', '1234567890', 'teste1@email.com', '48000000001');
+VALUES ('1', '1', '1', 'JOSE', '00000000001', '1234567891', 'teste1@email.com', '48000000001');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('2', '2', '2', 'JOAO', '00000000002', '9876543210', 'teste3@email.com', '48000000003');
+VALUES ('2', '2', '2', 'JOAO', '00000000002', '1234567892', 'teste2@email.com', '48000000003');
+INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
+VALUES ('3', '3', '2', 'JOAO', '00000000003', '1234567893', 'teste3@email.com', '48000000005');
+INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
+VALUES ('4', '4', '2', 'JOAO', '00000000004', '1234567894', 'teste4@email.com', '48000000007');
+INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
+VALUES ('5', '5', '2', 'JOAO', '00000000005', '1234567895', 'teste5@email.com', '48000000009');
 
 -- TICKET
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)
@@ -488,11 +506,20 @@ INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cart
 VALUES ('1', '1', '1', '10000000001', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
 INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
                                            `ativo`, `valor`, `tipoPgto`)
-VALUES ('2', '2', '2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
+VALUES ('2', '2', '2', '10000000002', now(), adddate(now(), 365), '1', '25.00', 'CARTÃO');
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
+                                           `ativo`, `valor`, `tipoPgto`)
+VALUES ('3', '1', '3', '10000000003', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
+                                           `ativo`, `valor`, `tipoPgto`)
+VALUES ('4', '2', '4', '10000000004', now(), adddate(now(), 365), '1', '25.00', 'CARTÃO');
+INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cartao`, `dt_entrada`, `dt_validade`,
+                                           `ativo`, `valor`, `tipoPgto`)
+VALUES ('5', '1', '5', '10000000005', now(), adddate(now(), 365), '1', '200.00', 'DINHEIRO');
 
 -- MOVIMENTO
-# INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
-# VALUES ('1', '1', now());
+INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
+VALUES ('1', '1', now());
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
 VALUES ('2', '2', now());
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)

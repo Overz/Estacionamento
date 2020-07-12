@@ -215,7 +215,6 @@ public class OCR extends JFrame {
         }
     }
 
-
     /**
      * Retorna o caminho das imagens
      *

@@ -59,6 +59,7 @@ public class ControllerInicio {
         this.timerRefreshData();
     }
 
+    // INICIO ### MÉTODS DA TABELA
     /**
      * Atualiza a JTable com Todos os Valores
      */
@@ -114,7 +115,7 @@ public class ControllerInicio {
      * @param movimento  MovimentoVO
      * @param novaColuna Objet[]
      */
-    public void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+    private void atualizarTabelaTicket(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
         LocalDateTime entrada = movimento.getHr_entrada();
         String placa = movimento.getTicket().getPlaca();
         // Impede que o Plano/Cliente seja Preenchido na tabela
@@ -145,7 +146,7 @@ public class ControllerInicio {
      * @param novaColuna Object[]
      * @param now        LocalDateTime
      */
-    public void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
+    private void atualizarTabelaPlano(MovimentoVO movimento, Object[] novaColuna, LocalDateTime now) {
         LocalDateTime entrada = movimento.getHr_entrada();
 
         // Impede que o Plano/Cliente seja Preenchido na tabela
@@ -187,6 +188,7 @@ public class ControllerInicio {
     private void limparTabela() {
         inicioView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_INICIO));
     }
+    // FIM ### MÉTODOS DA TABELA
 
     /**
      * Remover as linhas selecionadas da tablea;
@@ -238,6 +240,7 @@ public class ControllerInicio {
         }
     }
 
+    // INICIO ### MÉTODOS DO TICKET
     /**
      * Valida o ticket por algum tempo, e atualiza o Status no banco
      *
@@ -397,6 +400,7 @@ public class ControllerInicio {
         m.setHr_entrada(m.getHr_entrada());
         m.setHr_saida(t.getDataValidacao());
     }
+    // FIM ### MÉTODOS DO TICKET
 
     /**
      * Cria o Timer para atualizar o Status do ticket
