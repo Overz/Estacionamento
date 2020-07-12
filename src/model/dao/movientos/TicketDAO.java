@@ -90,10 +90,8 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
             result = stmt.executeQuery();
             while (result != null && result.next()) {
-                ticketVO = criarResultSet(result);
-                list.add(ticketVO);
+                return (T) criarResultSet(result);
             }
-            return (T) list;
         } catch (SQLException e) {
             String method = "Consultar (String... values)";
             System.out.println("\n" +

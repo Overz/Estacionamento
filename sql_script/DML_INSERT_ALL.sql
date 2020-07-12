@@ -454,7 +454,7 @@ VALUES ('40', 'MOTOS EM GERAIS');
 
 -- CARRO
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
-VALUES ('1', '1', 'ABC0001', 'BRANCO');
+VALUES ('1', '1', 'BRA2OE4', 'BRANCO');
 INSERT INTO `dbestacionamento`.`carro` (`id`, `idModelo`, `placa`, `cor`)
 VALUES ('2', '2', 'A0B0C0D', 'VERMELHO');
 
@@ -491,8 +491,8 @@ INSERT INTO `dbestacionamento`.`contrato` (`id`, `idPlano`, `idCliente`, `n_cart
 VALUES ('2', '2', '2', '10000000003', now(), adddate(now(), 365), '1', '25.00', 'DINHEIRO');
 
 -- MOVIMENTO
-INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
-VALUES ('1', '1', now());
+# INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
+# VALUES ('1', '1', now());
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idContrato`, `hr_entrada`)
 VALUES ('2', '2', now());
 INSERT INTO `dbestacionamento`.`movimento` (`id`, `idTicket`, `hr_entrada`)

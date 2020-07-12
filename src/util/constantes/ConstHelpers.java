@@ -18,7 +18,9 @@ public class ConstHelpers {
     public static final String REGEX_NUMEROS_PALAVRAS = "[A-Za-z0-9]+";
     public static final String REGEX_TELEFONE = "[\\(\\)\\0-9]+";
     public static final String REGEX_CPF = "[\\.?\\-?\\0-9]+";
-    public static final int TEMPO_1_MIN = 60 * 5000;
+    public static final int TEMPO_1_MIN = 60 * 1000;
+    public static final int TEMPO_5_MIN = 60 * 5000;
+    public static final int TEMPO_10_MIN = 60 * 10000;
     public static final int TEMPO_30_SEG = 30 * 1000;
     public static ClienteVO clienteForID;
     public static int FLAG = 0;

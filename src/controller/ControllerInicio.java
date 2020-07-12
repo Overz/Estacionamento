@@ -46,6 +46,7 @@ public class ControllerInicio {
     private String title = "";
     private long minutes;
     private double valor;
+    private Timer timer;
 
     public ControllerInicio(InicioView inicioView) {
         this.inicioView = inicioView;
@@ -128,7 +129,7 @@ public class ControllerInicio {
         if (placa != null && !placa.isEmpty()) {
             novaColuna[2] = placa;
         } else {
-            novaColuna[2] = "SEM PLACA";
+            novaColuna[2] = "NENHUM REGISTRO";
         }
         // Coluna 4 (Cliente)
         novaColuna[3] = "";
@@ -400,7 +401,7 @@ public class ControllerInicio {
     /**
      * Cria o Timer para atualizar o Status do ticket
      */
-    private synchronized void timerTicket() {
+    private void timerTicket() {
         ActionListener event = e -> {
             // validar o Ticket por X minutos
             ConstHelpers.FLAG = 1;
@@ -410,7 +411,7 @@ public class ControllerInicio {
         };
         Timer timer;
         if (ConstHelpers.TEMPO_TICKET == 0) {
-            timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
+            timer = new Timer(ConstHelpers.TEMPO_5_MIN, event);
         } else {
             timer = new Timer(ConstHelpers.TEMPO_TICKET, event);
         }
@@ -530,6 +531,7 @@ public class ControllerInicio {
             t = daoT.cadastrar(t);
 
             if (t != null) {
+                ConstHelpers.FLAG = -1;
                 m = new MovimentoVO(t.getId(), t.getDataEntrada(), true, t);
                 m = daoM.cadastrar(m);
 
@@ -577,9 +579,9 @@ public class ControllerInicio {
     /**
      * Timer que mantém a tabela atualizada a cada X tempo
      */
-    private synchronized void timerRefreshData() {
+    private void timerRefreshData() {
         ActionListener event = e -> this.atualizarTabela();
-        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+        timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();
     }
 
@@ -597,4 +599,13 @@ public class ControllerInicio {
             e.printStackTrace();
         }
     }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
 }

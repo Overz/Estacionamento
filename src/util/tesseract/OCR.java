@@ -26,21 +26,27 @@ public class OCR extends JFrame {
 
     private static final String python = "python3 ";
     private static OCR window;
+    private ImageIcon icon;
+    private JLabel label = new JLabel();
+
     private ControllerInicio controllerInicio;
     private BaseDAO<TicketVO> daoT;
     private BaseDAO<MovimentoVO> daoM;
     private BaseDAO<ContratoVO> daoC;
-    private TicketVO t;
     private MovimentoVO m;
+    private TicketVO t;
+    private ContratoVO c;
+
+    private Timer timer;
     private ArrayList<String> listaPlacas;
     private String imagePath;
+    private long leftLimit = 9999L;
+    private long rightLimit = 99999999L;
     private int i = 0;
     private int start = 0;
     private int y;
     private int x;
-    private ImageIcon icon;
-    private JLabel label = new JLabel();
-    private Timer timer;
+
 
     public static void main(String[] args) {
         try {
@@ -75,16 +81,22 @@ public class OCR extends JFrame {
             this.addScreenPosition();
             this.setVisible(false);
             if (start == 1) {
+                controllerInicio.getTimer().stop();
                 ActionListener event = e -> {
+                    if (this.i == -1) {
+                        start = 0; // Método para dar Stop no timer
+                        timer.stop();
+                        controllerInicio.getTimer().restart();
+                    }
                     this.lerImagem();
-//                    this.mostrarImagemComLabel();
+                    this.mostrarImagemComLabel();
                     this.cadastrar();
+                    ConstHelpers.FLAG = 0; // Utilizado para listar todos no método atualizar
+                    controllerInicio.atualizarTabela();
+                    timer.setDelay(5000);
                 };
                 timer = new Timer(15000, event);
                 timer.start();
-                if (start == 0) {
-                    timer.stop();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,18 +111,8 @@ public class OCR extends JFrame {
         daoM = new MovimentoDAO();
         daoT = new TicketDAO();
 
-        long leftLimit = 9999L;
-        long rightLimit = 999999999L;
         if (timer.isRunning()) {
-
-            if (this.i == -1) {
-                start = 0; // Método para dar Stop no timer
-                timer.stop();
-                timer.setRepeats(false);
-            }
-
             if (listaPlacas != null) {
-
                 for (String placa : listaPlacas) {
                     ConstHelpers.FLAG = 2;
                     ContratoVO c = daoC.consultar(placa);
@@ -125,20 +127,18 @@ public class OCR extends JFrame {
                             m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
                             m = daoM.cadastrar(m);
                             if (m != null) {
-                                ConstHelpers.FLAG = 0; // Utilizado para listar todos no método atualizar
-                                controllerInicio.atualizarTabela();
                                 ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
-//                                do {
-//                                    timer.setDelay(500);
-//                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
-//                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-//                                                                     + c.toString() + "</body></html>"), "Cadastrado",
-//                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-//                                    if (res == JOptionPane.CANCEL_OPTION) {
-//                                        break;
-//                                    }
-//                                } while (res != JOptionPane.OK_OPTION);
+                                do {
+                                    timer.setDelay(2000);
+                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                     + c.toString() + "</body></html>"), "Cadastrado",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                                    if (res == JOptionPane.CANCEL_OPTION) {
+                                        break;
+                                    }
+                                } while (res != JOptionPane.OK_OPTION);
                                 System.out.println("Cadastrou Cliente");
                             }
                         }
@@ -151,29 +151,27 @@ public class OCR extends JFrame {
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
                             m = daoM.cadastrar(m);
                             if (m != null) {
-                                ConstHelpers.FLAG = 0;
-                                controllerInicio.atualizarTabela();
                                 ConstHelpers.FLAG = 1; /// Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
-//                                do {
-//                                    timer.setDelay(500);
-//                                    ConstHelpers.TIPO_TOSTRING = 1;
-//                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
-//                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-//                                                                     + t.toString() + "</body></html>"), "Cadastrado",
-//                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-//                                    if (res == JOptionPane.CANCEL_OPTION) {
-//                                        break;
-//                                    }
-//                                } while (res != JOptionPane.OK_OPTION);
+                                do {
+                                    timer.setDelay(2000);
+                                    ConstHelpers.TIPO_TOSTRING = 1;
+                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                     + t.toString() + "</body></html>"), "Cadastrado",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                                    if (res == JOptionPane.CANCEL_OPTION) {
+                                        break;
+                                    }
+                                } while (res != JOptionPane.OK_OPTION);
                                 System.out.println("Cadastrou Ticket\n");
                             }
                         }
                     }
+                    timer.setDelay(5000);
                 }
             }
         }
-        ConstHelpers.TIPO_TOSTRING = 0;
     }
 
     /**
@@ -203,6 +201,7 @@ public class OCR extends JFrame {
             ex.printStackTrace();
         }
     }
+
 
     /**
      * Retorna o caminho das imagens
@@ -237,28 +236,16 @@ public class OCR extends JFrame {
                 imagePath = imagePath("bp8.png");
                 break;
             case 9:
-                imagePath = imagePath("bp10.png");
+                imagePath = imagePath("bp9.png");
                 break;
             case 10:
-                imagePath = imagePath("bp11.png");
+                imagePath = imagePath("bp10.png");
                 break;
             case 11:
-                imagePath = imagePath("bp12.png");
+                imagePath = imagePath("bp11.png");
                 break;
             case 12:
-                imagePath = imagePath("bp13.png");
-                break;
-            case 13:
-                imagePath = imagePath("bp14.png");
-                break;
-            case 14:
-                imagePath = imagePath("bp15.png");
-                break;
-            case 15:
-                imagePath = imagePath("bp16.png");
-                break;
-            case 16:
-                imagePath = imagePath("bp17.png");
+                imagePath = imagePath("bp12.png");
                 i = -1;
                 break;
             default:
@@ -284,6 +271,7 @@ public class OCR extends JFrame {
             if (res == JOptionPane.CANCEL_OPTION || res == JOptionPane.CLOSED_OPTION) {
                 timer.stop();
                 JOptionPane.showMessageDialog(this, Modificacoes.labelConfig("A Simulação foi Finalizada!"));
+                return;
             }
         } while (res != JOptionPane.OK_OPTION);
 
