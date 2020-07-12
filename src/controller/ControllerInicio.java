@@ -128,7 +128,7 @@ public class ControllerInicio {
         if (placa != null && !placa.isEmpty()) {
             novaColuna[2] = placa;
         } else {
-            novaColuna[2] = "";
+            novaColuna[2] = "SEM PLACA";
         }
         // Coluna 4 (Cliente)
         novaColuna[3] = "";

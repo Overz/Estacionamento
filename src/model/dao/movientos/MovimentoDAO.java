@@ -164,7 +164,7 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         } else if (ConstHelpers.FLAG == 1) {
             qry = "select * from movimento where idticket=?;";
         } else if (ConstHelpers.FLAG == 2) {
-            qry = "select * from movimento wheree idplano=?;";
+            qry = "select * from movimento where idContrato=?;";
         }
 
         conn = Banco.getConnection();
@@ -202,7 +202,6 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             qry = "insert into movimento (hr_entrada, atual, idContrato) values (?,?,?);";
         } else {
             qry = "insert into movimento (idticket, hr_entrada, atual) values (?,?,?);";
-
         }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);

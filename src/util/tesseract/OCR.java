@@ -116,29 +116,38 @@ public class OCR extends JFrame {
                     ContratoVO c = daoC.consultar(placa);
 
                     if (c != null) {
-                        ConstHelpers.FLAG = 1;
-                        m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
-                        m = daoM.cadastrar(m);
+                        ConstHelpers.FLAG = 2;
+                        m = daoM.consultarPorId(c.getId());
                         if (m != null) {
-                            controllerInicio.atualizarTabela();
-                            ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
-                            int res;
-                            do {
-                                timer.setDelay(500);
-                                res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
-                                        Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                                 + c.toString() + "</body></html>"), "Cadastrado",
-                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-                                if (res == JOptionPane.CANCEL_OPTION){
-                                    break;
-                                }
-                            } while (res != JOptionPane.OK_OPTION);
+                            break;
+                        } else {
+                            ConstHelpers.FLAG = 1;
+                            m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
+                            m = daoM.cadastrar(m);
+                            if (m != null) {
+                                ConstHelpers.FLAG = 0; // Utilizado para listar todos no método atualizar
+                                controllerInicio.atualizarTabela();
+                                ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
+                                int res;
+//                                do {
+//                                    timer.setDelay(500);
+//                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+//                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+//                                                                     + c.toString() + "</body></html>"), "Cadastrado",
+//                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+//                                    if (res == JOptionPane.CANCEL_OPTION) {
+//                                        break;
+//                                    }
+//                                } while (res != JOptionPane.OK_OPTION);
+                                System.out.println("Cadastrou Cliente");
+                            }
                         }
                     } else {
                         ConstHelpers.FLAG = 1;
                         t = new TicketVO(controllerInicio.randomTicketGenerator(leftLimit, rightLimit), placa, LocalDateTime.now(), true, false);
                         t = daoT.cadastrar(t);
                         if (t != null) {
+                            ConstHelpers.FLAG = 2;
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
                             m = daoM.cadastrar(m);
                             if (m != null) {
@@ -146,16 +155,18 @@ public class OCR extends JFrame {
                                 controllerInicio.atualizarTabela();
                                 ConstHelpers.FLAG = 1; /// Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
-                                do {
-                                    timer.setDelay(500);
-                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
-                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                                     + t.toString() + "</body></html>"), "Cadastrado",
-                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-                                    if (res == JOptionPane.CANCEL_OPTION){
-                                        break;
-                                    }
-                                } while (res != JOptionPane.OK_OPTION);
+//                                do {
+//                                    timer.setDelay(500);
+//                                    ConstHelpers.TIPO_TOSTRING = 1;
+//                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+//                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+//                                                                     + t.toString() + "</body></html>"), "Cadastrado",
+//                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+//                                    if (res == JOptionPane.CANCEL_OPTION) {
+//                                        break;
+//                                    }
+//                                } while (res != JOptionPane.OK_OPTION);
+                                System.out.println("Cadastrou Ticket\n");
                             }
                         }
                     }
