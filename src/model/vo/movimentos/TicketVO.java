@@ -40,6 +40,7 @@ public class TicketVO {
         this.dataEntrada = dataEntrada;
         this.status = status;
         this.validado = validado;
+        this.placa = placa;
     }
 
     public TicketVO() {

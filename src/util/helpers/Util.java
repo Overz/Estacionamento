@@ -39,10 +39,12 @@ public class Util {
      */
     public static void checkPythonVersion() {
         try {
+            // TODO TENTAR RODAR NO WINDOWS
             String line;
             Process p = Runtime.getRuntime().exec("python3 --version");
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
             if ((line = in.readLine()) != null) {
+                System.out.println("Running pip install");
                 Runtime.getRuntime().exec("pip install pytesseract");
             } else {
                 JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("POR FAVOR, INSTALE PYTHON 3.x !"));

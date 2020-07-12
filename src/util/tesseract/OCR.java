@@ -77,7 +77,7 @@ public class OCR extends JFrame {
             if (start == 1) {
                 ActionListener event = e -> {
                     this.lerImagem();
-                    this.mostrarImagemComLabel();
+//                    this.mostrarImagemComLabel();
                     this.cadastrar();
                 };
                 timer = new Timer(15000, event);
@@ -113,7 +113,7 @@ public class OCR extends JFrame {
 
                 for (String placa : listaPlacas) {
                     ConstHelpers.FLAG = 2;
-                    ContratoVO c = daoC.consultar(placa); // TODO LEFT/INNER JOIN NO DAO
+                    ContratoVO c = daoC.consultar(placa); // TODO TESTAR SE A PLACA ACHA UM CLIENTE
 
                     if (c != null) {
                         m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
@@ -126,7 +126,8 @@ public class OCR extends JFrame {
                                                              + "<br>" + c.toString() + "</body></html>"));
                         }
                     } else {
-                        t = new TicketVO(controllerInicio.randomTicketGenerator(leftLimit, rightLimit), LocalDateTime.now(), true, false);
+                        ConstHelpers.FLAG = 1;
+                        t = new TicketVO(controllerInicio.randomTicketGenerator(leftLimit, rightLimit), placa, LocalDateTime.now(), true, false);
                         t = daoT.cadastrar(t);
                         if (t != null) {
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
@@ -165,6 +166,7 @@ public class OCR extends JFrame {
             listaPlacas = new ArrayList<>();
             while ((line = in.readLine()) != null) {
                 listaPlacas.add(line);
+                System.out.println(line);
             }
         } catch (Exception ex) {
             System.out.println("Erro ao tentar processar a Imagem!");

@@ -118,7 +118,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
             qry = "insert into ticket (n_ticket, hr_entrada, statusticket, validado, placa)" +
                   "values (?,?,?,?,?);";
         } else {
-            qry = "insert into ticket (n_ticket, valor, tipo, hr_entrada, hr_saida, statusticket, validado" +
+            qry = "insert into ticket (n_ticket, valor, tipo, hr_entrada, hr_saida, statusticket, validado, placa)" +
                   "values (?,?,?,?,?,?,?);";
         }
         conn = Banco.getConnection();
@@ -131,15 +131,19 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 stmt.setBoolean(3, newObject.getStatus());
                 stmt.setBoolean(4, newObject.getValidado());
 
-                // TODO TESTAR SE ESTA FUNCIONANDO
                 String placa = newObject.getPlaca();
-                if (placa != null && !placa.isEmpty()){
+                if (placa != null && !placa.isEmpty()) {
                     stmt.setString(5, placa);
                 } else {
                     stmt.setString(5, "");
                 }
 
-                stmt.execute();
+                if (stmt.execute()) { // TODO NÃO ESTA GERANDO O "TRUE" DO EXECUTE
+                    result = stmt.getGeneratedKeys();
+                    newObject.setId(result.getInt(1));
+                }
+
+                return newObject;
 
             } else {
                 stmt.setLong(1, newObject.getNumero());
@@ -149,6 +153,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 stmt.setTimestamp(5, Timestamp.valueOf(newObject.getDataValidacao()));
                 stmt.setBoolean(6, newObject.getStatus());
                 stmt.setBoolean(7, newObject.getValidado());
+                stmt.setString(8, newObject.getPlaca());
             }
 
             result = stmt.getGeneratedKeys();

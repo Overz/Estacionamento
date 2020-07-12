@@ -134,6 +134,9 @@ public class ControllerMovimento {
         return MovimentoBO.validarData2(b) && MovimentoBO.validarData1(a);
     }
 
+    /**
+     * Método para consultar os movimentos do Dia automaticamente
+     */
     public void consultarDiaAtual() {
         ConstHelpers.FLAG = 2;
         ConstHelpers.SUB_FLAG = 4;
