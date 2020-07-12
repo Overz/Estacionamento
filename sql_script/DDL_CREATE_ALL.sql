@@ -88,7 +88,7 @@ CREATE TABLE `dbestacionamento`.`contrato`
 CREATE TABLE `dbestacionamento`.`ticket`
 (
     `id`           INT        NOT NULL AUTO_INCREMENT,
-    `placa`        VARCHAR(8) NULL,
+    `placa`        VARCHAR(8) NULL     DEFAULT NULL,
     `n_ticket`     LONG       NOT NULL,
     `valor`        DOUBLE     NULL     DEFAULT NULL,
     `tipo`         VARCHAR(8) NOT NULL DEFAULT 'DINHEIRO',

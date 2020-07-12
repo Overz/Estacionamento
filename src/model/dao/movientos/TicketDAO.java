@@ -165,11 +165,11 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                     stmt.setString(5, "");
                 }
 
-                if (stmt.execute()) { // TODO NÃO ESTA GERANDO O "TRUE" DO EXECUTE
-                    result = stmt.getGeneratedKeys();
-                    newObject.setId(result.getInt(1));
-                    ticketVO = newObject;
-                }
+                stmt.execute(); // TODO NÃO ESTA GERANDO O "TRUE" DO EXECUTE
+                result = stmt.getGeneratedKeys();
+                newObject.setId(result.getInt(1));
+                ticketVO = newObject;
+
 
                 return ticketVO;
 
@@ -184,6 +184,7 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 stmt.setString(8, newObject.getPlaca());
             }
 
+            stmt.execute();
             result = stmt.getGeneratedKeys();
             if (result.next()) {
                 int id = result.getInt(1);

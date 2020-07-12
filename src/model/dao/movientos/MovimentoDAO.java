@@ -198,8 +198,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
         String qry;
         if (ConstHelpers.FLAG == 0) {
             qry = "insert into movimento (hr_entrada, hr_saida, atual) values (?,?,?);";
+        } else if (ConstHelpers.FLAG == 1) {
+            qry = "insert into movimento (hr_entrada, atual, idContrato) values (?,?,?);";
         } else {
             qry = "insert into movimento (idticket, hr_entrada, atual) values (?,?,?);";
+
         }
         conn = Banco.getConnection();
         stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -208,11 +211,16 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
             if (ConstHelpers.FLAG == 0) {
                 stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_saida()));
+                stmt.setBoolean(3, newObject.isAtual());
+            } else if (ConstHelpers.FLAG == 1) {
+                stmt.setTimestamp(1, Timestamp.valueOf(newObject.getHr_entrada()));
+                stmt.setBoolean(2, newObject.isAtual());
+                stmt.setInt(3, newObject.getContrato().getId());
             } else {
                 stmt.setInt(1, newObject.getId());
                 stmt.setTimestamp(2, Timestamp.valueOf(newObject.getHr_entrada()));
+                stmt.setBoolean(3, newObject.isAtual());
             }
-            stmt.setBoolean(3, newObject.isAtual());
 
             stmt.execute();
             result = stmt.getGeneratedKeys();

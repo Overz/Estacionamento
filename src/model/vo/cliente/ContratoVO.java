@@ -106,7 +106,7 @@ public class ContratoVO {
                    " - Ativo?: " + this.ativo +
                    " - R$: " + this.valor;
         } else if (ConstHelpers.FLAG == 1) {
-            return "Nº: " + this.numeroCartao + " Nome: " + clienteVO.getNome();
+            return "<br>Nº: " + this.numeroCartao + "<br>Nome: " + clienteVO.getNome();
         } else {
             return " - ID: " + this.id +
                    " - Nº: " + this.numeroCartao +

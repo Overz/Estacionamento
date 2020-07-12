@@ -113,17 +113,26 @@ public class OCR extends JFrame {
 
                 for (String placa : listaPlacas) {
                     ConstHelpers.FLAG = 2;
-                    ContratoVO c = daoC.consultar(placa); // TODO TESTAR SE A PLACA ACHA UM CLIENTE
+                    ContratoVO c = daoC.consultar(placa);
 
                     if (c != null) {
+                        ConstHelpers.FLAG = 1;
                         m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
                         m = daoM.cadastrar(m);
                         if (m != null) {
                             controllerInicio.atualizarTabela();
                             ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
-                            JOptionPane.showMessageDialog(MainView.getInicioView(),
-                                    Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                             + "<br>" + c.toString() + "</body></html>"));
+                            int res;
+                            do {
+                                timer.setDelay(500);
+                                res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+                                        Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                 + c.toString() + "</body></html>"), "Cadastrado",
+                                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                                if (res == JOptionPane.CANCEL_OPTION){
+                                    break;
+                                }
+                            } while (res != JOptionPane.OK_OPTION);
                         }
                     } else {
                         ConstHelpers.FLAG = 1;
@@ -133,11 +142,20 @@ public class OCR extends JFrame {
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
                             m = daoM.cadastrar(m);
                             if (m != null) {
+                                ConstHelpers.FLAG = 0;
                                 controllerInicio.atualizarTabela();
-                                ConstHelpers.FLAG = 1;
-                                JOptionPane.showMessageDialog(MainView.getInicioView(),
-                                        Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
-                                                                 + "<br>" + t.toString()));
+                                ConstHelpers.FLAG = 1; /// Se cadastrar, deverá exibir um ToString personalizado
+                                int res;
+                                do {
+                                    timer.setDelay(500);
+                                    res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
+                                            Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
+                                                                     + t.toString() + "</body></html>"), "Cadastrado",
+                                            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+                                    if (res == JOptionPane.CANCEL_OPTION){
+                                        break;
+                                    }
+                                } while (res != JOptionPane.OK_OPTION);
                             }
                         }
                     }

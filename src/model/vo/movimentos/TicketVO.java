@@ -121,7 +121,7 @@ public class TicketVO {
 
     private String builderToString() {
         if (TIPO_TOSTRING == 1){
-            return "Nº: " + numero + " ENTRADA: " + dataEntrada;
+            return "<br>Nº: " + numero + "<br>ENTRADA: " + dataEntrada;
         }else {
             return " - TICKET: " +
                    " - ID: " + id +
