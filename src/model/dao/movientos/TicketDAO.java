@@ -79,6 +79,33 @@ public class TicketDAO implements BaseDAO<TicketVO> {
 
     @Override
     public <T> T consultar(String... values) {
+        String qry = "select * from ticket where placa = ?;";
+        list = new ArrayList<>();
+        conn = Banco.getConnection();
+        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+
+        try {
+            stmt.setString(1, values[0]);
+
+            result = stmt.executeQuery();
+            while (result != null && result.next()) {
+                ticketVO = criarResultSet(result);
+                list.add(ticketVO);
+            }
+            return (T) list;
+        } catch (SQLException e) {
+            String method = "Consultar (String... values)";
+            System.out.println("\n" +
+                               "Class: " + getClass().getSimpleName() + "\n" +
+                               "Method: " + method + "\n" +
+                               "Msg: " + e.getMessage() + "\n" +
+                               "Cause: " + e.getCause()
+            );
+        } finally {
+            Banco.closeResultSet(result);
+            Banco.closePreparedStatement(stmt);
+            Banco.closeConnection(conn);
+        }
         return null;
     }
 
@@ -141,9 +168,10 @@ public class TicketDAO implements BaseDAO<TicketVO> {
                 if (stmt.execute()) { // TODO NÃO ESTA GERANDO O "TRUE" DO EXECUTE
                     result = stmt.getGeneratedKeys();
                     newObject.setId(result.getInt(1));
+                    ticketVO = newObject;
                 }
 
-                return newObject;
+                return ticketVO;
 
             } else {
                 stmt.setLong(1, newObject.getNumero());
