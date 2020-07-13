@@ -109,7 +109,7 @@ public class Util {
                             button.setBackground(Color.WHITE);
                             button.setEnabled(false);
                         };
-                        Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+                        Timer timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
                         timer.start();
                     }
 

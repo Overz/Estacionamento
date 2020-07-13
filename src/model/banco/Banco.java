@@ -64,8 +64,8 @@ public class Banco {
 	private static final String BANCO = "dbestacionamento";
 	private static final String CONEXAO = "jdbc:mysql://localhost:3306/" + BANCO
 			+ "?useTimezone=true&serverTimezone=America/Sao_Paulo&zeroDateTimeBehavior=convertToNull";
-	private static final String USUARIO = "adm";
-	private static final String SENHA = "password";
+	private static final String USUARIO = "cris";
+	private static final String SENHA = "30752287";
 
 	/**
 	 * Estabelece a conexão JBDC considerando as configurações da classe Banco.
