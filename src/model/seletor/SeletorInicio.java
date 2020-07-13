@@ -67,6 +67,7 @@ public class SeletorInicio {
                 if (!primeiro) {
                     qry += " or ";
                 }
+                // TODO Tentar vincular Placa do TICKET
                 qry += " car.placa like '%" + valor + "%' ";
                 primeiro = false;
             }
