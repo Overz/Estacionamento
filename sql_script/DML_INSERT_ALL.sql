@@ -482,11 +482,11 @@ VALUES ('1', '1', '1', 'JOSE', '00000000001', '1234567891', 'teste1@email.com', 
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
 VALUES ('2', '2', '2', 'JOAO', '00000000002', '1234567892', 'teste2@email.com', '48000000003');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('3', '3', '2', 'ANA', '00000000003', '1234567893', 'teste3@email.com', '48000000005');
+VALUES ('3', '3', '3', 'ANA', '00000000003', '1234567893', 'teste3@email.com', '48000000005');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('4', '4', '2', 'CARLOS', '00000000004', '1234567894', 'teste4@email.com', '48000000007');
+VALUES ('4', '4', '4', 'CARLOS', '00000000004', '1234567894', 'teste4@email.com', '48000000007');
 INSERT INTO `dbestacionamento`.`cliente` (`id`, `idEndereco`, `idCarro`, `nome`, `cpf`, `rg`, `email`, `telefone`)
-VALUES ('5', '5', '2', 'AMANDA', '00000000005', '1234567895', 'teste5@email.com', '48000000009');
+VALUES ('5', '5', '5', 'AMANDA', '00000000005', '1234567895', 'teste5@email.com', '48000000009');
 
 -- TICKET
 INSERT INTO `dbestacionamento`.`ticket` (`id`, `n_ticket`)

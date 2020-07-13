@@ -23,7 +23,8 @@ public class SeletorInicio {
      * where
      * <p>
      * Message == 3 {
-     * t.n_ticket like '%X_value%'
+     * t.n_ticket like '%X_value%'SELECT *
+     * FROM contrato;
      * or con.n_cartao like '%X_value%'
      * }
      * <p>
@@ -68,6 +69,15 @@ public class SeletorInicio {
                     qry += " or ";
                 }
                 qry += " car.placa like '%" + valor + "%' ";
+                primeiro = false;
+            }
+        }
+        if (ConstHelpers.SUB_FLAG == 1) {
+            if (temFiltro) {
+                if (!primeiro) {
+                    qry += " or ";
+                }
+                qry += " t.placa like '%" + valor + "%' ";
                 primeiro = false;
             }
         }

@@ -92,9 +92,11 @@ public class MovimentoDAO implements BaseDAO<MovimentoVO> {
 		String qry = "";
 		SeletorInicio seletorInicio = new SeletorInicio();
 		if (ConstHelpers.FLAG == 0) {
-			qry = "select * from movimento movi " + " left join contrato con on movi.idContrato = con.id "
+			qry = "select * from movimento movi " +
+				  "left join contrato con on movi.idContrato = con.id "
 					+ " left join ticket t on movi.idTicket = t.id "
-					+ " left join cliente cli on con.idCliente = cli.id " + " left join plano p on con.idPlano = p.id "
+					+ " left join cliente cli on con.idCliente = cli.id "
+					+ " left join plano p on con.idPlano = p.id "
 					+ " left join carro car on cli.idCarro = car.id "
 					+ " left join modelo modl on car.idModelo = modl.id ";
 
