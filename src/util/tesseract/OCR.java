@@ -27,7 +27,7 @@ public class OCR extends JFrame {
     private static final String python = "python3 ";
     private static OCR window;
     private ImageIcon icon;
-    private JLabel label = new JLabel();
+    private final JLabel label = new JLabel();
 
     private ControllerInicio controllerInicio;
     private BaseDAO<TicketVO> daoT;
@@ -41,8 +41,8 @@ public class OCR extends JFrame {
     private ArrayList<String> listaPlacas;
     private ArrayList<MovimentoVO> listaMovimentos;
     private String imagePath;
-    private long leftLimit = 9999L;
-    private long rightLimit = 99999999L;
+    private final long leftLimit = 9999L;
+    private final long rightLimit = 99999999L;
     private int i = 0;
     private int start = 0;
     private int y;
@@ -204,6 +204,9 @@ public class OCR extends JFrame {
                 System.out.println(line);
             }
         } catch (Exception ex) {
+            JOptionPane.showConfirmDialog(this,
+                    Modificacoes.labelConfig("<html><body>Variavel de Sistema Não Foi Reconhecida!" +
+                                             "  <br><br>A Simulação Ira Parar!</body></html>"));
             System.out.println("Erro ao tentar processar a Imagem!");
             System.out.println(ex.getMessage());
             ex.printStackTrace();
