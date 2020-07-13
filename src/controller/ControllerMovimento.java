@@ -124,6 +124,7 @@ public class ControllerMovimento {
         movimentoView.getTable().setModel(new DefaultTableModel(new Object[][]{}, Colunas.COLUNAS_MOVIMENTO));
     }
 
+    // TODO Não esta Consultando dias acimas do dia atual
     public void consultar(String dt1, String dt2) {
         if (validarForm(dt1, dt2)) {
             ConstHelpers.FLAG = 2;
