@@ -65,6 +65,11 @@ public class Util {
 				System.out.println(line);
 			}
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause() + "\n");
+			JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("<html><body>POR FAVOR, INSTALE PYTHON 3.x !" +
+																		 "<br><br>Variavel de Ambiente Não Reconhecida!</body></html>"));
+
 			e.printStackTrace();
 		}
 	}
