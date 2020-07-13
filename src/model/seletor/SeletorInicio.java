@@ -23,7 +23,8 @@ public class SeletorInicio {
      * where
      * <p>
      * Message == 3 {
-     * t.n_ticket like '%X_value%'
+     * t.n_ticket like '%X_value%'SELECT *
+FROM contrato;
      * or con.n_cartao like '%X_value%'
      * }
      * <p>

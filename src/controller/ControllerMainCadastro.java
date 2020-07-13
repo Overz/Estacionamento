@@ -138,7 +138,7 @@ public class ControllerMainCadastro {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } // TODO Verificar se Cadastra e a Mensagem se exibiu
+    }
 
     /**
      * Insere o ID para atualizar os objetos no DB
@@ -326,8 +326,10 @@ public class ControllerMainCadastro {
                 msg = "<html><body>Cliente com este CPF já Existe!<br>";
                 if (existeContrato != null && existeContrato.getNumeroCartao() == con.getNumeroCartao()) {
                     msg += "Número do Cartão Já está em Uso!<br>";
+                    System.out.println(msg);
                     return false;
                 }
+                System.out.println(msg);
                 return false;
             } else {
                 e = daoEndereco.cadastrar(e);

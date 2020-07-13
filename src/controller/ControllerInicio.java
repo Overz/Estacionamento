@@ -60,6 +60,7 @@ public class ControllerInicio {
     }
 
     // INICIO ### MÉTODS DA TABELA
+
     /**
      * Atualiza a JTable com Todos os Valores
      */
@@ -241,6 +242,7 @@ public class ControllerInicio {
     }
 
     // INICIO ### MÉTODOS DO TICKET
+
     /**
      * Valida o ticket por algum tempo, e atualiza o Status no banco
      *
@@ -588,7 +590,7 @@ public class ControllerInicio {
             ConstHelpers.FLAG = 0;
             this.atualizarTabela();
         };
-        timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+        timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
         timer.start();
     }
 

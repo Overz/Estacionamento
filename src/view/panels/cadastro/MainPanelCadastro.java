@@ -115,9 +115,7 @@ public class MainPanelCadastro extends JPanel {
             }
         });
 
-        btnSalvar.addActionListener(e -> {
-            mainCtrl.salvar(tipoCadastro);
-        });
+        btnSalvar.addActionListener(e -> mainCtrl.salvar(tipoCadastro));
 
         btnLimpar.addActionListener(e -> MainView.limparDadosDasTelasCadastro());
     }
