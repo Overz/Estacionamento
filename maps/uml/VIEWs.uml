@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>view.panels.LostTicketView</OriginalElement>
+  <nodes>
+    <node x="1447.8385057471264" y="1456.0">view.panels.MovimentoView</node>
+    <node x="1123.8385057471264" y="1324.0">view.panels.cadastro.ListaClientesView</node>
+    <node x="2039.8385057471262" y="1420.0">view.panels.CaixaView</node>
+    <node x="197.59425287356316" y="423.0">view.panels.cadastro.subCadastro.PanelzinhoCadastroDados</node>
+    <node x="0.0" y="1420.0">view.panels.LostTicketView</node>
+    <node x="577.1067528735632" y="567.0">view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano</node>
+    <node x="919.1067528735632" y="615.0">view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco</node>
+    <node x="1727.8385057471264" y="1276.0">view.panels.mainView.InicioView</node>
+    <node x="419.2317528735632" y="1468.0">view.panels.cadastro.MainPanelCadastro</node>
+    <node x="890.0650862068965" y="0.0">javax.swing.JPanel</node>
+    <node x="869.4192528735632" y="2273.0">view.panels.mainView.MainView</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="view.panels.LostTicketView" target="javax.swing.JPanel">
+      <point x="0.0" y="-269.5" />
+      <point x="153.5" y="363.0" />
+      <point x="932.1900862068965" y="363.0" />
+      <point x="-126.375" y="161.5" />
+    </edge>
+    <edge source="view.panels.MovimentoView" target="javax.swing.JPanel">
+      <point x="0.0" y="-233.5" />
+      <point x="1577.8385057471264" y="393.0" />
+      <point x="1128.7734195402297" y="393.0" />
+      <point x="70.20833333333326" y="161.5" />
+    </edge>
+    <edge source="view.panels.cadastro.subCadastro.PanelzinhoCadastroPlano" target="javax.swing.JPanel">
+      <point x="0.0" y="-257.5" />
+      <point x="738.1067528735632" y="403.0" />
+      <point x="1044.5234195402297" y="403.0" />
+      <point x="-14.041666666666742" y="161.5" />
+    </edge>
+    <edge source="view.panels.CaixaView" target="javax.swing.JPanel">
+      <point x="0.0" y="-269.5" />
+      <point x="2182.838505747126" y="373.0" />
+      <point x="1184.9400862068965" y="373.0" />
+      <point x="126.375" y="161.5" />
+    </edge>
+    <edge source="view.panels.cadastro.subCadastro.PanelzinhoCadastroDados" target="javax.swing.JPanel">
+      <point x="0.0" y="-401.5" />
+      <point x="353.09425287356316" y="373.0" />
+      <point x="960.2734195402297" y="373.0" />
+      <point x="-98.29166666666663" y="161.5" />
+    </edge>
+    <edge source="view.panels.cadastro.ListaClientesView" target="javax.swing.JPanel">
+      <point x="0.0" y="-365.5" />
+      <point x="1275.8385057471264" y="403.0" />
+      <point x="1100.6900862068965" y="403.0" />
+      <point x="42.125" y="161.5" />
+    </edge>
+    <edge source="view.panels.cadastro.MainPanelCadastro" target="javax.swing.JPanel">
+      <point x="0.0" y="-221.5" />
+      <point x="557.7317528735632" y="1256.0" />
+      <point x="535.5317528735632" y="1256.0" />
+      <point x="535.5317528735632" y="393.0" />
+      <point x="1016.4400862068965" y="393.0" />
+      <point x="-42.125" y="161.5" />
+    </edge>
+    <edge source="view.panels.mainView.InicioView" target="javax.swing.JPanel">
+      <point x="0.0" y="-413.5" />
+      <point x="1873.8385057471264" y="383.0" />
+      <point x="1156.8567528735632" y="383.0" />
+      <point x="98.29166666666674" y="161.5" />
+    </edge>
+    <edge source="view.panels.cadastro.subCadastro.PanelzinhoCadastroEndereco" target="javax.swing.JPanel">
+      <point x="0.0" y="-209.5" />
+      <point x="14.041666666666742" y="161.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.29369918699187" x="1163.0" y="1465.9999999999998" />
+  <SelectedNodes>
+    <node>view.panels.LostTicketView</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

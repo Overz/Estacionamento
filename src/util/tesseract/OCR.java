@@ -88,8 +88,6 @@ public class OCR extends JFrame {
                     this.lerImagem();
                     this.mostrarImagemComLabel();
                     this.cadastrar();
-                    ConstHelpers.FLAG = 0; // Utilizado para listar todos no método atualizar
-//                    controllerInicio.atualizarTabela();
                     timer.setDelay(5000);
                 };
                 timer = new Timer(15000, event);
@@ -111,8 +109,6 @@ public class OCR extends JFrame {
         }
     }
 
-    // TODO DAR CONTINUIDADE - EXTREMA IMPORTANCIA
-    // TODO Testar para ver se cadastra Ticket/Cliente
     private void cadastrar() {
         controllerInicio = new ControllerInicio(MainView.getInicioView());
         daoC = new ContratoDAO();
@@ -129,19 +125,19 @@ public class OCR extends JFrame {
                     if (c != null) {
                         ConstHelpers.FLAG = 2;
                         m = daoM.consultarPorId(c.getId());
+                        timer.setDelay(5000);
                         if (m != null) {
                             break;
                         } else {
                             ConstHelpers.FLAG = 1;
                             m = new MovimentoVO(c.getId(), LocalDateTime.now(), null, true, c);
                             m = daoM.cadastrar(m);
+                            timer.setDelay(5000);
                             if (m != null) {
-//                                listaMovimentos.add(m);
-//                                controllerInicio.atualizarTabelaPlano(m, new Object[5], LocalDateTime.now());
                                 ConstHelpers.FLAG = 1; // Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
                                 do {
-                                    timer.setDelay(2000);
+                                    timer.setDelay(5000);
                                     res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
                                             Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
                                                                      + c.toString() + "</body></html>"), "Cadastrado",
@@ -157,17 +153,16 @@ public class OCR extends JFrame {
                         ConstHelpers.FLAG = 1;
                         t = new TicketVO(controllerInicio.randomTicketGenerator(leftLimit, rightLimit), placa, LocalDateTime.now(), true, false);
                         t = daoT.cadastrar(t);
+                        timer.setDelay(5000);
                         if (t != null) {
                             ConstHelpers.FLAG = 2;
                             m = new MovimentoVO(t.getId(), LocalDateTime.now(), true, t);
                             m = daoM.cadastrar(m);
                             if (m != null) {
-//                                listaMovimentos.add(m);
-//                                controllerInicio.atualizarTabelaTicket(m, new Object[5], LocalDateTime.now());
                                 ConstHelpers.FLAG = 1; /// Se cadastrar, deverá exibir um ToString personalizado
                                 int res;
                                 do {
-                                    timer.setDelay(2000);
+                                    timer.setDelay(5000);
                                     ConstHelpers.TIPO_TOSTRING = 1;
                                     res = JOptionPane.showConfirmDialog(MainView.getInicioView(),
                                             Modificacoes.labelConfig("<html><body>Placa Vinculada: " + placa
