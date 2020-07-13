@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>util.helpers.Modificacoes</OriginalElement>
+  <nodes>
+    <node x="513.0" y="0.0">util.constantes.ConstHelpers</node>
+    <node x="162.75" y="707.0">util.helpers.Util</node>
+    <node x="0.0" y="240.0">util.helpers.Modificacoes</node>
+    <node x="0.0" y="1626.0">util.constantes.Colunas</node>
+    <node x="1218.0" y="0.0">util.constantes.ConstCaixa</node>
+    <node x="858.0" y="0.0">util.constantes.ConstInicio</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="util.helpers.Util" target="util.constantes.ConstHelpers">
+      <point x="146.0" y="-437.0" />
+      <point x="600.75" y="682.0" />
+      <point x="663.0" y="682.0" />
+      <point x="0.0" y="328.5" />
+    </edge>
+    <edge source="util.helpers.Util" target="util.helpers.Modificacoes">
+      <point x="-146.0" y="-437.0" />
+      <point x="308.75" y="682.0" />
+      <point x="246.5" y="682.0" />
+      <point x="0.0" y="88.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.40000000000000013" x="669.7499999999993" y="840.25" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

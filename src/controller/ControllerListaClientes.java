@@ -60,7 +60,6 @@ public class ControllerListaClientes {
         listaClientesView.getLblTotalDeClientes().setText("Total de Clientes Cadastrados: " + list.size());
     }
 
-    // TODO Verificar BUG que não remove
     public void removeSelectedRow() {
 
         int icone = JOptionPane.INFORMATION_MESSAGE;
