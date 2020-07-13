@@ -1,5 +1,7 @@
 package model.vo.movimentos;
 
+import util.constantes.ConstHelpers;
+
 import java.time.LocalDateTime;
 
 import static util.constantes.ConstHelpers.TIPO_TOSTRING;
@@ -120,9 +122,9 @@ public class TicketVO {
     }
 
     private String builderToString() {
-        if (TIPO_TOSTRING == 1){
-            return "<br>Nº: " + numero + "<br>ENTRADA: " + dataEntrada;
-        }else {
+        if (TIPO_TOSTRING == 1) {
+            return "<br>Nº: " + numero + "<br>ENTRADA: " + dataEntrada.format(ConstHelpers.DTF);
+        } else {
             return " - TICKET: " +
                    " - ID: " + id +
                    " - Nº: " + numero +

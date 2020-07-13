@@ -69,7 +69,12 @@ public class ControllerMovimento {
         novaLinha[0] = movimento.getTicket().getNumero();
         novaLinha[1] = "";
         novaLinha[2] = "";
-        novaLinha[3] = "";
+        String placa = movimento.getTicket().getPlaca();
+        if (placa != null && !placa.trim().isEmpty()) {
+            novaLinha[3] = placa;
+        } else {
+            novaLinha[3] = "NENHUM REGISTRO";
+        }
 
         if (movimento.getTicket().getValor() > 0.0) {
             novaLinha[4] = "R$: " + Util.formatarValor(movimento.getTicket().getValor());

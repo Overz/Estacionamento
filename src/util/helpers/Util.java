@@ -16,7 +16,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
-import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -39,18 +38,21 @@ public class Util {
      */
     public static void checkPythonVersion() {
         try {
-            // TODO TENTAR RODAR NO WINDOWS
-            String line;
-            Process p = Runtime.getRuntime().exec("python3 --version");
-            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            if ((line = in.readLine()) != null) {
-                System.out.println("Running pip install");
-                Runtime.getRuntime().exec("pip install pytesseract");
-            } else {
-                JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("POR FAVOR, INSTALE PYTHON 3.x !"));
-                System.exit(0);
+            if (getOs().equalsIgnoreCase(windowsOs)) {
+                // TODO TENTAR RODAR NO WINDOWS
+            } else if (getOs().equalsIgnoreCase(linuxOs)) {
+                String line;
+                Process p = Runtime.getRuntime().exec("python3 --version");
+                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                if ((line = in.readLine()) != null) {
+                    System.out.println("Running pip install");
+                    Runtime.getRuntime().exec("pip install pytesseract");
+                } else {
+                    JOptionPane.showMessageDialog(null, Modificacoes.labelConfig("POR FAVOR, INSTALE PYTHON 3.x !"));
+                    System.exit(0);
+                }
+                System.out.println(line);
             }
-            System.out.println(line);
         } catch (Exception e) {
             e.printStackTrace();
         }

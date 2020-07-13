@@ -584,7 +584,10 @@ public class ControllerInicio {
      * Timer que mantém a tabela atualizada a cada X tempo
      */
     private void timerRefreshData() {
-        ActionListener event = e -> this.atualizarTabela();
+        ActionListener event = e -> {
+            ConstHelpers.FLAG = 0;
+            this.atualizarTabela();
+        };
         timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
         timer.start();
     }
