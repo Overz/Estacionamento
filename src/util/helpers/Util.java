@@ -1,6 +1,14 @@
 package util.helpers;
 
-import java.awt.Color;
+import model.banco.BaseDAO;
+import model.dao.cliente.PlanoDAO;
+import model.vo.cliente.PlanoVO;
+import util.constantes.ConstHelpers;
+
+import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -13,23 +21,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.Timer;
-import javax.swing.table.TableColumn;
-import javax.swing.text.MaskFormatter;
-
-import model.banco.BaseDAO;
-import model.dao.cliente.PlanoDAO;
-import model.vo.cliente.PlanoVO;
-import util.constantes.ConstHelpers;
 
 public class Util {
 
@@ -129,7 +120,7 @@ public class Util {
 							button.setBackground(Color.WHITE);
 							button.setEnabled(false);
 						};
-						Timer timer = new Timer(ConstHelpers.TEMPO_30_SEG, event);
+						Timer timer = new Timer(ConstHelpers.TEMPO_1_MIN, event);
 						timer.start();
 					}
 
