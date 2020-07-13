@@ -1,191 +1,167 @@
 package model.dao.veiculos;
 
-import model.banco.Banco;
-import model.banco.BaseDAO;
-import model.vo.veiculo.MarcaVO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.banco.Banco;
+import model.banco.BaseDAO;
+import model.vo.veiculo.MarcaVO;
+
 public class MarcaDAO implements BaseDAO<MarcaVO> {
 
-    private Connection conn = null;
-    private PreparedStatement stmt = null;
-    private ResultSet result = null;
-    private ArrayList<MarcaVO> list = null;
-    private MarcaVO marcaVO = null;
+	private Connection conn = null;
+	private PreparedStatement stmt = null;
+	private ResultSet result = null;
+	private ArrayList<MarcaVO> list = null;
+	private MarcaVO marcaVO = null;
 
-    private MarcaVO criarResultSet(ResultSet result) {
-        try {
-            marcaVO = new MarcaVO();
-            marcaVO.setId(result.getInt("id"));
-            marcaVO.setMarca(result.getString("nome"));
+	private MarcaVO criarResultSet(ResultSet result) {
+		try {
+			marcaVO = new MarcaVO();
+			marcaVO.setId(result.getInt("id"));
+			marcaVO.setMarca(result.getString("nome"));
 
-            return marcaVO;
-        } catch (SQLException e) {
-            String method = "CriarResultSet(ResultSet result)";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        }
-        return null;
-    } // OK
+			return marcaVO;
+		} catch (SQLException e) {
+			String method = "CriarResultSet(ResultSet result)";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		}
+		return null;
+	} // OK
 
-    @Override
-    public ArrayList<MarcaVO> consultarTodos() {
-        String qry = "select * from marca;";
-        list = new ArrayList<>();
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+	@Override
+	public ArrayList<MarcaVO> consultarTodos() {
+		String qry = "select * from marca;";
+		list = new ArrayList<>();
+		conn = Banco.getConnection();
+		stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        try {
-            result = stmt.executeQuery();
-            while (result.next()) {
-                marcaVO = criarResultSet(result);
-                list.add(marcaVO);
-            }
-            return list;
-        } catch (SQLException e) {
-            String method = "ConsultarTodos()";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
+		try {
+			result = stmt.executeQuery();
+			while (result.next()) {
+				marcaVO = criarResultSet(result);
+				list.add(marcaVO);
+			}
+			return list;
+		} catch (SQLException e) {
+			String method = "ConsultarTodos()";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		} finally {
+			Banco.closeResultSet(result);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return null;
+	} // OK
 
-    @Override
-    public <T> T consultar(String... values) {
-        return null;
-    }
+	@Override
+	public <T> T consultar(String... values) {
+		return null;
+	}
 
-    @Override
-    public MarcaVO consultarPorId(int id) {
-        String qry = "select * from marca where id = ?";
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+	@Override
+	public MarcaVO consultarPorId(int id) {
+		String qry = "select * from marca where id = ?";
+		conn = Banco.getConnection();
+		stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        try {
-            stmt.setInt(1, id);
-            result = stmt.executeQuery();
-            while (result.next()) {
-                marcaVO = criarResultSet(result);
-            }
-            return marcaVO;
-        } catch (SQLException e) {
-            String method = "ConsultarPorID(int id)";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
+		try {
+			stmt.setInt(1, id);
+			result = stmt.executeQuery();
+			while (result.next()) {
+				marcaVO = criarResultSet(result);
+			}
+			return marcaVO;
+		} catch (SQLException e) {
+			String method = "ConsultarPorID(int id)";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		} finally {
+			Banco.closeResultSet(result);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return null;
+	} // OK
 
-    @Override
-    public MarcaVO cadastrar(MarcaVO newObject, String... values) {
-        String qry = "insert into marca (nome) values (?);";
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+	@Override
+	public MarcaVO cadastrar(MarcaVO newObject, String... values) {
+		String qry = "insert into marca (nome) values (?);";
+		conn = Banco.getConnection();
+		stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        try {
-            stmt.setString(1, newObject.getMarca());
+		try {
+			stmt.setString(1, newObject.getMarca());
 
-            result = stmt.getGeneratedKeys();
-            if (result.next()) {
-                int id = result.getInt(1);
-                newObject.setId(id);
-            }
-            return newObject;
-        } catch (SQLException e) {
-            String method = "Cadastrar(T newObject)";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return null;
-    } // OK
+			result = stmt.getGeneratedKeys();
+			if (result.next()) {
+				int id = result.getInt(1);
+				newObject.setId(id);
+			}
+			return newObject;
+		} catch (SQLException e) {
+			String method = "Cadastrar(T newObject)";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		} finally {
+			Banco.closeResultSet(result);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return null;
+	} // OK
 
-    @Override
-    public boolean alterar(MarcaVO object) {
-        String qry = "update marca set nome=? where id=?;";
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+	@Override
+	public boolean alterar(MarcaVO object) {
+		String qry = "update marca set nome=? where id=?;";
+		conn = Banco.getConnection();
+		stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        try {
-            stmt.setString(1, object.getMarca());
-            stmt.setInt(2, object.getId());
+		try {
+			stmt.setString(1, object.getMarca());
+			stmt.setInt(2, object.getId());
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
-                return true;
-            }
-        } catch (SQLException e) {
-            String method = "Alterar(T object)";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return false;
-    } // OK
+			if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+				return true;
+			}
+		} catch (SQLException e) {
+			String method = "Alterar(T object)";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		} finally {
+			Banco.closeResultSet(result);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return false;
+	} // OK
 
-    @Override
-    public boolean excluirPorID(int id) {
-        String qry = "delete from marca where id = ?";
-        conn = Banco.getConnection();
-        stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
+	@Override
+	public boolean excluirPorID(int id) {
+		String qry = "delete from marca where id = ?";
+		conn = Banco.getConnection();
+		stmt = Banco.getPreparedStatement(conn, qry, PreparedStatement.RETURN_GENERATED_KEYS);
 
-        try {
-            stmt.setInt(1, id);
+		try {
+			stmt.setInt(1, id);
 
-            if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
-                return true;
-            }
-        } catch (SQLException e) {
-            String method = "excluir(int id)";
-            System.out.println("\n" +
-                               "Class: " + getClass().getSimpleName() + "\n" +
-                               "Method: " + method + "\n" +
-                               "Msg: " + e.getMessage() + "\n" +
-                               "Cause: " + e.getCause()
-            );
-        } finally {
-            Banco.closeResultSet(result);
-            Banco.closePreparedStatement(stmt);
-            Banco.closeConnection(conn);
-        }
-        return false;
-    } // OK
+			if (stmt.executeUpdate() == Banco.CODIGO_RETORNO_SUCESSO) {
+				return true;
+			}
+		} catch (SQLException e) {
+			String method = "excluir(int id)";
+			System.out.println("\n" + "Class: " + getClass().getSimpleName() + "\n" + "Method: " + method + "\n"
+					+ "Msg: " + e.getMessage() + "\n" + "Cause: " + e.getCause());
+		} finally {
+			Banco.closeResultSet(result);
+			Banco.closePreparedStatement(stmt);
+			Banco.closeConnection(conn);
+		}
+		return false;
+	} // OK
 }
